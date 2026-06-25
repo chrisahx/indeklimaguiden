@@ -12,11 +12,15 @@ const path = '/beregnere/aircondition-varmepumpe-stoerrelse/';
 const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
 const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
 const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
+const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
+const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
 const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
 const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
 const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
 const showWideAd = import.meta.env.DEV || wideAdSlot;
 const showArticleAd = import.meta.env.DEV || articleAdSlot;
+const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
+const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
 const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
 const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
 const breadcrumbs = [
@@ -195,6 +199,8 @@ const calculatorJsonLd = {
         En aircondition eller varmepumpe skal dimensioneres efter mere end m² alene. Brug m² som startpunkt, men juster for loftshøjde, isolering, solindfald, vinduer og om anlægget skal køle, varme eller begge dele.
       </AnswerBox>
 
+      {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
+
       <h2>Hvor stor aircondition skal jeg bruge?</h2>
       <p>
         Når du søger efter en aircondition størrelse beregner, er målet typisk at finde ud af, om et anlæg på for eksempel 2,5 kW, 3,5 kW eller 5 kW passer til rummet. Et lille soveværelse med god isolering kræver langt mindre end en stor stue med højt solindfald og brede vinduespartier.
@@ -249,6 +255,8 @@ const calculatorJsonLd = {
       <p>
         Hvis du vælger “begge dele”, viser beregneren den højeste relevante belastning. Derfor kan resultatet blive højere end ved kun køling eller kun opvarmning.
       </p>
+
+      {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
 
       {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
 
@@ -399,6 +407,7 @@ const calculatorJsonLd = {
   :global(.sidebar-ad) { min-height: 420px; }
   :global(.wide-ad) { min-height: 92px; margin-bottom: clamp(2rem, 5vw, 4rem); }
   :global(.article-ad) { min-height: 120px; margin: 2.5rem 0; }
+  :global(.calculator-mobile-ad) { display: none; min-height: 120px; margin: 2rem 0; }
   .article-shell { padding-bottom: clamp(3rem, 7vw, 6rem); }
   .article-shell.has-rail-ads {
     display: grid;
@@ -436,6 +445,7 @@ const calculatorJsonLd = {
     .installer-warning { border-top: 1px solid rgba(255, 255, 255, 0.18); border-left: 0; padding: 1rem 0 0; }
     .article-shell.has-rail-ads { display: block; width: auto; }
     .rail-ad { display: none; }
+    :global(.calculator-mobile-ad) { display: block; }
   }
 
   @media (max-width: 620px) {
