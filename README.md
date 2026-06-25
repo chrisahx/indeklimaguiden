@@ -130,4 +130,4 @@ Only configured slots render in production. If an env var is missing, that place
 
 ## Notes
 
-Rail ads are desktop-only and hidden on smaller screens. This avoids crowding mobile layouts and keeps the calculator/article content readable.
+Rail ads are desktop-only and hidden on smaller screens. Use the `*_MOBILE_1` and `*_MOBILE_2` slots for mobile-only in-content ads so mobile pages still have ad inventory without crowding the layout.
