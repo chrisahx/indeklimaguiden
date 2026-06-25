@@ -1,6 +1,6 @@
 ---
 name: seo-aeo-internal-linking
-description: "Maps Danish internal link opportunities between indoor climate pages, product reviews, comparisons, buyer guides, pillar pages, and future lead-generation pages with anchor text, placement instructions, orphan detection, and cannibalization checks. Activate when the user wants to build an internal linking strategy or find link opportunities."
+description: "Maps Danish internal links for Indeklima Guiden MDX articles, category hubs, pillar pages, reviews, comparisons, and buyer guides with anchor text, placement context, component-aware link suggestions, orphan detection, and cannibalization checks. Activate when building or auditing internal links."
 risk: safe
 source: community
 date_added: "2026-04-01"
@@ -10,91 +10,184 @@ date_added: "2026-04-01"
 
 ## Overview
 
-Analyses a set of Danish indoor climate pages and produces a prioritised list of internal link opportunities with exact Danish anchor text, a context sentence showing where each link should appear, orphan page detection, anchor text cannibalization warnings, and a link equity map showing how authority flows across the content.
+Analyses Danish indoor climate pages and MDX articles to produce internal link opportunities with exact Danish anchor text, placement instructions, orphan detection, anchor cannibalization warnings, and a link equity map.
 
-The linking model should support product reviews, comparison pages, buyer guides, explainers, cost/energy articles, home-type guides, and future lead-generation pages for contractors/installers.
+This skill understands the Indeklima Guiden article structure: category hubs at `/aircondition/`, `/varmepumper/`, `/indeklima/`; MDX articles under `src/content/articles/{category}/`; and article components such as `AnswerBox`, `ComparisonTable`, `SpecCard`, `ProsCons`, `ExpertTip`, and `DisclosureBox`.
 
-Part of the [SEO-AEO Engine](https://github.com/mrprewsh/seo-aeo-engine).
+## When To Use This Skill
 
-## When to Use This Skill
+- Use when adding links to a new Danish MDX article.
+- Use when building links between category hubs, pillar pages, and cluster articles.
+- Use when connecting reviews to comparisons and buyer guides.
+- Use when linking practical guides about electricity use, sizing, installation, humidity, air quality, and home type.
+- Use when auditing the site for orphan pages or weak topical connections.
+- Use after `@seo-aeo-content-cluster` creates a topic map.
 
-- Use when building internal links between a new Danish pillar page and its cluster articles
-- Use when connecting product reviews to comparison pages and buyer guides
-- Use when linking practical guides about electricity use, sizing, installation, humidity, air quality, and home type
-- Use when auditing an existing site for orphan pages
-- Use after content-cluster generates a topic map
-- Use when preparing conversion paths toward future lead-generation pages for relevant contractors/installers
-- Use when you need anchor text suggestions with placement context
+## Link Targets In This Project
 
-## How It Works
+Use these core category hubs when relevant:
+
+- `/aircondition/` for aircondition, mobile cooling, BTU, aftræk, støj, and cooling choices.
+- `/varmepumper/` for luft til luft-varmepumper, price, installation, heating/cooling, and running economy.
+- `/indeklima/` for luftfugtighed, ventilation, luftkvalitet, affugtere, luftrensere, skimmel risk, and general comfort.
+
+Article URLs are generated from frontmatter as:
+
+```text
+/{category}/{slug}/
+```
+
+## Component-Aware Link Placement
+
+Suggest internal links where they help the reader naturally:
+
+- `AnswerBox`: Avoid stuffing links into the direct answer unless the link is essential. The answer should remain extractable and clean.
+- First body section: Strong place for one contextual category or pillar link.
+- `ComparisonTable`: Good for linking compared options only if the table text stays readable. Prefer links in adjacent prose if table cells become cluttered.
+- `SpecCard`: Avoid links inside dense spec values. Use nearby explanatory text instead.
+- `ProsCons`: Usually avoid links inside list items unless the link clarifies an alternative.
+- `ExpertTip`: Good for linking to deeper caveat articles, installation guides, or calculation articles.
+- FAQ: Do not rely on frontmatter FAQ for primary internal links. FAQ answers are rendered from frontmatter and should stay short and self-contained.
+
+## Workflow
 
 ### Step 1: Detect Orphan Pages
-Flag any page with zero incoming internal links. These are invisible to search engines and must be linked immediately.
+
+Flag any article or category page with zero incoming internal links. Prioritise links from category hubs, pillar articles, and high-traffic guides.
 
 ### Step 2: Build Semantic Overlap Matrix
-Match pages by Danish primary keyword similarity, user intent, product type, home type, and content summary to identify natural linking opportunities. Strong semantic links include review → comparison, comparison → buyer guide, guide → product category, problem article → solution article, and informational article → future contractor/installer page where relevant.
+
+Match pages by:
+
+- Category.
+- Primary keyword.
+- Search intent.
+- Product type.
+- Home type.
+- Problem/solution relationship.
+- Stage in buyer journey.
+
+Strong link patterns:
+
+- Category hub → priority cluster article.
+- Cluster article → category hub.
+- Pillar → cluster.
+- Cluster → pillar.
+- Review → comparison.
+- Comparison → buyer guide.
+- Cost article → product/category guide.
+- Problem article → solution/buyer guide.
+- Installation/caveat article → future contractor/installer path when relevant.
 
 ### Step 3: Assign Link Types
-Every suggestion gets one of four labels:
-- **Cluster → Pillar** — highest priority, consolidates authority upward
-- **Pillar → Cluster** — distributes authority downward
-- **Cluster → Cluster** — builds semantic depth
-- **Contextual Boost** — concentrates equity on a focus page
-- **Review → Comparison** — helps users compare alternatives after reading a unit review
-- **Guide → Lead Page** — supports future lead generation when the user likely needs professional help
 
-### Step 4: Write Context Sentences
-For every link opportunity, write the Danish sentence the anchor text should appear in — naturally placed, not forced. Anchors should match Danish search language, such as "bedste aircondition til soveværelse", "hvor meget strøm bruger en varmepumpe", "affugter til kælder", or "luft til luft varmepumpe til sommerhus".
+Use one of these labels:
 
-### Step 5: Check Anchor Text
-Flag any exact-match anchor used more than once for the same target page as a cannibalization risk. Avoid generic anchors like "klik her", "læs mere", and "se mere" when the anchor can describe the destination more clearly.
+- Category → Article.
+- Article → Category.
+- Pillar → Cluster.
+- Cluster → Pillar.
+- Cluster → Cluster.
+- Review → Comparison.
+- Comparison → Buyer Guide.
+- Problem → Solution.
+- Contextual Boost.
+- Guide → Future Lead Page.
 
-## Examples
+### Step 4: Write Danish Anchor And Context
 
-### Example: Link Opportunity Output
-🔴 High Priority — Link 1
-Type: Cluster → Pillar
-Source: "How to Build a Budget That Actually Works"
-Target: "The Complete Guide to Automated Budgeting"
-Anchor: "automated budgeting guide"
-Context: "For a full breakdown of every method available,
-see our [automated budgeting guide]."
-Impact: Consolidates topical authority on pillar page.
-Orphan Alert:
-"PennyWise Pricing Page" has no incoming links.
-Fix: Add link from comparison table in Article 2.
+For every opportunity, provide:
+
+- Source page.
+- Target page.
+- Link type.
+- Exact Danish anchor text.
+- Placement: heading/section/component area.
+- Full Danish context sentence.
+- Reason/impact.
+
+Good anchors are descriptive and natural:
+
+- “bedste mobile aircondition”
+- “hvor meget strøm en mobil aircondition bruger”
+- “luft til luft-varmepumpe pris”
+- “optimal luftfugtighed i hjemmet”
+- “aircondition til soveværelse”
+- “affugter til kælder”
+- “luftrenser mod støv og pollen”
+
+Avoid:
+
+- “klik her”
+- “læs mere”
+- “se mere”
+- repeated exact-match anchors to the same URL across many pages
+
+### Step 5: Check Cannibalization
+
+Flag when:
+
+- Two pages target nearly identical primary keywords.
+- The same exact-match anchor points to different pages.
+- The same target receives the exact same anchor too often.
+- A category page and article compete for the same query.
+
+## Output Template
+
+```md
+# Internal Link Map
+
+## Orphan Pages
+- [URL] — Fix: [source page and anchor]
+
+## High Priority Links
+1. Source:
+   Target:
+   Type:
+   Anchor:
+   Placement:
+   Context sentence:
+   Impact:
+
+## Medium Priority Links
+...
+
+## Component-Aware Notes
+- Avoid linking inside:
+- Best placement:
+
+## Anchor Cannibalization Warnings
+- Anchor:
+- Problem:
+- Fix:
+
+## Link Equity Map
+- Category hub:
+- Pillar:
+- Supporting articles:
+```
 
 ## Best Practices
 
-- ✅ **Do:** Every cluster article must have at least one Cluster → Pillar link
-- ✅ **Do:** Link reviews to relevant comparisons, buyer guides, and product category pages
-- ✅ **Do:** Link problem/education articles to practical buying guides when the user is likely moving toward a decision
-- ✅ **Do:** Write a Danish context sentence for every suggestion — anchor text needs natural placement
-- ✅ **Do:** Fix orphan pages before adding any new links
-- ❌ **Don't:** Use the same exact-match anchor for the same target page more than once
-- ❌ **Don't:** Over-optimise every anchor; mix exact, partial, descriptive, and natural Danish anchors
-- ❌ **Don't:** Push lead-generation links too aggressively in informational articles
-- ❌ **Don't:** Add more than 100 outgoing internal links on any single page
-
-## Common Pitfalls
-
-- **Problem:** All cluster articles link to the pillar but not to each other
-  **Solution:** Add Cluster → Cluster links between semantically related articles to build depth.
-
-- **Problem:** Same anchor text used across multiple pages for the same target
-  **Solution:** Use partial match and branded anchors for subsequent links after the first exact-match use.
+- Every article should link to its category hub or relevant pillar.
+- Category hubs should link to the most important P1 articles.
+- Product reviews should link to comparisons, buyer guides, and relevant category hubs.
+- Informational articles should link toward practical next-step guides when useful.
+- Use varied anchors: exact, partial, descriptive, and natural Danish.
+- Place links in body prose where they help the reader, not just for SEO.
+- Keep `AnswerBox` concise and mostly link-free.
+- Do not overload frontmatter FAQ answers with internal links.
+- Do not push lead-generation links aggressively in informational articles.
+- Do not add more than necessary; quality beats link volume.
 
 ## Related Skills
 
-- `@seo-aeo-content-cluster` — generates the cluster map this skill links together
-- `@seo-aeo-blog-writer` — writes or updates the articles that receive internal links
-
-## Additional Resources
-
-- [SEO-AEO Engine Repository](https://github.com/mrprewsh/seo-aeo-engine)
-- [Full Internal Linking SKILL.md](https://github.com/mrprewsh/seo-aeo-engine/blob/main/.agent/skills/internal-linking/SKILL.md)
+- `@seo-aeo-content-cluster` creates the cluster map this skill links together.
+- `@seo-aeo-blog-writer` writes or updates articles with the suggested links.
+- `@seo-aeo-content-quality-auditor` audits link quality and article readiness.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only for Danish indoor climate internal linking.
+- Do not invent existing article URLs if the site structure is available; inspect content files when possible.
+- Ask for clarification if the target pillar, article priority, or conversion path is unclear.

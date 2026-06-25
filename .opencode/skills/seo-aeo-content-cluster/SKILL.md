@@ -1,6 +1,6 @@
 ---
 name: seo-aeo-content-cluster
-description: "Builds Danish topical authority maps for aircondition, varmepumper, affugtere, luftrensere, indeklima, strømforbrug, unit sizing, product reviews, comparisons, and buyer guides. Activate when the user wants to build a Danish content cluster, topic map, or content strategy."
+description: "Builds Danish topical authority maps and MDX article briefs for Indeklima Guiden, including SEO/AEO intent, component recommendations, FAQ ideas, and internal links for aircondition, varmepumper, indeklima, affugtere, and luftrensere. Activate when planning Danish content clusters or article roadmaps."
 risk: safe
 source: community
 date_added: "2026-04-01"
@@ -10,98 +10,149 @@ date_added: "2026-04-01"
 
 ## Overview
 
-Maps out a complete Danish topical authority structure around a pillar keyword for indoor climate products: aircondition, varmepumper, affugtere, luftrensere, strømforbrug, kapacitet/størrelse, installation, vedligeholdelse, and product selection. Produces a pillar page definition, 8–15 cluster articles sorted into Priority 1/2/3 tiers, a content type for each, an internal link map, and a content gap analysis identifying AEO opportunities competitors are missing.
+Builds Danish topical authority structures for Indeklima Guiden. Clusters should support aircondition, varmepumper, affugtere, luftrensere, ventilation-adjacent topics, strømforbrug, kapacitet/størrelse, installation, vedligeholdelse, product selection, and practical home-type decisions.
 
-The goal is to support a Danish affiliate/lead-generation style website that educates users before they choose a product or request help from relevant contractors in the future.
+The output must be ready for this Astro/MDX site: each planned article should include target category, slug, schema type, recommended MDX components, FAQ questions, and internal link opportunities.
 
-Part of the [SEO-AEO Engine](https://github.com/mrprewsh/seo-aeo-engine).
+## When To Use This Skill
 
-## When to Use This Skill
+- Use when building topical authority around a Danish indoor climate topic.
+- Use when planning article clusters for `aircondition`, `varmepumper`, or `indeklima`.
+- Use when deciding which article to write next.
+- Use when planning product reviews, comparisons, buyer guides, explainers, cost/energy articles, and how-to content.
+- Use when identifying Danish AEO opportunities competitors are missing.
 
-- Use when building topical authority around a Danish indoor climate topic
-- Use when planning article clusters for aircondition, varmepumper, affugtere, luftrensere, ventilation-adjacent topics, electricity use, or product comparisons
-- Use when you need to know what to write next to support a pillar page
-- Use when planning review, comparison, buyer guide, explainer, and how-to content
-- Use when preparing future lead-generation paths toward relevant contractors or installers
-- Use when you want to identify AEO content gaps competitors are missing
+## Cluster Output Requirements
 
-## How It Works
+For every planned article, include:
 
-### Step 1: Define the Pillar Page
-Set the Danish primary keyword, target audience, and word count target (2500–4000 words) for the pillar page that anchors the cluster. Define whether the audience is homeowners, renters, apartment owners, villa owners, summer house owners, allergy sufferers, people with humidity problems, or users comparing specific units.
+- Priority: `P1`, `P2`, or `P3`.
+- Working title in Danish.
+- Primary keyword and 3–6 secondary keywords.
+- Category: `aircondition`, `varmepumper`, or `indeklima`.
+- Suggested slug.
+- Content type: pillar, comparison, review, buyer guide, explainer, price guide, cost/energy, how-to, home-type guide, or problem/solution.
+- Search intent: informational, commercial investigation, comparison, local/installer, troubleshooting, or mixed.
+- Recommended `schemaType`: `Article`, `Review`, or `HowTo`.
+- Recommended components: `AnswerBox`, `ComparisonTable`, `SpecCard`, `ProsCons`, `ExpertTip`, `DisclosureBox`.
+- 4–6 FAQ question ideas for frontmatter.
+- Internal links: pillar target, cluster links, category links, and conversion/future lead paths where relevant.
+- AEO angle: direct answer, definition, verdict, comparison matrix, calculation, or checklist.
+
+## Component Planning Rules
+
+Plan components based on article intent:
+
+- Explainer: `AnswerBox`, optionally `ComparisonTable`, `ExpertTip`.
+- Product review: `DisclosureBox`, `AnswerBox title="Kort dom"`, `SpecCard`, `ProsCons`, optionally `ComparisonTable` for alternatives.
+- Comparison: `AnswerBox title="Hurtig anbefaling"`, `ComparisonTable`, `ExpertTip`, optionally `SpecCard`.
+- Buyer guide: `AnswerBox`, `SpecCard`, `ComparisonTable`, `ExpertTip`.
+- Cost/energy article: `AnswerBox`, `SpecCard`, `ComparisonTable`, `ExpertTip`.
+- Problem/solution article: `AnswerBox`, `ExpertTip`, optionally `ComparisonTable` if multiple solutions are compared.
+- How-to article: `AnswerBox`, `ExpertTip`, `ComparisonTable` only if choosing between approaches.
+
+Do not plan manual FAQ components. FAQ belongs in article frontmatter and is rendered by `ArticleLayout.astro`.
+
+## Cluster Workflow
+
+### Step 1: Define The Pillar Page
+
+Set the Danish primary keyword, target audience, search intent, category, and word count target. Define whether the audience is homeowners, renters, apartment owners, villa owners, summer house owners, allergy sufferers, people with humidity problems, or users comparing specific units.
 
 ### Step 2: Generate Cluster Articles
-Produce 8–15 subtopics sorted into three priority tiers:
-- **Priority 1** — High volume, clear intent. Write these first.
-- **Priority 2** — Medium volume, long-tail focus. Write second.
-- **Priority 3** — Low volume, high conversion intent. Write last.
 
-Assign each article a unique Danish keyword, content type, search intent, and link map. Include a healthy mix of:
-- Product reviews: individual unit/model reviews
-- Comparisons: best units by category, price, home type, noise level, or energy use
-- Buyer guides: what to look for before buying
-- Explainers: how the technology works
-- Cost/energy articles: kWh, electricity price, seasonal use, running cost
-- Fit articles: what works for apartment, villa, summer house, bedroom, basement, office, or small room
-- Maintenance/problem articles: filters, condensation, humidity, mold risk, noise, placement, service
+Produce 8–15 subtopics sorted into priority tiers:
+
+- `P1`: High search value, clear intent, high usefulness. Write first.
+- `P2`: Medium volume, long-tail, supports topical depth. Write second.
+- `P3`: Lower volume, high conversion or niche AEO intent. Write later.
+
+Include a healthy mix:
+
+- Product reviews.
+- Comparisons by category, price, home type, noise level, energy use, or season.
+- Buyer guides.
+- Explainers.
+- Cost/energy articles.
+- Fit articles for apartment, villa, summer house, bedroom, basement, office, or small room.
+- Maintenance/problem articles: filters, condensation, humidity, mold/skimmel risk, noise, placement, service.
 
 ### Step 3: Build Internal Link Map
-Every cluster article must link back to the pillar page. No orphan articles. Show the full tree of relationships.
 
-### Step 4: Run Content Gap Analysis
-Identify angles that competitors likely miss — especially question-based Danish AEO opportunities that AI engines commonly surface. Prioritise practical queries such as "hvor meget strøm bruger...", "hvilken størrelse skal jeg vælge", "kan den bruges i lejlighed", "bedst til soveværelse", "luft til luft varmepumpe vs aircondition", and "affugter eller luftrenser".
+Every cluster article must link back to the pillar page or category hub. No orphan articles. Map cluster-to-cluster links where intent naturally overlaps.
 
-## Examples
+### Step 4: Identify AEO Gaps
 
-### Example: Automated Budgeting Cluster
-Pillar: The Complete Guide to Automated Budgeting
-Priority 1:
+Flag question-based Danish opportunities, especially:
 
-How to Build a Budget That Actually Works | how-to guide
-Best Budgeting Apps Compared | comparison
-What Is Zero-Based Budgeting? | explainer ← AEO priority
+- “hvor meget strøm bruger ...”
+- “hvilken størrelse skal jeg vælge ...”
+- “kan den bruges i lejlighed ...”
+- “bedst til soveværelse ...”
+- “luft til luft varmepumpe vs aircondition”
+- “affugter eller luftrenser”
+- “hvad koster ... i drift”
 
-Priority 2:
-4. How to Automate Your Savings in 3 Steps | how-to guide
-5. Budgeting for Millennials: What Nobody Tells You | opinion
-Link Map:
-Pillar ← Article 1, 2, 3, 4, 5
-Article 1 ↔ Article 4
-Article 2 → Article 3
-AEO Priority:
-★ Article 3 — "What Is" format has highest AI extraction probability
-★ Article 2 — comparison table will be lifted for product queries
+## Output Template
+
+```md
+## Cluster: [Pillar Keyword]
+
+Pillar page:
+- Title:
+- Category:
+- Slug:
+- Intent:
+- Recommended components:
+- Internal links out:
+
+### P1 Articles
+
+1. [Title]
+- Primary keyword:
+- Secondary keywords:
+- Category:
+- Slug:
+- Content type:
+- Search intent:
+- schemaType:
+- Recommended components:
+- AEO angle:
+- FAQ ideas:
+- Internal links:
+
+### P2 Articles
+...
+
+### P3 Articles
+...
+
+### Link Map
+- Pillar -> cluster:
+- Cluster -> pillar:
+- Cluster -> cluster:
+- Category links:
+```
 
 ## Best Practices
 
-- ✅ **Do:** Assign every cluster article a unique Danish target keyword — no overlap
-- ✅ **Do:** Include product reviews, comparisons, buyer guides, explainers, and cost/energy articles where relevant
-- ✅ **Do:** Include at least one article for each major search intent: information, comparison, commercial investigation, and local/installer intent when relevant
-- ✅ **Do:** Flag the 2 highest AEO-opportunity articles for priority writing
-- ✅ **Do:** Plan soft conversion paths toward future lead generation without making every article sales-heavy
-- ❌ **Don't:** Let any article become an orphan — every article links to at least one other
-- ❌ **Don't:** Target the same keyword on both the pillar and a cluster article
-- ❌ **Don't:** Build only generic explainers; this site needs review, comparison, buying, and practical decision content
-
-## Common Pitfalls
-
-- **Problem:** Cluster articles all target similar keywords and cannibalise each other
-  **Solution:** Run a uniqueness check — every article needs a distinct keyword with no semantic overlap.
-
-- **Problem:** No AEO content in the cluster
-  **Solution:** At least 2 articles must be structured as direct-answer pages (FAQ or "What Is" explainer).
+- Do assign every article a unique Danish target keyword.
+- Do prevent cannibalisation between pillar, category, and cluster pages.
+- Do plan components upfront so the writer can produce structured MDX quickly.
+- Do include at least two AEO-heavy articles per cluster.
+- Do include review, comparison, buying, and practical decision content, not only generic explainers.
+- Do plan soft conversion paths toward future installers/contractors only where useful.
+- Do not create orphan articles.
+- Do not target the same keyword on both a pillar and a cluster article.
 
 ## Related Skills
 
-- `@seo-aeo-blog-writer` — writes the Priority 1 cluster articles
-- `@seo-aeo-internal-linking` — builds the detailed link map from cluster output
-
-## Additional Resources
-
-- [SEO-AEO Engine Repository](https://github.com/mrprewsh/seo-aeo-engine)
-- [Full Content Cluster SKILL.md](https://github.com/mrprewsh/seo-aeo-engine/blob/main/.agent/skills/content-cluster/SKILL.md)
+- `@seo-aeo-blog-writer` writes the planned MDX articles.
+- `@seo-aeo-internal-linking` turns the cluster into detailed link placements.
+- `@seo-aeo-content-quality-auditor` audits article quality after writing.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only for Danish indoor climate content planning.
+- Do not treat keyword plans as final search-volume data unless actual research is provided.
+- Ask for clarification if the pillar topic or business priority is unclear.
