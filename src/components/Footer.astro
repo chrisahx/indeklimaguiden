@@ -12,6 +12,7 @@ import { CATEGORIES, SITE } from '../lib/constants';
     <nav aria-label="Kategorier">
       <h2>Kategorier</h2>
       {Object.values(CATEGORIES).map((category) => <a href={`/${category.slug}/`}>{category.name}</a>)}
+      <a href="/beregnere/">Beregnere</a>
     </nav>
     <nav aria-label="Information">
       <h2>Information</h2>

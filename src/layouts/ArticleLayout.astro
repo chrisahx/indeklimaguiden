@@ -7,6 +7,7 @@ import ArticleCard from '../components/ArticleCard.astro';
 import BaseLayout from './BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import FAQ from '../components/FAQ.astro';
+import GoogleAd from '../components/GoogleAd.astro';
 import JsonLd from '../components/JsonLd.astro';
 
 interface Props {
@@ -16,6 +17,16 @@ interface Props {
 
 const { article, allArticles } = Astro.props;
 const category = CATEGORIES[article.data.category];
+const topAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE_TOP;
+const inArticleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE_IN_CONTENT;
+const bottomAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE_BOTTOM;
+const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE_LEFT_RAIL;
+const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE_RIGHT_RAIL;
+const showTopAd = import.meta.env.DEV || topAdSlot;
+const showInArticleAd = import.meta.env.DEV || inArticleAdSlot;
+const showBottomAd = import.meta.env.DEV || bottomAdSlot;
+const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
+const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
 const breadcrumbs = [
   { name: 'Forside', url: '/' },
   { name: category.name, url: `/${category.slug}/` },
@@ -42,10 +53,38 @@ const related = relatedArticles(article, allArticles);
         {article.data.updatedDate && <time datetime={article.data.updatedDate.toISOString()}>Opdateret {article.data.updatedDate.toLocaleDateString('da-DK')}</time>}
       </div>
     </div>
-    <div class="reading article-body">
-      <slot />
-      <FAQ items={article.data.faq} />
+
+    {showTopAd && (
+      <aside class="container article-top-ad" aria-label="Annonce">
+        <GoogleAd slotId={topAdSlot} className="article-wide-ad" />
+      </aside>
+    )}
+
+    <div class:list={['article-content-layout', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
+      {showLeftRailAd && (
+        <aside class="rail-ad left-rail" aria-label="Annonce">
+          <GoogleAd slotId={leftRailAdSlot} className="article-rail-ad" />
+        </aside>
+      )}
+
+      <div class="reading article-body">
+        <slot />
+        {showInArticleAd && <GoogleAd slotId={inArticleAdSlot} className="article-inline-ad" />}
+        <FAQ items={article.data.faq} />
+      </div>
+
+      {showRightRailAd && (
+        <aside class="rail-ad right-rail" aria-label="Annonce">
+          <GoogleAd slotId={rightRailAdSlot} className="article-rail-ad" />
+        </aside>
+      )}
     </div>
+
+    {showBottomAd && (
+      <aside class="container article-bottom-ad" aria-label="Annonce">
+        <GoogleAd slotId={bottomAdSlot} className="article-wide-ad" />
+      </aside>
+    )}
   </article>
   {related.length > 0 && (
     <section class="container related section">
@@ -66,8 +105,26 @@ const related = relatedArticles(article, allArticles);
   .lead { color: var(--color-muted); font-size: clamp(1.14rem, 2vw, 1.32rem); line-height: 1.65; }
   .meta { display: flex; flex-wrap: wrap; gap: 0.75rem 1.2rem; margin: 1rem 0; color: var(--color-muted); font-size: 0.95rem; }
   .meta time { border-radius: 999px; padding: 0.32rem 0.7rem; background: rgba(255, 255, 255, 0.72); border: 1px solid var(--color-border); }
+  .article-top-ad { margin-top: 2rem; }
+  :global(.article-wide-ad) { min-height: 92px; }
+  .article-content-layout { margin-top: 2.25rem; }
+  .article-content-layout.has-rail-ads {
+    display: grid;
+    grid-template-columns: minmax(140px, 1fr) minmax(0, var(--reading)) minmax(140px, 1fr);
+    gap: clamp(1rem, 3vw, 2rem);
+    width: min(1420px, calc(100% - 40px));
+    margin-inline: auto;
+    align-items: start;
+  }
+  .article-content-layout.has-rail-ads .reading { width: 100%; }
+  .rail-ad { position: sticky; top: 104px; min-width: 0; }
+  :global(.article-rail-ad) { min-height: 600px; }
+  .left-rail { grid-column: 1; }
+  .article-body { grid-column: 2; }
+  .right-rail { grid-column: 3; }
+  :global(.article-inline-ad) { min-height: 120px; margin: 2.5rem 0; }
+  .article-bottom-ad { margin-top: 2rem; }
   .article-body {
-    margin-top: 2.25rem;
     padding: clamp(1.35rem, 4vw, 2.75rem);
     background: #fff;
     border: 1px solid rgba(217, 229, 232, 0.7);
@@ -75,4 +132,8 @@ const related = relatedArticles(article, allArticles);
     box-shadow: 0 1px 2px rgba(6, 25, 35, 0.025);
   }
   .related h2 { margin-top: 0; }
+  @media (max-width: 920px) {
+    .article-content-layout.has-rail-ads { display: block; width: auto; }
+    .rail-ad { display: none; }
+  }
 </style>

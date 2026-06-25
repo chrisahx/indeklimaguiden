@@ -9,6 +9,7 @@ import { CATEGORIES, SITE } from '../lib/constants';
     </a>
     <nav class="nav" aria-label="Primær navigation">
       {Object.values(CATEGORIES).map((category) => <a href={`/${category.slug}/`}>{category.name}</a>)}
+      <a href="/beregnere/">Beregnere</a>
     </nav>
   </div>
 </header>

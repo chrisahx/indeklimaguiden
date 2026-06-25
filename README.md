@@ -1,43 +1,125 @@
-# Astro Starter Kit: Minimal
+# Indeklima Guiden
+
+Astro site for Danish guides, articles, calculators, and SEO/AEO content about aircondition, varmepumper, and indoor climate.
+
+## Commands
+
+Run commands from the project root.
+
+| Command | Action |
+| :-- | :-- |
+| `npm install` | Install dependencies |
+| `npm run dev` | Start local dev server |
+| `npm run build` | Build production site to `dist/` and generate Pagefind index |
+| `npm run build:astro` | Build Astro only |
+| `npm run preview` | Preview production build locally |
+| `npm run astro ...` | Run Astro CLI commands |
+
+When starting the dev server in this workspace, prefer:
 
 ```sh
-npm create astro@latest -- --template minimal
+astro dev --background
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Manage it with `astro dev status`, `astro dev logs`, and `astro dev stop`.
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+## Project Structure
 
 ```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+src/
+├── components/        Shared Astro components
+├── content/articles/  MDX articles
+├── layouts/           Page/article layouts
+├── lib/               SEO, constants, structured data, article helpers
+├── pages/             Astro routes
+└── styles/            Global CSS
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Important routes:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Route | File |
+| :-- | :-- |
+| `/` | `src/pages/index.astro` |
+| `/aircondition/` | `src/pages/aircondition/index.astro` |
+| `/varmepumper/` | `src/pages/varmepumper/index.astro` |
+| `/indeklima/` | `src/pages/indeklima/index.astro` |
+| `/beregnere/` | `src/pages/beregnere/index.astro` |
+| `/beregnere/aircondition-varmepumpe-stoerrelse/` | `src/pages/beregnere/aircondition-varmepumpe-stoerrelse.astro` |
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Google AdSense
 
-## 🧞 Commands
+The site uses manual AdSense placements through `src/components/GoogleAd.astro`.
 
-All commands are run from the root of the project, from a terminal:
+In development, ad positions render visible `Annonce` placeholders even without AdSense configuration. In production, ad positions render only when both the AdSense client and the relevant slot ID are configured.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+### Required Client ID
 
-## 👀 Want to learn more?
+Set this to your Google AdSense publisher client ID:
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```sh
+PUBLIC_GOOGLE_ADSENSE_CLIENT="ca-pub-XXXXXXXXXXXXXXXX"
+```
+
+This loads the AdSense script in `src/layouts/BaseLayout.astro`:
+
+```html
+https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX
+```
+
+### Calculator Ad Slots
+
+These control ad placements on `/beregnere/aircondition-varmepumpe-stoerrelse/`.
+
+| Env var | Placement |
+| :-- | :-- |
+| `PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR` | Ad beside the calculator form/result on desktop |
+| `PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE` | Wide ad between calculator and article content |
+| `PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE` | In-content ad inside the calculator article content |
+| `PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL` | Left rail ad beside calculator article content on desktop |
+| `PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL` | Right rail ad beside calculator article content on desktop |
+
+### Article Ad Slots
+
+These control ad placements for MDX article pages using `src/layouts/ArticleLayout.astro`.
+
+| Env var | Placement |
+| :-- | :-- |
+| `PUBLIC_ADSENSE_SLOT_ARTICLE_TOP` | Wide ad after the article hero/meta area |
+| `PUBLIC_ADSENSE_SLOT_ARTICLE_IN_CONTENT` | In-content ad before the FAQ section |
+| `PUBLIC_ADSENSE_SLOT_ARTICLE_BOTTOM` | Wide ad after the article body |
+| `PUBLIC_ADSENSE_SLOT_ARTICLE_LEFT_RAIL` | Left rail ad beside article content on desktop |
+| `PUBLIC_ADSENSE_SLOT_ARTICLE_RIGHT_RAIL` | Right rail ad beside article content on desktop |
+
+### Example `.env`
+
+```sh
+PUBLIC_GOOGLE_ADSENSE_CLIENT="ca-pub-XXXXXXXXXXXXXXXX"
+
+PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR="1111111111"
+PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE="2222222222"
+PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE="3333333333"
+PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL="4444444444"
+PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL="5555555555"
+
+PUBLIC_ADSENSE_SLOT_ARTICLE_TOP="6666666666"
+PUBLIC_ADSENSE_SLOT_ARTICLE_IN_CONTENT="7777777777"
+PUBLIC_ADSENSE_SLOT_ARTICLE_BOTTOM="8888888888"
+PUBLIC_ADSENSE_SLOT_ARTICLE_LEFT_RAIL="9999999999"
+PUBLIC_ADSENSE_SLOT_ARTICLE_RIGHT_RAIL="0000000000"
+```
+
+### How To Enable Google Ads
+
+1. Create or open your site in Google AdSense.
+2. Get your publisher client ID, formatted like `ca-pub-XXXXXXXXXXXXXXXX`.
+3. Create ad units in AdSense for the placements you want to use.
+4. Copy each ad unit slot ID into the matching env var.
+5. Add the env vars to your hosting provider.
+6. Deploy a production build.
+7. Confirm that AdSense has approved the domain and that ads are allowed to serve.
+
+Only configured slots render in production. If an env var is missing, that placement is omitted from the HTML.
+
+## Notes
+
+Rail ads are desktop-only and hidden on smaller screens. This avoids crowding mobile layouts and keeps the calculator/article content readable.

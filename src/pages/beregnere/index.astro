@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import { breadcrumbsJsonLd } from '../../lib/structured-data';
+
+const breadcrumbs = [
+  { name: 'Forside', url: '/' },
+  { name: 'Beregnere', url: '/beregnere/' },
+];
+---
+
+<BaseLayout
+  title="Beregnere til aircondition, varmepumper og indeklima"
+  description="Praktiske beregnere til danske hjem. Beregn blandt andet hvor stor aircondition eller varmepumpe du bør kigge efter."
+  path="/beregnere/"
+>
+  <section class="section container page-head">
+    <div>
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="pill">Beregnere</span>
+      <h1>Beregnere til bedre indeklima</h1>
+      <p>Brug vores beregnere som et praktisk første estimat, før du vælger aircondition, varmepumpe eller andre løsninger til hjemmet.</p>
+    </div>
+  </section>
+
+  <section class="container calculators">
+    <article class="surface calculator-card">
+      <span class="card-kicker">Vigtig beregner</span>
+      <h2><a href="/beregnere/aircondition-varmepumpe-stoerrelse/">Hvor stor aircondition eller varmepumpe skal jeg bruge?</a></h2>
+      <p>Indtast rumstørrelse, loftshøjde, isolering, solindfald og vinduer, og få et estimat på anbefalet kapacitet i kW.</p>
+      <a class="button" href="/beregnere/aircondition-varmepumpe-stoerrelse/">Åbn beregner</a>
+    </article>
+  </section>
+
+  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+</BaseLayout>
+
+<style>
+  .page-head { padding-bottom: 2rem; }
+  .page-head p { max-width: 760px; color: var(--color-muted); font-size: 1.16rem; }
+  .calculators { padding-bottom: clamp(3rem, 7vw, 6rem); }
+  .calculator-card { max-width: 780px; padding: clamp(1.25rem, 3vw, 2rem); }
+  .calculator-card h2 { margin: 0.8rem 0 0.75rem; font-size: clamp(1.7rem, 3.4vw, 2.5rem); }
+  .calculator-card h2 a { color: var(--color-primary); text-decoration: none; }
+  .calculator-card p { color: var(--color-muted); font-size: 1.08rem; }
+  .card-kicker { width: fit-content; border-radius: 999px; padding: 0.22rem 0.6rem; background: var(--color-warm-soft); color: #8a5200; font-size: 0.76rem; font-weight: 850; letter-spacing: 0.06em; text-transform: uppercase; }
+</style>

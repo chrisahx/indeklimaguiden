@@ -1,0 +1,56 @@
+---
+interface Props {
+  slotId?: string;
+  className?: string;
+  format?: string;
+  fullWidthResponsive?: boolean;
+}
+
+const {
+  slotId,
+  className = '',
+  format = 'auto',
+  fullWidthResponsive = true,
+} = Astro.props;
+const client = import.meta.env.PUBLIC_GOOGLE_ADSENSE_CLIENT;
+const shouldRenderAd = Boolean(client && slotId);
+const shouldRenderPlaceholder = import.meta.env.DEV && !shouldRenderAd;
+---
+
+{shouldRenderAd && (
+  <div class:list={['google-ad', className]}>
+    <ins
+      class="adsbygoogle"
+      style="display:block"
+      data-ad-client={client}
+      data-ad-slot={slotId}
+      data-ad-format={format}
+      data-full-width-responsive={fullWidthResponsive ? 'true' : 'false'}
+    ></ins>
+    <script is:inline>
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+)}
+
+{shouldRenderPlaceholder && (
+  <div class:list={['google-ad', 'google-ad-placeholder', className]}>
+    <span>Annonce</span>
+  </div>
+)}
+
+<style>
+  .google-ad { width: 100%; overflow: hidden; }
+  .google-ad-placeholder {
+    display: grid;
+    place-items: center;
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.46);
+    color: var(--color-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+</style>
