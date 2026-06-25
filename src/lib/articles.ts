@@ -2,6 +2,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { CATEGORIES, type CategoryKey } from './constants';
 
 export type Article = CollectionEntry<'articles'>;
+export type ArticleType = Article['data']['articleType'];
 
 export const includeDrafts = !import.meta.env.PROD;
 
@@ -18,6 +19,16 @@ export async function getArticles() {
 export async function getArticlesByCategory(category: CategoryKey) {
   const articles = await getArticles();
   return articles.filter((article) => article.data.category === category);
+}
+
+export async function getArticlesByType(articleType: ArticleType) {
+  const articles = await getArticles();
+  return articles.filter((article) => article.data.articleType === articleType);
+}
+
+export async function getArticlesByCategoryAndType(category: CategoryKey, articleType: ArticleType) {
+  const articles = await getArticlesByCategory(category);
+  return articles.filter((article) => article.data.articleType === articleType);
 }
 
 export function getCategory(category: CategoryKey) {

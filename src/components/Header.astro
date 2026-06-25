@@ -1,5 +1,32 @@
 ---
 import { CATEGORIES, SITE } from '../lib/constants';
+
+const categoryLinks = Object.values(CATEGORIES).map((category) => ({
+  label: category.name,
+  slug: category.slug,
+}));
+
+const navGroups = [
+  {
+    label: 'Guides',
+    href: '/guides/',
+    links: categoryLinks.map((category) => ({ label: category.label, href: `/guides/${category.slug}/` })),
+  },
+  {
+    label: 'Anmeldelser',
+    href: '/anmeldelser/',
+    links: categoryLinks.map((category) => ({ label: category.label, href: `/anmeldelser/${category.slug}/` })),
+  },
+  {
+    label: 'Beregnere',
+    href: '/beregnere/',
+    links: [
+      { label: 'Beregner 1', href: '/beregnere/aircondition-varmepumpe-stoerrelse/' },
+      { label: 'Beregner 2', href: '/beregnere/' },
+      { label: 'Beregner 3', href: '/beregnere/' },
+    ],
+  },
+];
 ---
 
 <header class="site-header">
@@ -7,19 +34,88 @@ import { CATEGORIES, SITE } from '../lib/constants';
     <a class="brand" href="/" aria-label={`${SITE.name} forside`}>
       <span>{SITE.name}</span>
     </a>
-    <nav class="nav" aria-label="Primær navigation">
-      {Object.values(CATEGORIES).map((category) => <a href={`/${category.slug}/`}>{category.name}</a>)}
-      <a href="/beregnere/">Beregnere</a>
+
+    <nav class="nav desktop-nav" aria-label="Primær navigation">
+      {navGroups.map((group) => (
+        <div class="nav-group">
+          <a class="nav-trigger" href={group.href}>
+            <span>{group.label}</span>
+            <span aria-hidden="true">⌄</span>
+          </a>
+          <div class="dropdown" aria-label={`${group.label} undermenu`}>
+            {group.links.map((link) => <a href={link.href}>{link.label}</a>)}
+          </div>
+        </div>
+      ))}
     </nav>
+
+    <button class="mobile-menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-button>
+      <span>Menu</span>
+      <span class="menu-icon" aria-hidden="true"></span>
+    </button>
   </div>
+
+  <nav id="mobile-menu" class="mobile-menu container" aria-label="Mobil navigation" hidden data-mobile-menu>
+    {navGroups.map((group, index) => (
+      <section class="mobile-group">
+        <button class="mobile-group-trigger" type="button" aria-expanded={index === 0 ? 'true' : 'false'} aria-controls={`mobile-group-${index}`} data-mobile-group-trigger>
+          <span>{group.label}</span>
+          <span aria-hidden="true">+</span>
+        </button>
+        <div id={`mobile-group-${index}`} class="mobile-group-links" hidden={index !== 0} data-mobile-group-links>
+          <a class="mobile-overview" href={group.href}>Alle {group.label.toLowerCase()}</a>
+          {group.links.map((link) => <a href={link.href}>{link.label}</a>)}
+        </div>
+      </section>
+    ))}
+  </nav>
 </header>
+
+<script>
+  const menuButton = document.querySelector('[data-mobile-menu-button]');
+  const mobileMenu = document.querySelector('[data-mobile-menu]');
+  const groupTriggers = document.querySelectorAll('[data-mobile-group-trigger]');
+
+  function setMenuOpen(open) {
+    if (!(menuButton instanceof HTMLButtonElement) || !(mobileMenu instanceof HTMLElement)) return;
+
+    menuButton.setAttribute('aria-expanded', String(open));
+    mobileMenu.hidden = !open;
+  }
+
+  menuButton?.addEventListener('click', () => {
+    const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
+    setMenuOpen(!isOpen);
+  });
+
+  groupTriggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      if (!(trigger instanceof HTMLButtonElement)) return;
+
+      const linksId = trigger.getAttribute('aria-controls');
+      const links = linksId ? document.getElementById(linksId) : null;
+      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+
+      trigger.setAttribute('aria-expanded', String(!isOpen));
+      if (links) links.hidden = isOpen;
+    });
+  });
+
+  mobileMenu?.addEventListener('click', (event) => {
+    if (event.target instanceof HTMLAnchorElement) setMenuOpen(false);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.matchMedia('(min-width: 981px)').matches) setMenuOpen(false);
+  });
+</script>
 
 <style>
   .site-header {
     position: sticky;
     top: 0;
     z-index: 20;
-    background: rgba(244, 247, 248, 0.82);
+    background: rgba(244, 247, 248, 0.88);
     border-bottom: 1px solid var(--color-border);
     backdrop-filter: blur(16px);
   }
@@ -46,39 +142,184 @@ import { CATEGORIES, SITE } from '../lib/constants';
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 0.35rem;
-    font-size: 0.95rem;
-    font-weight: 700;
+    gap: 0.45rem;
     flex: 1;
+    font-size: 0.95rem;
+    font-weight: 800;
   }
 
-  .nav a {
+  .nav-group {
+    position: relative;
+    padding-block: 0.8rem;
+  }
+
+  .nav-trigger,
+  .mobile-menu-button,
+  .mobile-group-trigger,
+  .mobile-menu a {
     color: var(--color-primary);
-    border-radius: 999px;
-    padding: 0.55rem 0.8rem;
     text-decoration: none;
+  }
+
+  .nav-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 999px;
+    padding: 0.58rem 0.86rem;
     transition: background 160ms ease, color 160ms ease;
   }
 
-  .nav a:hover {
+  .nav-trigger:hover,
+  .nav-trigger:focus-visible,
+  .nav-group:focus-within .nav-trigger,
+  .nav-group:hover .nav-trigger {
     background: rgba(32, 199, 215, 0.12);
     color: var(--color-accent-dark);
   }
 
+  .dropdown {
+    position: absolute;
+    top: calc(100% - 0.45rem);
+    left: 50%;
+    min-width: 220px;
+    padding: 0.45rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: var(--shadow-card);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 0.4rem);
+    transition: opacity 160ms ease, transform 160ms ease;
+  }
+
+  .nav-group:hover .dropdown,
+  .nav-group:focus-within .dropdown {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+  }
+
+  .dropdown a {
+    display: flex;
+    border-radius: var(--radius-md);
+    padding: 0.75rem 0.85rem;
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .dropdown a:hover,
+  .dropdown a:focus-visible {
+    background: var(--color-accent-soft);
+    color: var(--color-accent-dark);
+  }
+
+  .mobile-menu-button {
+    display: none;
+    align-items: center;
+    gap: 0.65rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.65rem 0.85rem;
+    background: rgba(255, 255, 255, 0.72);
+    font: inherit;
+    font-weight: 850;
+    cursor: pointer;
+  }
+
+  .menu-icon,
+  .menu-icon::before,
+  .menu-icon::after {
+    display: block;
+    width: 1.15rem;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    content: '';
+  }
+
+  .menu-icon::before { transform: translateY(-6px); }
+  .menu-icon::after { transform: translateY(4px); }
+
+  .mobile-menu {
+    padding-bottom: 1rem;
+  }
+
+  .mobile-menu[hidden] {
+    display: none;
+  }
+
+  .mobile-group {
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .mobile-group + .mobile-group {
+    margin-top: 0.7rem;
+  }
+
+  .mobile-group-trigger {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    border: 0;
+    padding: 1rem;
+    background: transparent;
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  .mobile-group-trigger[aria-expanded='true'] span:last-child {
+    transform: rotate(45deg);
+  }
+
+  .mobile-group-trigger span:last-child {
+    transition: transform 160ms ease;
+  }
+
+  .mobile-group-links {
+    display: grid;
+    gap: 0.35rem;
+    padding: 0 0.65rem 0.75rem;
+  }
+
+  .mobile-group-links[hidden] {
+    display: none;
+  }
+
+  .mobile-group-links a {
+    border-radius: var(--radius-md);
+    padding: 0.78rem 0.85rem;
+    font-weight: 800;
+  }
+
+  .mobile-group-links a:hover,
+  .mobile-group-links a:focus-visible {
+    background: var(--color-accent-soft);
+    color: var(--color-accent-dark);
+  }
+
+  .mobile-overview {
+    background: rgba(32, 199, 215, 0.11);
+  }
+
   @media (max-width: 980px) {
     .header-inner {
-      align-items: flex-start;
-      flex-direction: column;
-      padding-block: 0.85rem;
+      min-height: 72px;
     }
 
-    .nav {
-      width: 100%;
-      justify-content: flex-start;
-      overflow-x: auto;
-      padding-bottom: 0.25rem;
-      white-space: nowrap;
+    .desktop-nav {
+      display: none;
     }
 
+    .mobile-menu-button {
+      display: inline-flex;
+    }
   }
 </style>

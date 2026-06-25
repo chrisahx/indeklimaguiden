@@ -1,0 +1,35 @@
+---
+import ArticleCard from '../../components/ArticleCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getArticlesByCategoryAndType } from '../../lib/articles';
+import { CATEGORIES, type CategoryKey } from '../../lib/constants';
+
+export function getStaticPaths() {
+  return Object.values(CATEGORIES).map((category) => ({
+    params: { category: category.slug },
+    props: { categoryKey: category.slug as CategoryKey },
+  }));
+}
+
+const { categoryKey } = Astro.props;
+const category = CATEGORIES[categoryKey as CategoryKey];
+const articles = await getArticlesByCategoryAndType(categoryKey as CategoryKey, 'guide');
+---
+
+<BaseLayout title={`${category.name} guides`} description={`Praktiske guides om ${category.name.toLowerCase()} til danske hjem.`} path={`/guides/${category.slug}/`}>
+  <section class="section container page-head">
+    <span class="pill">{category.name} guides</span>
+    <h1>Guides om {category.name.toLowerCase()}</h1>
+    <p>{category.description}</p>
+  </section>
+
+  <section class="container article-list">
+    {articles.length > 0 ? <div class="grid">{articles.map((article) => <ArticleCard article={article} />)}</div> : <p>Der er endnu ingen publicerede guides i denne kategori.</p>}
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head { padding-bottom: 2rem; }
+  .page-head p { max-width: 780px; color: var(--color-muted); font-size: 1.16rem; }
+  .article-list { padding-bottom: clamp(3rem, 7vw, 6rem); }
+</style>

@@ -1,0 +1,48 @@
+---
+import ArticleCard from '../../components/ArticleCard.astro';
+import CategoryCard from '../../components/CategoryCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getArticlesByType } from '../../lib/articles';
+import { CATEGORIES } from '../../lib/constants';
+
+const articles = await getArticlesByType('anmeldelse');
+---
+
+<BaseLayout
+  title="Anmeldelser af aircondition, varmepumper og indeklima-produkter"
+  description="Find anmeldelser og vurderinger af produkter til aircondition, varmepumper og bedre indeklima."
+  path="/anmeldelser/"
+>
+  <section class="section container page-head">
+    <span class="pill">Anmeldelser</span>
+    <h1>Anmeldelser til bedre valg</h1>
+    <p>Her samler vi produktanmeldelser og vurderinger, så du kan sammenligne løsninger til køling, varme og indeklima på et mere praktisk grundlag.</p>
+  </section>
+
+  <section class="container section-list">
+    <div class="section-heading">
+      <span class="pill">Vælg område</span>
+      <h2>Anmeldelser efter kategori</h2>
+    </div>
+    <div class="grid">
+      {Object.values(CATEGORIES).map((category) => <CategoryCard title={category.name} description={category.description} href={`/anmeldelser/${category.slug}/`} cta="Se anmeldelser" />)}
+    </div>
+  </section>
+
+  <section class="container section-list">
+    <div class="section-heading">
+      <span class="pill">Seneste</span>
+      <h2>Alle anmeldelser</h2>
+    </div>
+    {articles.length > 0 ? <div class="grid">{articles.map((article) => <ArticleCard article={article} />)}</div> : <p>Der er endnu ingen publicerede anmeldelser.</p>}
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head { padding-bottom: 2rem; }
+  .page-head p { max-width: 780px; color: var(--color-muted); font-size: 1.16rem; }
+  .section-list { padding-bottom: clamp(3rem, 7vw, 6rem); }
+  .section-list + .section-list { padding-top: 0; }
+  .section-heading { margin-bottom: 1.5rem; }
+  .section-heading h2 { margin-top: 0.8rem; }
+</style>

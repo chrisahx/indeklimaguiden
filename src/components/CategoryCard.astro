@@ -3,16 +3,17 @@ interface Props {
   title: string;
   description: string;
   href: string;
+  cta?: string;
 }
 
-const { title, description, href } = Astro.props;
+const { title, description, href, cta = 'Se guides' } = Astro.props;
 ---
 
 <a class="category-card surface" href={href}>
   <span class="icon" aria-hidden="true">{title.slice(0, 1)}</span>
   <h2>{title}</h2>
   <p>{description}</p>
-  <span class="card-link">Se guides</span>
+  <span class="card-link">{cta}</span>
 </a>
 
 <style>

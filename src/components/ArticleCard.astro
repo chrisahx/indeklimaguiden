@@ -6,10 +6,13 @@ import { CATEGORIES } from '../lib/constants';
 interface Props { article: Article }
 const { article } = Astro.props;
 const category = CATEGORIES[article.data.category];
+const typeLabel = article.data.articleType === 'anmeldelse' ? 'Anmeldelse' : 'Guide';
+const ctaLabel = article.data.articleType === 'anmeldelse' ? 'Læs anmeldelse' : 'Læs guide';
 ---
 
 <article class="article-card surface">
   <div class="card-meta">
+    <span>{typeLabel}</span>
     <span>{category.name}</span>
     {article.data.draft && <span class="draft">Kladde</span>}
   </div>
@@ -17,15 +20,15 @@ const category = CATEGORIES[article.data.category];
   <p>{article.data.description}</p>
   <div class="card-footer">
     <time datetime={article.data.pubDate.toISOString()}>{article.data.pubDate.toLocaleDateString('da-DK')}</time>
-    <a class="read-more" href={articleUrl(article)} aria-label={`Læs guiden: ${article.data.title}`}>Læs guide</a>
+    <a class="read-more" href={articleUrl(article)} aria-label={`${ctaLabel}: ${article.data.title}`}>{ctaLabel}</a>
   </div>
 </article>
 
 <style>
   .article-card { display: flex; min-height: 245px; flex-direction: column; padding: 1.2rem; transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease; }
   .article-card:hover { border-color: var(--color-accent); box-shadow: var(--shadow-card); transform: translateY(-4px); }
-  .card-meta { display: flex; justify-content: space-between; gap: 0.75rem; color: var(--color-accent-dark); font-size: 0.76rem; font-weight: 850; letter-spacing: 0.06em; text-transform: uppercase; }
-  .card-meta span:first-child { border-radius: 999px; padding: 0.22rem 0.55rem; background: var(--color-accent-soft); }
+  .card-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.55rem; color: var(--color-accent-dark); font-size: 0.76rem; font-weight: 850; letter-spacing: 0.06em; text-transform: uppercase; }
+  .card-meta span { border-radius: 999px; padding: 0.22rem 0.55rem; background: var(--color-accent-soft); }
   h2 { margin: 0.9rem 0 0.65rem; font-size: 1.32rem; }
   h2 a { color: var(--color-primary); text-decoration: none; }
   p { color: var(--color-muted); }

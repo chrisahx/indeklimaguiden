@@ -1,11 +1,12 @@
 ---
 import ArticleCard from '../../components/ArticleCard.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getArticlesByCategory } from '../../lib/articles';
+import { getArticlesByCategoryAndType } from '../../lib/articles';
 import { CATEGORIES } from '../../lib/constants';
 
 const category = CATEGORIES.varmepumper;
-const articles = await getArticlesByCategory('varmepumper');
+const guides = await getArticlesByCategoryAndType('varmepumper', 'guide');
+const anmeldelser = await getArticlesByCategoryAndType('varmepumper', 'anmeldelse');
 const topics = ['Luft til luft-varmepumpe pris', 'Elforbrug og SCOP', 'Installation og placering', 'Sommerkøling og vinterdrift'];
 ---
 
@@ -24,10 +25,17 @@ const topics = ['Luft til luft-varmepumpe pris', 'Elforbrug og SCOP', 'Installat
   </section>
   <section class="container article-list">
     <div class="section-heading">
-      <span class="pill">Læs næste</span>
+      <span class="pill">Guides</span>
       <h2>Guides om pris, drift og installation</h2>
     </div>
-    {articles.length > 0 ? <div class="grid">{articles.map((article) => <ArticleCard article={article} />)}</div> : <p>Der er endnu ingen publicerede artikler i denne kategori.</p>}
+    {guides.length > 0 ? <div class="grid">{guides.map((article) => <ArticleCard article={article} />)}</div> : <p>Der er endnu ingen publicerede guides i denne kategori.</p>}
+  </section>
+  <section class="container article-list compact">
+    <div class="section-heading">
+      <span class="pill">Anmeldelser</span>
+      <h2>Anmeldelser af varmepumper</h2>
+    </div>
+    {anmeldelser.length > 0 ? <div class="grid">{anmeldelser.map((article) => <ArticleCard article={article} />)}</div> : <p>Der er endnu ingen publicerede anmeldelser i denne kategori.</p>}
   </section>
 </BaseLayout>
 
@@ -38,6 +46,7 @@ const topics = ['Luft til luft-varmepumpe pris', 'Elforbrug og SCOP', 'Installat
   .topic-panel h2 { margin: 0 0 1rem; font-size: 1.25rem; }
   .topic-panel span { display: block; border-top: 1px solid var(--color-border); padding: 0.75rem 0; color: var(--color-primary); font-weight: 800; }
   .article-list { padding-bottom: clamp(3rem, 7vw, 6rem); }
+  .article-list.compact { padding-top: 0; }
   .section-heading { margin-bottom: 1.5rem; }
   .section-heading h2 { margin-top: 0.8rem; }
   @media (max-width: 860px) { .page-head { grid-template-columns: 1fr; } }
