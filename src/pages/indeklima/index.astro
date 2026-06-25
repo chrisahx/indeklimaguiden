@@ -1,0 +1,22 @@
+---
+import ArticleCard from '../../components/ArticleCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getArticlesByCategory } from '../../lib/articles';
+import { CATEGORIES } from '../../lib/constants';
+
+const category = CATEGORIES.indeklima;
+const articles = await getArticlesByCategory('indeklima');
+---
+
+<BaseLayout title="Indeklima" description={category.description} path="/indeklima/">
+  <section class="section container page-head">
+    <span class="pill">Guidekategori</span>
+    <h1>{category.name}</h1>
+    <p>{category.description}</p>
+  </section>
+  <section class="container">
+    {articles.length > 0 ? <div class="grid">{articles.map((article) => <ArticleCard article={article} />)}</div> : <p>Der er endnu ingen publicerede artikler i denne kategori.</p>}
+  </section>
+</BaseLayout>
+
+<style>.page-head p { max-width: 720px; color: var(--color-muted); font-size: 1.2rem; }</style>

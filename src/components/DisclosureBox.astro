@@ -1,0 +1,16 @@
+---
+interface Props { title?: string }
+const { title = 'Redaktionel transparens' } = Astro.props;
+---
+
+<aside class="disclosure">
+  <strong>{title}</strong>
+  <slot>
+    Indeklima Guiden er en redaktionel guide. Artikler kan i fremtiden indeholde annoncer eller affiliate-links, men vurderinger bør være baseret på specifikationer, relevans og praktisk egnethed til danske hjem.
+  </slot>
+</aside>
+
+<style>
+  .disclosure { margin: 1.5rem 0; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1rem; background: #fff7ed; color: var(--color-primary); font-size: 0.95rem; }
+  strong { display: block; margin-bottom: 0.35rem; }
+</style>

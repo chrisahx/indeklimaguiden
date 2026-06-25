@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../lib/constants';
+---
+
+<BaseLayout title="Kontakt" description="Kontakt Indeklima Guiden." path="/kontakt/">
+  <section class="section reading article-body">
+    <h1>Kontakt</h1>
+    <p>Har du spørgsmål, rettelser eller input til en artikel, kan du kontakte os på:</p>
+    <p><a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a></p>
+  </section>
+</BaseLayout>

@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../lib/constants';
+---
+
+<BaseLayout title="Privatlivspolitik" description="Privatlivspolitik for Indeklima Guiden." path="/privatlivspolitik/">
+  <section class="section reading article-body">
+    <h1>Privatlivspolitik</h1>
+    <p>Indeklima Guiden behandler kun personoplysninger i det omfang, det er nødvendigt for at drive og forbedre hjemmesiden.</p>
+    <h2>Google Analytics</h2>
+    <p>Vi bruger kun Google Analytics, hvis du aktivt accepterer analytics-cookies i cookieindstillingerne. Analytics hjælper os med at forstå brugen af siden på et overordnet niveau.</p>
+    <h2>Kontakt</h2>
+    <p>Spørgsmål om privatliv kan sendes til <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>.</p>
+  </section>
+</BaseLayout>

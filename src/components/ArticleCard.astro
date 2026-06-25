@@ -1,0 +1,30 @@
+---
+import type { Article } from '../lib/articles';
+import { articleUrl } from '../lib/articles';
+import { CATEGORIES } from '../lib/constants';
+
+interface Props { article: Article }
+const { article } = Astro.props;
+const category = CATEGORIES[article.data.category];
+---
+
+<article class="article-card surface">
+  <div class="card-meta">
+    <span>{category.name}</span>
+    {article.data.draft && <span class="draft">Kladde</span>}
+  </div>
+  <h2><a href={articleUrl(article)}>{article.data.title}</a></h2>
+  <p>{article.data.description}</p>
+  <time datetime={article.data.pubDate.toISOString()}>{article.data.pubDate.toLocaleDateString('da-DK')}</time>
+</article>
+
+<style>
+  .article-card { padding: 1.1rem; transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease; }
+  .article-card:hover { border-color: var(--color-accent); box-shadow: var(--shadow-soft); transform: translateY(-2px); }
+  .card-meta { display: flex; justify-content: space-between; gap: 0.75rem; color: var(--color-accent-dark); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+  h2 { margin: 0.7rem 0 0.5rem; font-size: 1.25rem; }
+  h2 a { color: var(--color-primary); text-decoration: none; }
+  p { color: var(--color-muted); }
+  time { color: var(--color-muted); font-size: 0.9rem; }
+  .draft { color: var(--color-warm); }
+</style>

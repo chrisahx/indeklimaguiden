@@ -1,0 +1,157 @@
+---
+import { SITE } from '../lib/constants';
+
+const gaMeasurementId = SITE.gaMeasurementId;
+---
+
+<div class="cookie-consent" data-cookie-consent hidden>
+  <div class="cookie-card" role="dialog" aria-live="polite" aria-label="Cookieindstillinger">
+    <div class="cookie-summary">
+      <h2>Vi bruger cookies</h2>
+      <p>
+        Vi bruger nødvendige cookies til at gemme dine valg. Med dit samtykke bruger vi også Google Analytics til at forstå, hvordan siden bruges.
+      </p>
+    </div>
+    <div class="cookie-actions" data-cookie-main-actions>
+      <button type="button" class="button" data-cookie-accept>Accepter alle</button>
+      <button type="button" class="button secondary" data-cookie-reject>Afvis valgfrie</button>
+      <button type="button" class="link-button" data-cookie-customize>Tilpas valg</button>
+    </div>
+    <div class="cookie-preferences" data-cookie-preferences hidden>
+      <label><input type="checkbox" checked disabled /> Nødvendige cookies</label>
+      <label><input type="checkbox" data-cookie-analytics /> Analytics cookies</label>
+      <label><input type="checkbox" data-cookie-marketing /> Marketing cookies</label>
+      <div class="cookie-actions">
+        <button type="button" class="button" data-cookie-save>Gem valg</button>
+        <button type="button" class="button secondary" data-cookie-reject>Afvis valgfrie</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ gaMeasurementId }}>
+  const consentKey = 'indeklima-guiden-cookie-consent-v1';
+  const banner = document.querySelector('[data-cookie-consent]');
+  const preferences = document.querySelector('[data-cookie-preferences]');
+  const mainActions = document.querySelector('[data-cookie-main-actions]');
+  const analyticsInput = document.querySelector('[data-cookie-analytics]');
+  const marketingInput = document.querySelector('[data-cookie-marketing]');
+
+  function readConsent() {
+    try {
+      return JSON.parse(localStorage.getItem(consentKey) || 'null');
+    } catch {
+      return null;
+    }
+  }
+
+  function writeConsent(consent) {
+    localStorage.setItem(consentKey, JSON.stringify({ ...consent, version: 1, updatedAt: new Date().toISOString() }));
+  }
+
+  function loadAnalytics() {
+    if (window.__indeklimaGaLoaded || !gaMeasurementId) return;
+    window.__indeklimaGaLoaded = true;
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ window.dataLayer.push(arguments); }
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', gaMeasurementId, { anonymize_ip: true });
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`;
+    document.head.appendChild(script);
+  }
+
+  function applyConsent(consent) {
+    if (consent?.analytics) loadAnalytics();
+  }
+
+  function hideBanner() {
+    banner?.setAttribute('hidden', '');
+  }
+
+  function showBanner() {
+    const current = readConsent();
+    if (analyticsInput) analyticsInput.checked = Boolean(current?.analytics);
+    if (marketingInput) marketingInput.checked = Boolean(current?.marketing);
+    preferences?.setAttribute('hidden', '');
+    mainActions?.removeAttribute('hidden');
+    banner?.removeAttribute('hidden');
+  }
+
+  document.querySelectorAll('[data-cookie-accept]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const consent = { necessary: true, analytics: true, marketing: true };
+      writeConsent(consent);
+      applyConsent(consent);
+      hideBanner();
+    });
+  });
+
+  document.querySelectorAll('[data-cookie-reject]').forEach((button) => {
+    button.addEventListener('click', () => {
+      writeConsent({ necessary: true, analytics: false, marketing: false });
+      hideBanner();
+    });
+  });
+
+  document.querySelector('[data-cookie-customize]')?.addEventListener('click', () => {
+    mainActions?.setAttribute('hidden', '');
+    preferences?.removeAttribute('hidden');
+  });
+
+  document.querySelector('[data-cookie-save]')?.addEventListener('click', () => {
+    const consent = {
+      necessary: true,
+      analytics: Boolean(analyticsInput?.checked),
+      marketing: Boolean(marketingInput?.checked),
+    };
+    writeConsent(consent);
+    applyConsent(consent);
+    hideBanner();
+  });
+
+  document.querySelectorAll('[data-cookie-settings]').forEach((button) => {
+    button.addEventListener('click', showBanner);
+  });
+
+  const consent = readConsent();
+  if (consent) {
+    applyConsent(consent);
+  } else {
+    showBanner();
+  }
+</script>
+
+<style>
+  .cookie-consent {
+    position: fixed;
+    inset: auto 1rem 1rem;
+    z-index: 50;
+  }
+
+  .cookie-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    max-width: 980px;
+    margin-inline: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    background: var(--color-surface);
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+  }
+
+  .cookie-card h2 { margin: 0 0 0.35rem; font-size: 1.1rem; }
+  .cookie-card p { margin: 0; color: var(--color-muted); }
+  .cookie-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem; }
+  .link-button { border: 0; background: transparent; color: var(--color-accent-dark); cursor: pointer; font: inherit; font-weight: 700; }
+  .cookie-preferences { grid-column: 1 / -1; display: grid; gap: 0.75rem; }
+  .cookie-preferences label { display: flex; gap: 0.5rem; align-items: center; }
+
+  @media (max-width: 760px) {
+    .cookie-card { grid-template-columns: 1fr; }
+  }
+</style>

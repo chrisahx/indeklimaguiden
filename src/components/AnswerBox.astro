@@ -1,0 +1,14 @@
+---
+interface Props { title?: string }
+const { title = 'Kort svar' } = Astro.props;
+---
+
+<section class="answer-box">
+  <span class="pill">{title}</span>
+  <div><slot /></div>
+</section>
+
+<style>
+  .answer-box { margin: 2rem 0; border: 1px solid #bae6fd; border-radius: var(--radius-lg); padding: 1.25rem; background: #f0f9ff; }
+  .answer-box :global(p:last-child) { margin-bottom: 0; }
+</style>

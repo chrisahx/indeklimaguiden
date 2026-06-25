@@ -1,0 +1,14 @@
+---
+interface Props { title?: string }
+const { title = 'Eksperttip' } = Astro.props;
+---
+
+<aside class="expert-tip">
+  <strong>{title}</strong>
+  <slot />
+</aside>
+
+<style>
+  .expert-tip { position: relative; margin: 1.75rem 0; border-left: 4px solid var(--color-accent); border-radius: var(--radius-md); padding: 1rem 1rem 1rem 1.2rem; background: #f8fafc; box-shadow: var(--shadow-soft); }
+  strong { display: block; margin-bottom: 0.35rem; color: var(--color-primary); }
+</style>

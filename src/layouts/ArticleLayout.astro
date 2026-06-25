@@ -1,0 +1,70 @@
+---
+import type { Article } from '../lib/articles';
+import { articleUrl, relatedArticles } from '../lib/articles';
+import { CATEGORIES } from '../lib/constants';
+import { breadcrumbsJsonLd, articleJsonLd, faqJsonLd } from '../lib/structured-data';
+import ArticleCard from '../components/ArticleCard.astro';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import DisclosureBox from '../components/DisclosureBox.astro';
+import FAQ from '../components/FAQ.astro';
+import JsonLd from '../components/JsonLd.astro';
+
+interface Props {
+  article: Article;
+  allArticles: Article[];
+}
+
+const { article, allArticles } = Astro.props;
+const category = CATEGORIES[article.data.category];
+const breadcrumbs = [
+  { name: 'Forside', url: '/' },
+  { name: category.name, url: `/${category.slug}/` },
+  { name: article.data.title, url: articleUrl(article) },
+];
+const related = relatedArticles(article, allArticles);
+---
+
+<BaseLayout
+  title={article.data.seoTitle ?? article.data.title}
+  description={article.data.seoDescription ?? article.data.description}
+  path={articleUrl(article)}
+  type="article"
+  noindex={import.meta.env.PROD && article.data.draft}
+>
+  <article class="article-shell">
+    <div class="reading">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="pill">{category.name}{article.data.draft ? ' · Kladde' : ''}</span>
+      <h1>{article.data.title}</h1>
+      <p class="lead">{article.data.description}</p>
+      <div class="meta">
+        <time datetime={article.data.pubDate.toISOString()}>Udgivet {article.data.pubDate.toLocaleDateString('da-DK')}</time>
+        {article.data.updatedDate && <time datetime={article.data.updatedDate.toISOString()}>Opdateret {article.data.updatedDate.toLocaleDateString('da-DK')}</time>}
+      </div>
+      {article.data.commercialDisclosure && <DisclosureBox />}
+    </div>
+    <div class="reading article-body">
+      <slot />
+      <FAQ items={article.data.faq} />
+    </div>
+  </article>
+  {related.length > 0 && (
+    <section class="container related section">
+      <h2>Læs også</h2>
+      <div class="grid">{related.map((item) => <ArticleCard article={item} />)}</div>
+    </section>
+  )}
+  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+  <JsonLd data={articleJsonLd(article)} />
+  {article.data.faq.length > 0 && <JsonLd data={faqJsonLd(article.data.faq)} />}
+</BaseLayout>
+
+<style>
+  .article-shell { padding: 3rem 0 0; }
+  h1 { margin-top: 1rem; }
+  .lead { color: var(--color-muted); font-size: 1.2rem; line-height: 1.65; }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.75rem 1.2rem; margin: 1rem 0; color: var(--color-muted); font-size: 0.95rem; }
+  .article-body { margin-top: 2rem; }
+  .related h2 { margin-top: 0; }
+</style>

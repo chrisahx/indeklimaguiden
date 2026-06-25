@@ -1,0 +1,76 @@
+---
+import { CATEGORIES, SITE } from '../lib/constants';
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="footer-brand" href="/">{SITE.name}</a>
+      <p>Uafhængig, praktisk vejledning om aircondition, varmepumper og indeklima til danske boligejere.</p>
+      <p><a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a></p>
+    </div>
+    <nav aria-label="Kategorier">
+      <h2>Kategorier</h2>
+      {Object.values(CATEGORIES).map((category) => <a href={`/${category.slug}/`}>{category.name}</a>)}
+    </nav>
+    <nav aria-label="Information">
+      <h2>Information</h2>
+      <a href="/om-os/">Om os</a>
+      <a href="/kontakt/">Kontakt</a>
+      <a href="/redaktionelle-retningslinjer/">Redaktionelle retningslinjer</a>
+      <a href="/annoncering-og-affiliate/">Annoncering og affiliate</a>
+      <a href="/privatlivspolitik/">Privatlivspolitik</a>
+      <a href="/cookiepolitik/">Cookiepolitik</a>
+      <button type="button" data-cookie-settings>Cookieindstillinger</button>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 4rem;
+    padding: 3rem 0;
+    background: var(--color-primary);
+    color: #eaf1ff;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .footer-brand {
+    display: inline-block;
+    margin-bottom: 0.8rem;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .site-footer h2 {
+    margin: 0 0 0.8rem;
+    color: #fff;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .site-footer a,
+  .site-footer button {
+    display: block;
+    margin: 0.35rem 0;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: #eaf1ff;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+  }
+
+  @media (max-width: 760px) {
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+</style>

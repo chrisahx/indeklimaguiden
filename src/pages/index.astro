@@ -1,17 +1,81 @@
 ---
+import ArticleCard from '../components/ArticleCard.astro';
+import CategoryCard from '../components/CategoryCard.astro';
+import SearchBox from '../components/SearchBox.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getArticles } from '../lib/articles';
+import { CATEGORIES } from '../lib/constants';
 
+const articles = (await getArticles()).slice(0, 6);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="Indeklima Guiden | Guides til aircondition, varmepumper og indeklima"
+  description="Uafhængig og praktisk vejledning om aircondition, varmepumper og bedre indeklima til danske boligejere."
+  path="/"
+>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="pill">Dansk guide til bedre indeklima</span>
+        <h1>Bedre beslutninger om aircondition, varmepumper og indeklima.</h1>
+        <p>
+          Indeklima Guiden hjælper danske boligejere med at forstå produkter, priser, strømforbrug og praktiske valg uden salgssnak.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="/aircondition/">Start med aircondition</a>
+          <a class="button secondary" href="/soeg/">Søg på siden</a>
+        </div>
+      </div>
+      <div class="hero-panel surface">
+        <h2>Find hurtigt svar</h2>
+        <SearchBox />
+        <p>Prøv for eksempel “strømforbrug”, “luftfugtighed” eller “luft til luft varmepumpe”.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-heading">
+      <span class="pill">Emner</span>
+      <h2>Start i den rigtige kategori</h2>
+    </div>
+    <div class="grid">
+      {Object.values(CATEGORIES).map((category) => (
+        <CategoryCard title={category.name} description={category.description} href={`/${category.slug}/`} />
+      ))}
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-heading">
+      <span class="pill">Artikler</span>
+      <h2>Seneste guides</h2>
+    </div>
+    {articles.length > 0 ? <div class="grid">{articles.map((article) => <ArticleCard article={article} />)}</div> : <p>Der er endnu ingen publicerede artikler.</p>}
+  </section>
+
+  <section class="section container trust surface">
+    <div>
+      <span class="pill">Redaktionel tilgang</span>
+      <h2>Praktisk forbrugerjournalistik frem for produktsnak.</h2>
+    </div>
+    <p>
+      Artiklerne er bygget til at give korte svar, tydelige forbehold og konkrete vurderingspunkter. Når der omtales produkter, skal vurderingerne være baseret på specifikationer, energiforbrug, støjniveau og egnethed til danske hjem.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { padding: clamp(4rem, 8vw, 7rem) 0; background: linear-gradient(135deg, #f8f9ff 0%, #e0f2fe 100%); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr); gap: 2rem; align-items: center; }
+  .hero p { max-width: 680px; color: var(--color-muted); font-size: 1.2rem; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.5rem; }
+  .hero-panel { padding: 1.25rem; }
+  .hero-panel h2 { margin-top: 0; font-size: 1.4rem; }
+  .section-heading { margin-bottom: 1.5rem; }
+  .section-heading h2 { margin-top: 0.8rem; }
+  .trust { display: grid; grid-template-columns: 1fr 1.2fr; gap: 2rem; padding: 2rem; }
+  .trust h2 { margin: 0.8rem 0 0; }
+  @media (max-width: 860px) { .hero-grid, .trust { grid-template-columns: 1fr; } }
+</style>
