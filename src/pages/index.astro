@@ -1,12 +1,18 @@
 ---
 import ArticleCard from '../components/ArticleCard.astro';
 import CategoryCard from '../components/CategoryCard.astro';
-import SearchBox from '../components/SearchBox.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getArticles } from '../lib/articles';
 import { CATEGORIES } from '../lib/constants';
 
 const articles = (await getArticles()).slice(0, 6);
+
+const reviewSignals = [
+  ['Støjniveau', 'Hvor lavt anlægget reelt kan køre i soveværelse og stue.'],
+  ['Strømforbrug', 'Hvad køling, opvarmning og drift betyder for elregningen.'],
+  ['Rumstørrelse', 'Hvilke løsninger der passer til små, mellemstore og store rum.'],
+  ['Installation', 'Hvad du selv kan gøre, og hvornår fagfolk er nødvendige.'],
+];
 ---
 
 <BaseLayout
@@ -16,29 +22,44 @@ const articles = (await getArticles()).slice(0, 6);
 >
   <section class="hero">
     <div class="container hero-grid">
-      <div>
-        <span class="pill">Dansk guide til bedre indeklima</span>
-        <h1>Bedre beslutninger om aircondition, varmepumper og indeklima.</h1>
+      <div class="hero-copy">
+        <span class="pill">Dansk hub for indeklima-apparater</span>
+        <h1>Find den rigtige løsning til køling, varme og sundere indeklima.</h1>
         <p>
-          Indeklima Guiden hjælper danske boligejere med at forstå produkter, priser, strømforbrug og praktiske valg uden salgssnak.
+          Indeklima Guiden samler praktiske guides, anmeldelser og købsoverblik om aircondition, varmepumper, affugtere, luftrensere og bedre luftkvalitet i danske hjem.
         </p>
         <div class="hero-actions">
           <a class="button" href="/aircondition/">Start med aircondition</a>
-          <a class="button secondary" href="/soeg/">Søg på siden</a>
+          <a class="button secondary" href="/indeklima/">Forstå dit indeklima</a>
         </div>
       </div>
-      <div class="hero-panel surface">
-        <h2>Find hurtigt svar</h2>
-        <SearchBox />
-        <p>Prøv for eksempel “strømforbrug”, “luftfugtighed” eller “luft til luft varmepumpe”.</p>
+      <div class="hero-panel" aria-label="Vurderingspunkter for indeklima-apparater">
+        <div class="panel-top">
+          <span>Review-fokus 2026</span>
+          <strong>Danske boliger</strong>
+        </div>
+        <div class="score-card">
+          <span class="score-label">Prioritet</span>
+          <strong>Lav støj + lavt forbrug</strong>
+          <p>Vi vurderer produkter ud fra hverdagsbrug, elpriser, rumstørrelse og praktisk installation.</p>
+        </div>
+        <div class="signal-grid">
+          {reviewSignals.map(([title, description]) => (
+            <div>
+              <strong>{title}</strong>
+              <span>{description}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   </section>
 
   <section class="section container">
     <div class="section-heading">
-      <span class="pill">Emner</span>
-      <h2>Start i den rigtige kategori</h2>
+      <span class="pill">Guides og anmeldelser</span>
+      <h2>Dit overblik over moderne indeklima-apparater</h2>
+      <p>Start med den løsning, du overvejer, eller det problem du vil løse: varme, køling, fugt, luftkvalitet eller strømforbrug.</p>
     </div>
     <div class="grid">
       {Object.values(CATEGORIES).map((category) => (
@@ -50,32 +71,57 @@ const articles = (await getArticles()).slice(0, 6);
   <section class="section container">
     <div class="section-heading">
       <span class="pill">Artikler</span>
-      <h2>Seneste guides</h2>
+      <h2>Seneste danske guides</h2>
+      <p>Aktuelle forklaringer og købsguides om bedste mobile aircondition, luft til luft-varmepumpe pris, optimal luftfugtighed og bedre indeklima.</p>
     </div>
     {articles.length > 0 ? <div class="grid">{articles.map((article) => <ArticleCard article={article} />)}</div> : <p>Der er endnu ingen publicerede artikler.</p>}
   </section>
 
-  <section class="section container trust surface">
+  <section class="section container method">
     <div>
-      <span class="pill">Redaktionel tilgang</span>
+      <span class="pill">Sådan vurderer vi</span>
       <h2>Praktisk forbrugerjournalistik frem for produktsnak.</h2>
+      <p>
+        Artiklerne er skrevet til danske boligejere og lejere, der vil forstå forskellen på markedsføring og reel hverdagsværdi.
+      </p>
     </div>
-    <p>
-      Artiklerne er bygget til at give korte svar, tydelige forbehold og konkrete vurderingspunkter. Når der omtales produkter, skal vurderingerne være baseret på specifikationer, energiforbrug, støjniveau og egnethed til danske hjem.
-    </p>
+    <div class="method-grid">
+      {['Energiforbrug', 'Støjniveau', 'Pris og totaløkonomi', 'Rumstørrelse', 'Vedligeholdelse', 'Danske forhold'].map((item) => (
+        <div class="method-card surface">
+          <span aria-hidden="true"></span>
+          <strong>{item}</strong>
+        </div>
+      ))}
+    </div>
   </section>
 </BaseLayout>
 
 <style>
-  .hero { padding: clamp(4rem, 8vw, 7rem) 0; background: linear-gradient(135deg, #f8f9ff 0%, #e0f2fe 100%); }
-  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr); gap: 2rem; align-items: center; }
-  .hero p { max-width: 680px; color: var(--color-muted); font-size: 1.2rem; }
+  .hero { padding: clamp(4.5rem, 9vw, 8.5rem) 0 clamp(3rem, 7vw, 6rem); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
+  .hero-copy p { max-width: 760px; color: var(--color-muted); font-size: clamp(1.12rem, 2vw, 1.35rem); }
   .hero-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.5rem; }
-  .hero-panel { padding: 1.25rem; }
-  .hero-panel h2 { margin-top: 0; font-size: 1.4rem; }
+  .hero-panel { position: relative; overflow: hidden; border: 1px solid rgba(171, 193, 200, 0.72); border-radius: var(--radius-xl); padding: 1.25rem; background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(220, 251, 255, 0.72)); box-shadow: var(--shadow-card); }
+  .hero-panel::before { position: absolute; inset: -35% -20% auto auto; width: 16rem; height: 16rem; border-radius: 999px; background: rgba(32, 199, 215, 0.2); content: ''; filter: blur(4px); }
+  .panel-top { position: relative; display: flex; justify-content: space-between; gap: 1rem; color: var(--color-muted); font-size: 0.9rem; }
+  .panel-top strong { color: var(--color-primary); }
+  .score-card { position: relative; margin: 1rem 0; border-radius: calc(var(--radius-xl) - 0.35rem); padding: 1.25rem; background: var(--color-primary); color: #eafaff; }
+  .score-card strong { display: block; margin: 0.35rem 0; color: #fff; font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.1; letter-spacing: -0.03em; }
+  .score-card p { color: #bdd5dc; font-size: 0.98rem; }
+  .score-label { color: var(--color-accent); font-size: 0.8rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+  .signal-grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .signal-grid div { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.9rem; background: rgba(255, 255, 255, 0.72); }
+  .signal-grid strong { display: block; color: var(--color-primary); }
+  .signal-grid span { display: block; margin-top: 0.25rem; color: var(--color-muted); font-size: 0.9rem; line-height: 1.45; }
   .section-heading { margin-bottom: 1.5rem; }
   .section-heading h2 { margin-top: 0.8rem; }
-  .trust { display: grid; grid-template-columns: 1fr 1.2fr; gap: 2rem; padding: 2rem; }
-  .trust h2 { margin: 0.8rem 0 0; }
-  @media (max-width: 860px) { .hero-grid, .trust { grid-template-columns: 1fr; } }
+  .section-heading p { max-width: 760px; color: var(--color-muted); font-size: 1.1rem; }
+  .method { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 2rem; align-items: start; }
+  .method h2 { margin: 0.8rem 0 1rem; }
+  .method p { color: var(--color-muted); font-size: 1.1rem; }
+  .method-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
+  .method-card { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; }
+  .method-card span { width: 0.7rem; height: 0.7rem; border-radius: 999px; background: var(--color-accent); box-shadow: 0 0 0 6px rgba(32, 199, 215, 0.14); }
+  @media (max-width: 860px) { .hero-grid, .method { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .signal-grid, .method-grid { grid-template-columns: 1fr; } }
 </style>

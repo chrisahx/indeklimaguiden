@@ -6,17 +6,39 @@ import { CATEGORIES } from '../../lib/constants';
 
 const category = CATEGORIES.indeklima;
 const articles = await getArticlesByCategory('indeklima');
+const topics = ['Optimal luftfugtighed', 'Ventilation i hverdagen', 'Affugter eller luftrenser', 'Måling af luftkvalitet'];
 ---
 
 <BaseLayout title="Indeklima" description={category.description} path="/indeklima/">
   <section class="section container page-head">
-    <span class="pill">Guidekategori</span>
-    <h1>{category.name}</h1>
-    <p>{category.description}</p>
+    <div>
+      <span class="pill">Indeklima guides</span>
+      <h1>Bedre luft, fugt og komfort i boligen</h1>
+      <p>{category.description}</p>
+      <p>Bliv klogere på luftfugtighed, ventilation, skimmelrisiko, luftrensere, affugtere og målinger, der gør det nemmere at forbedre indeklimaet konkret.</p>
+    </div>
+    <div class="topic-panel surface">
+      <h2>Populære spørgsmål</h2>
+      {topics.map((topic) => <span>{topic}</span>)}
+    </div>
   </section>
-  <section class="container">
+  <section class="container article-list">
+    <div class="section-heading">
+      <span class="pill">Læs næste</span>
+      <h2>Guides om luft, fugt og ventilation</h2>
+    </div>
     {articles.length > 0 ? <div class="grid">{articles.map((article) => <ArticleCard article={article} />)}</div> : <p>Der er endnu ingen publicerede artikler i denne kategori.</p>}
   </section>
 </BaseLayout>
 
-<style>.page-head p { max-width: 720px; color: var(--color-muted); font-size: 1.2rem; }</style>
+<style>
+  .page-head { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.65fr); gap: 2rem; align-items: end; }
+  .page-head p { max-width: 780px; color: var(--color-muted); font-size: 1.16rem; }
+  .topic-panel { padding: 1.25rem; }
+  .topic-panel h2 { margin: 0 0 1rem; font-size: 1.25rem; }
+  .topic-panel span { display: block; border-top: 1px solid var(--color-border); padding: 0.75rem 0; color: var(--color-primary); font-weight: 800; }
+  .article-list { padding-bottom: clamp(3rem, 7vw, 6rem); }
+  .section-heading { margin-bottom: 1.5rem; }
+  .section-heading h2 { margin-top: 0.8rem; }
+  @media (max-width: 860px) { .page-head { grid-template-columns: 1fr; } }
+</style>
