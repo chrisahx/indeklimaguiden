@@ -171,7 +171,7 @@ Rail ads are desktop-only and hidden on smaller screens. Use the `*_MOBILE_1` an
 - [x] Fugt i soveværelse
 - [x] Ventilation i hus
 - [x] Genvindingsanlæg guide
-- [ ] Sådan forbedrer du indeklimaet
+- [x] Sådan forbedrer du indeklimaet
 
 
 ```
