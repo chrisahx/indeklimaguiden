@@ -452,7 +452,7 @@ const calculatorJsonLd = {
   :global(.wide-ad) { min-height: 92px; margin-bottom: clamp(2rem, 5vw, 4rem); }
   :global(.article-ad) { min-height: 120px; margin: 2.5rem 0; }
   :global(.calculator-mobile-ad) { display: none; min-height: 120px; margin: 2rem 0; }
-  .article-shell { padding-bottom: clamp(3rem, 7vw, 6rem); }
+  .article-shell { width: min(800px, calc(100% - 40px)); margin-inline: auto; padding-bottom: clamp(3rem, 7vw, 6rem); }
   .article-shell.has-rail-ads {
     display: grid;
     grid-template-columns: minmax(140px, 1fr) minmax(0, 800px) minmax(140px, 1fr);
