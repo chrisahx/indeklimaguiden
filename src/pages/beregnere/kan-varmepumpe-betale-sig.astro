@@ -1,0 +1,545 @@
+---
+import AnswerBox from '../../components/AnswerBox.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FAQ from '../../components/FAQ.astro';
+import GoogleAd from '../../components/GoogleAd.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { absoluteUrl } from '../../lib/seo';
+import { breadcrumbsJsonLd, faqJsonLd } from '../../lib/structured-data';
+
+const path = '/beregnere/kan-varmepumpe-betale-sig/';
+const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
+const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
+const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
+const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
+const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
+const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
+const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
+const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
+const showWideAd = import.meta.env.DEV || wideAdSlot;
+const showArticleAd = import.meta.env.DEV || articleAdSlot;
+const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
+const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
+const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
+const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
+const breadcrumbs = [
+  { name: 'Forside', url: '/' },
+  { name: 'Beregnere', url: '/beregnere/' },
+  { name: 'Kan varmepumpe betale sig?', url: path },
+];
+const faq = [
+  {
+    question: 'Kan en varmepumpe betale sig?',
+    answer:
+      'Ja, en varmepumpe kan ofte betale sig, især hvis du i dag varmer med elradiatorer, olie eller gas. Den konkrete økonomi afhænger af din nuværende varmeregning, elpris, SCOP, boligstørrelse og pris inkl. montering.',
+  },
+  {
+    question: 'Hvor hurtigt tjener en varmepumpe sig hjem?',
+    answer:
+      'Tilbagebetalingstiden findes ved at dividere prisen på varmepumpen inkl. montering med den årlige besparelse. Hvis anlægget koster 25.000 kr. og sparer 10.000 kr. om året, er tilbagebetalingstiden cirka 2,5 år.',
+  },
+  {
+    question: 'Hvor meget kan man spare ved at skifte fra elvarme til varmepumpe?',
+    answer:
+      'Besparelsen kan være stor, fordi en varmepumpe typisk leverer flere kWh varme for hver kWh strøm. Med en SCOP på 4 bruger varmepumpen omtrent en fjerdedel af den el, direkte elvarme ville bruge til samme varmebehov.',
+  },
+  {
+    question: 'Kan varmepumpe betale sig i et hus med fjernvarme?',
+    answer:
+      'Det er ikke altid tilfældet. Fjernvarme kan være billig og stabil, så besparelsen ved varmepumpe er ofte mindre end ved el, olie eller gas. Beregneren kan give et første estimat, men tariffer og faste afgifter bør også vurderes.',
+  },
+  {
+    question: 'Hvad betyder SCOP for besparelsen?',
+    answer:
+      'SCOP viser varmepumpens sæsoneffektivitet. Jo højere SCOP, desto mindre strøm skal varmepumpen bruge for at levere samme mængde varme, og desto bedre bliver økonomien typisk.',
+  },
+  {
+    question: 'Er der støtte til varmepumpe?',
+    answer:
+      'Der kan i perioder være relevante støtteordninger eller tilskud for boligejere. Tjek altid aktuelle regler hos Energistyrelsen eller relevante offentlige ordninger, før du træffer beslutning.',
+  },
+];
+
+const calculatorJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Kan en varmepumpe betale sig beregner',
+  description:
+    'Beregn om en varmepumpe kan betale sig ud fra nuværende varmekilde, årlig varmeregning, boligstørrelse, varmepumpepris, elpris og SCOP.',
+  url: absoluteUrl(path),
+  applicationCategory: 'CalculatorApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'da-DK',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'DKK',
+  },
+};
+---
+
+<BaseLayout
+  title="Kan en varmepumpe betale sig? Beregn besparelse og tilbagebetalingstid"
+  description="Beregn om en varmepumpe kan betale sig for dig. Indtast varmekilde, varmeregning, elpris, SCOP og pris inkl. montering, og se besparelse, CO2 og tilbagebetalingstid."
+  path={path}
+>
+  <section class="calculator-hero">
+    <div class="container hero-copy">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="pill">Varmepumpe besparelse beregner</span>
+      <h1>Kan en varmepumpe betale sig?</h1>
+      <p>
+        Indtast din nuværende varmekilde, varmeregning, elpris, SCOP og pris inkl. montering, og få et praktisk estimat på årlig besparelse, tilbagebetalingstid og CO2-besparelse.
+      </p>
+      <div class="hero-actions">
+        <a class="button" href="#beregner">Brug beregneren</a>
+        <a class="button secondary" href="#forklaring">Se beregningsmetode</a>
+      </div>
+      <aside class="surface quick-answer" aria-label="Kort svar">
+        <span class="pill">Kort svar</span>
+        <p>
+          Ja, en varmepumpe kan ofte betale sig bedst, hvis du i dag bruger <strong>elvarme, olie eller gas</strong>. Besparelsen afhænger især af varmeregning, elpris, SCOP og installationspris.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <section id="beregner" class="section container calculator-section" aria-labelledby="calculator-heading">
+    <div class="section-heading">
+      <span class="pill">Tilbagebetalingstid varmepumpe</span>
+      <h2 id="calculator-heading">Beregn om en varmepumpe kan betale sig</h2>
+      <p>Resultatet er vejledende. Det erstatter ikke en konkret energiberegning, tilbud fra installatør eller vurdering af din boligs varmetab.</p>
+    </div>
+
+    <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
+      <div class="surface calculator-panel">
+        <form class="calculator-form" data-calculator novalidate>
+          <div class="field-grid">
+            <label>
+              <span>Nuværende varmekilde</span>
+              <select name="source">
+                <option value="electric" selected>Elradiator / elvarme</option>
+                <option value="oil">Olie</option>
+                <option value="gas">Gas</option>
+                <option value="district">Fjernvarme</option>
+                <option value="wood">Brændeovn</option>
+              </select>
+            </label>
+            <label>
+              <span>Jeg kender min</span>
+              <select name="inputType">
+                <option value="bill" selected>Årlige varmeregning</option>
+                <option value="usage">Årlige varmeforbrug i kWh</option>
+              </select>
+            </label>
+            <label>
+              <span data-current-value-label>Årlig varmeregning i kr.</span>
+              <input name="currentValue" type="number" inputmode="decimal" min="1000" max="150000" step="100" value="22000" required />
+            </label>
+            <label>
+              <span>Boligstørrelse i m²</span>
+              <input name="area" type="number" inputmode="numeric" min="20" max="500" step="1" value="130" required />
+            </label>
+            <label>
+              <span>Varmepumpepris inkl. montering</span>
+              <input name="pumpPrice" type="number" inputmode="decimal" min="5000" max="250000" step="500" value="25000" required />
+            </label>
+            <label>
+              <span>Elpris pr. kWh</span>
+              <input name="electricityPrice" type="number" inputmode="decimal" min="0.5" max="15" step="0.1" value="2.8" required />
+            </label>
+            <label class="wide">
+              <span class="label-with-help">
+                SCOP
+                <span class="tooltip">
+                  <button type="button" class="tooltip-trigger" aria-describedby="scop-help">?</button>
+                  <span id="scop-help" class="tooltip-content" role="tooltip">
+                    SCOP står typisk i produktets datablad, energimærke eller tilbud fra installatøren. Kender du ikke tallet, kan 3,5-4,5 bruges som groft udgangspunkt for mange luft til luft-varmepumper.
+                  </span>
+                </span>
+              </span>
+              <input name="scop" type="number" inputmode="decimal" min="1.5" max="7" step="0.1" value="4.0" required />
+            </label>
+          </div>
+          <p class="form-hint">SCOP er varmepumpens sæsoneffektivitet. En højere SCOP betyder normalt lavere strømforbrug til samme varmebehov.</p>
+          <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for varmeregning eller varmeforbrug, boligstørrelse, pris, elpris og SCOP.</p>
+          <button class="button" type="submit">Beregn besparelse</button>
+        </form>
+
+        <aside class="result-card" aria-live="polite" data-result>
+          <div>
+            <span class="pill">Dit estimat</span>
+            <p class="result-kicker" data-source-label>Elradiator / elvarme</p>
+          </div>
+          <div class="result-main">
+            <strong data-saving-result>Ca. 15.000 kr./år</strong>
+            <p data-payback-result>Tilbagebetalingstid: ca. 1,7 år.</p>
+          </div>
+          <div class="result-details">
+            <p data-co2-result>CO2-besparelse: ca. 460 kg/år</p>
+            <p data-verdict-result>Meget relevant ved el, olie og gas.</p>
+          </div>
+        </aside>
+      </div>
+
+      {showSidebarAd && (
+        <aside class="ad-column" aria-label="Annonce">
+          <GoogleAd slotId={sidebarAdSlot} className="sidebar-ad" />
+        </aside>
+      )}
+    </div>
+  </section>
+
+  {showWideAd && (
+    <aside class="container" aria-label="Annonce">
+      <GoogleAd slotId={wideAdSlot} className="wide-ad" />
+    </aside>
+  )}
+
+  <article class:list={['article-shell', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
+    {showLeftRailAd && (
+      <aside class="rail-ad left-rail" aria-label="Annonce">
+        <GoogleAd slotId={leftRailAdSlot} className="rail-ad-unit" />
+      </aside>
+    )}
+
+    <div class="article-main">
+      <div class="reading article-body content-card">
+        <AnswerBox>
+          En varmepumpe kan især betale sig, hvis du i dag bruger elradiatorer, olie eller gas. Den bedste økonomi opstår, når den årlige varmeregning er høj, varmepumpen har god SCOP, og installationsprisen står mål med den årlige besparelse.
+        </AnswerBox>
+
+        {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
+
+        <h2>Kan en varmepumpe betale sig?</h2>
+        <p>
+          Spørgsmålet “kan varmepumpe betale sig” afhænger først og fremmest af, hvad du varmer op med i dag. Direkte elvarme er ofte dyr i drift, og her kan en luft til luft-varmepumpe eller anden varmepumpeløsning give en tydelig besparelse. Olie og gas kan også give en stærk case, mens fjernvarme ofte kræver en mere konkret sammenligning.
+        </p>
+        <p>
+          Beregneren ovenfor bruger din nuværende varmeregning eller dit varmeforbrug til at estimere, hvor meget strøm en varmepumpe vil bruge med den SCOP, du angiver. Derefter sammenlignes den nye årlige strømudgift med din nuværende varmeudgift.
+        </p>
+
+        <h2>Hvornår er besparelsen størst?</h2>
+        <p>
+          Besparelsen er typisk størst i boliger med højt varmeforbrug og en dyr nuværende varmekilde. Derfor er varmepumper ofte mest interessante i huse, sommerhuse og tilbygninger med elvarme, olie eller gas. Boligstørrelse, isolering og brugsmønster betyder dog meget for det endelige resultat.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Nuværende varmekilde</th>
+              <th>Typisk potentiale</th>
+              <th>Kommentar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Elradiator</td>
+              <td>Meget højt</td>
+              <td>Ofte den bedste økonomiske case, fordi direkte elvarme bruger 1 kWh strøm pr. kWh varme.</td>
+            </tr>
+            <tr>
+              <td>Olie</td>
+              <td>Højt</td>
+              <td>Afhænger af oliepris, varmebehov og om varmepumpen kan dække nok af forbruget.</td>
+            </tr>
+            <tr>
+              <td>Gas</td>
+              <td>Middel/højt</td>
+              <td>Kan være relevant ved høj gaspris eller ønske om lavere CO2-udledning.</td>
+            </tr>
+            <tr>
+              <td>Fjernvarme</td>
+              <td>Lavere</td>
+              <td>Kræver sammenligning med lokale tariffer, faste afgifter og fjernvarmepris.</td>
+            </tr>
+            <tr>
+              <td>Brændeovn</td>
+              <td>Varierer</td>
+              <td>Økonomien afhænger meget af brændepris, egen arbejdskraft og hvor meget brændeovnen dækker.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Skift fra elvarme til varmepumpe</h2>
+        <p>
+          Skift fra elvarme til varmepumpe giver ofte den letteste besparelse at forstå: Hvis boligen tidligere brugte direkte el til opvarmning, kan en varmepumpe med SCOP 4 i princippet levere omtrent fire gange så meget varme pr. kWh strøm. Derfor er “skift fra elvarme til varmepumpe besparelse” et af de vigtigste scenarier for denne beregner.
+        </p>
+
+        <h2>Skift fra olie eller gas til varmepumpe</h2>
+        <p>
+          Ved olie og gas afhænger regnestykket af brændselspris, kedlens effektivitet og varmebehov. Beregneren bruger generelle virkningsgrader til at anslå varmebehovet, men et konkret tilbud og en vurdering af huset er vigtig, især hvis varmepumpen skal være primær varmekilde.
+        </p>
+
+        <h2>Er varmepumpe en god idé ved fjernvarme?</h2>
+        <p>
+          Ved fjernvarme er svaret mere nuanceret. Nogle fjernvarmeområder har konkurrencedygtige priser, mens andre kan være dyrere. Husk også faste afgifter og regler for supplerende varmekilder. En varmepumpe kan stadig være relevant til komfort, køling eller supplerende varme, men tilbagebetalingstiden kan være længere.
+        </p>
+
+        <h2 id="forklaring">Sådan beregner vi tilbagebetalingstid</h2>
+        <p>
+          Beregneren estimerer først boligens årlige varmebehov. Hvis du indtaster årlig varmeregning, omregnes beløbet med en typisk pris og virkningsgrad for den valgte varmekilde. Hvis du indtaster årligt varmeforbrug i kWh, bruges tallet direkte som varmebehov.
+        </p>
+        <p>
+          Derefter beregnes varmepumpens årlige elforbrug ved at dividere varmebehovet med SCOP. Tilbagebetalingstid beregnes som varmepumpepris inkl. montering divideret med den årlige besparelse.
+        </p>
+
+        {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
+
+        {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
+
+        <h2>Hvad betyder SCOP for økonomien?</h2>
+        <p>
+          SCOP er et af de vigtigste tal i en varmepumpe besparelse beregner. En højere SCOP betyder, at varmepumpen bruger mindre strøm til at levere samme varme. En model med SCOP 4 bruger cirka 2.500 kWh strøm til at levere 10.000 kWh varme, mens en model med SCOP 3,2 bruger cirka 3.125 kWh.
+        </p>
+
+        <h2>CO2-besparelse ved varmepumpe</h2>
+        <p>
+          CO2-besparelsen afhænger af din nuværende varmekilde og elmixet. Beregneren bruger grove emissionsfaktorer for at vise retningen, men den præcise klimagevinst afhænger af energikilder, leverandør og faktisk drift.
+        </p>
+
+        <h2>Husk installation, boligtype og støtteordninger</h2>
+        <p>
+          Energistyrelsen fremhæver energibesparelser og støtteordninger som relevante for boligejere, men regler og puljer ændrer sig. Tjek derfor aktuelle muligheder, og få en installatør til at vurdere placering, dimensionering og forventet årsydelse.
+        </p>
+        <p>
+          Læs også vores guides om <a href="/varmepumper/">varmepumper</a>, <a href="/varmepumper/luft-til-luft-varmepumpe-pris/">pris på luft til luft-varmepumpe</a> og <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">hvor stor varmepumpe du skal bruge</a>.
+        </p>
+
+        <FAQ items={faq} />
+      </div>
+
+      <aside class="reading side-panel">
+        <div class="checklist">
+          <h2>Det påvirker økonomien</h2>
+          <ul>
+            <li>Nuværende varmekilde og varmeregning</li>
+            <li>Boligens varmebehov og isolering</li>
+            <li>Varmepumpens SCOP</li>
+            <li>Elpris og fremtidige energiafgifter</li>
+            <li>Pris inkl. montering</li>
+            <li>Om varmepumpen dækker hele eller dele af varmebehovet</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    {showRightRailAd && (
+      <aside class="rail-ad right-rail" aria-label="Annonce">
+        <GoogleAd slotId={rightRailAdSlot} className="rail-ad-unit" />
+      </aside>
+    )}
+  </article>
+
+  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+  <JsonLd data={faqJsonLd(faq)} />
+  <JsonLd data={calculatorJsonLd} />
+</BaseLayout>
+
+<script>
+  const form = document.querySelector('[data-calculator]');
+  const result = document.querySelector('[data-result]');
+  const error = document.querySelector('[data-error]');
+  const currentValueLabel = document.querySelector('[data-current-value-label]');
+
+  const sourceLabels = {
+    electric: 'Elradiator / elvarme',
+    oil: 'Olie',
+    gas: 'Gas',
+    district: 'Fjernvarme',
+    wood: 'Brændeovn',
+  };
+
+  const sourceAssumptions = {
+    electric: { pricePerHeatKwh: 2.8, efficiency: 1, co2KgPerHeatKwh: 0.09 },
+    oil: { pricePerHeatKwh: 1.45, efficiency: 0.85, co2KgPerHeatKwh: 0.31 },
+    gas: { pricePerHeatKwh: 1.15, efficiency: 0.92, co2KgPerHeatKwh: 0.22 },
+    district: { pricePerHeatKwh: 0.95, efficiency: 1, co2KgPerHeatKwh: 0.08 },
+    wood: { pricePerHeatKwh: 0.75, efficiency: 0.7, co2KgPerHeatKwh: 0.04 },
+  };
+
+  const electricityCo2KgPerKwh = 0.09;
+
+  const formatKr = (value) => Math.round(value).toLocaleString('da-DK');
+  const formatNumber = (value) => Math.round(value).toLocaleString('da-DK');
+  const formatYears = (value) => value.toLocaleString('da-DK', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
+  function readData() {
+    if (!(form instanceof HTMLFormElement)) return null;
+    const formData = new FormData(form);
+    const source = String(formData.get('source'));
+    const inputType = String(formData.get('inputType'));
+    const currentValue = Number(formData.get('currentValue'));
+    const area = Number(formData.get('area'));
+    const pumpPrice = Number(formData.get('pumpPrice'));
+    const electricityPrice = Number(formData.get('electricityPrice'));
+    const scop = Number(formData.get('scop'));
+
+    if (!sourceAssumptions[source]) return null;
+    if (inputType !== 'bill' && inputType !== 'usage') return null;
+    if (!Number.isFinite(currentValue) || currentValue <= 0) return null;
+    if (!Number.isFinite(area) || area < 20 || area > 500) return null;
+    if (!Number.isFinite(pumpPrice) || pumpPrice < 5000 || pumpPrice > 250000) return null;
+    if (!Number.isFinite(electricityPrice) || electricityPrice < 0.5 || electricityPrice > 15) return null;
+    if (!Number.isFinite(scop) || scop < 1.5 || scop > 7) return null;
+    if (inputType === 'bill' && (currentValue < 1000 || currentValue > 150000)) return null;
+    if (inputType === 'usage' && (currentValue < 1000 || currentValue > 80000)) return null;
+
+    return { source, inputType, currentValue, area, pumpPrice, electricityPrice, scop };
+  }
+
+  function calculate(data) {
+    const assumptions = sourceAssumptions[data.source];
+    const heatDemand = data.inputType === 'usage'
+      ? data.currentValue * assumptions.efficiency
+      : data.currentValue / assumptions.pricePerHeatKwh;
+    const currentAnnualCost = data.inputType === 'bill'
+      ? data.currentValue
+      : (data.currentValue * assumptions.pricePerHeatKwh) / assumptions.efficiency;
+    const pumpElectricityKwh = heatDemand / data.scop;
+    const newAnnualCost = pumpElectricityKwh * data.electricityPrice;
+    const saving = currentAnnualCost - newAnnualCost;
+    const payback = saving > 0 ? data.pumpPrice / saving : null;
+    const currentCo2 = heatDemand * assumptions.co2KgPerHeatKwh;
+    const pumpCo2 = pumpElectricityKwh * electricityCo2KgPerKwh;
+    const co2Saving = Math.max(currentCo2 - pumpCo2, 0);
+
+    return { heatDemand, pumpElectricityKwh, saving, payback, co2Saving };
+  }
+
+  function getVerdict(source, saving) {
+    if (saving <= 0) return 'Ikke oplagt med de valgte tal.';
+    if (source === 'electric') return 'Meget relevant ved elvarme.';
+    if (source === 'oil' || source === 'gas') return 'Ofte relevant ved olie og gas.';
+    if (source === 'district') return 'Kræver ekstra tjek ved fjernvarme.';
+    return 'Potentialet varierer ved brændeovn.';
+  }
+
+  function updateInputLabel() {
+    if (!(form instanceof HTMLFormElement) || !currentValueLabel) return;
+    const inputType = new FormData(form).get('inputType');
+    currentValueLabel.textContent = inputType === 'usage' ? 'Årligt varmeforbrug i kWh' : 'Årlig varmeregning i kr.';
+  }
+
+  function updateResult() {
+    updateInputLabel();
+    const data = readData();
+    if (!data || !result) {
+      error?.removeAttribute('hidden');
+      return;
+    }
+
+    error?.setAttribute('hidden', '');
+    const estimate = calculate(data);
+    const paybackText = estimate.payback
+      ? `Tilbagebetalingstid: ca. ${formatYears(estimate.payback)} år.`
+      : 'Tilbagebetalingstid: ikke positiv med de valgte tal.';
+
+    result.querySelector('[data-source-label]').textContent = sourceLabels[data.source] ?? 'Varmekilde';
+    result.querySelector('[data-saving-result]').textContent = estimate.saving > 0
+      ? `Ca. ${formatKr(estimate.saving)} kr./år`
+      : 'Ingen estimeret besparelse';
+    result.querySelector('[data-payback-result]').textContent = paybackText;
+    result.querySelector('[data-co2-result]').textContent = `CO2-besparelse: ca. ${formatNumber(estimate.co2Saving)} kg/år`;
+    result.querySelector('[data-verdict-result]').textContent = getVerdict(data.source, estimate.saving);
+  }
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    updateResult();
+  });
+
+  form?.addEventListener('input', updateResult);
+  form?.addEventListener('change', updateResult);
+  updateResult();
+</script>
+
+<style>
+  .calculator-hero { padding: clamp(4rem, 8vw, 7rem) 0 clamp(2.25rem, 5vw, 4rem); }
+  .hero-copy { text-align: center; }
+  .hero-copy :global(.breadcrumbs) { justify-content: center; }
+  .hero-copy h1 { max-width: 1020px; margin: 0.85rem auto 1rem; font-size: clamp(2.65rem, 6vw, 5.35rem); }
+  .hero-copy p { max-width: 860px; margin-inline: auto; color: var(--color-muted); font-size: clamp(1.08rem, 2vw, 1.32rem); }
+  .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 1.4rem; }
+  .quick-answer { padding: 1.35rem; background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(220, 251, 255, 0.72)); }
+  .hero-copy .quick-answer { max-width: 760px; margin: 2rem auto 0; }
+  .quick-answer p { margin: 1rem 0 0; color: var(--color-primary); font-size: 1.12rem; }
+  .section-heading { margin-bottom: 1.5rem; }
+  .section-heading h2 { margin-top: 0.8rem; }
+  .section-heading p { max-width: 760px; color: var(--color-muted); font-size: 1.1rem; }
+  .calculator-layout { display: grid; gap: 1.15rem; align-items: start; }
+  .calculator-layout.has-sidebar-ad { grid-template-columns: minmax(0, 1fr) minmax(260px, 0.32fr); }
+  .calculator-panel { padding: clamp(1.2rem, 3vw, 2rem); }
+  .calculator-form { margin-bottom: 1.25rem; }
+  .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
+  label { display: grid; gap: 0.4rem; color: var(--color-primary); font-weight: 800; }
+  label span { font-size: 0.95rem; }
+  .label-with-help { display: inline-flex; align-items: center; gap: 0.45rem; width: fit-content; }
+  .tooltip { position: relative; display: inline-flex; }
+  .tooltip-trigger { display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; border: 1px solid var(--color-border-strong); border-radius: 999px; background: #fff; color: var(--color-primary); font: inherit; font-size: 0.78rem; font-weight: 900; cursor: help; }
+  .tooltip-trigger:focus { outline: 3px solid rgba(32, 199, 215, 0.2); border-color: var(--color-accent-dark); }
+  .tooltip-content { position: absolute; left: 50%; bottom: calc(100% + 0.6rem); z-index: 2; width: min(280px, calc(100vw - 3rem)); transform: translateX(-50%); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.75rem 0.85rem; background: var(--color-primary); color: #fff; box-shadow: 0 14px 32px rgba(6, 25, 35, 0.18); font-size: 0.88rem; font-weight: 650; line-height: 1.45; opacity: 0; pointer-events: none; transition: opacity 0.15s ease, transform 0.15s ease; }
+  .tooltip-content::after { content: ''; position: absolute; left: 50%; top: 100%; width: 0.75rem; height: 0.75rem; transform: translate(-50%, -50%) rotate(45deg); background: var(--color-primary); border-right: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+  .tooltip:hover .tooltip-content, .tooltip:focus-within .tooltip-content { opacity: 1; transform: translateX(-50%) translateY(-0.15rem); }
+  input, select { width: 100%; border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); padding: 0.85rem 0.9rem; background: #fff; color: var(--color-primary); font: inherit; }
+  input:focus, select:focus { outline: 3px solid rgba(32, 199, 215, 0.2); border-color: var(--color-accent-dark); }
+  .wide { grid-column: 1 / -1; }
+  .form-hint { color: var(--color-muted); font-size: 0.96rem; }
+  .form-error { color: #9f1239; font-weight: 800; }
+  .result-card { display: grid; grid-template-columns: minmax(160px, 0.4fr) minmax(0, 1fr) minmax(210px, 0.6fr); gap: 1rem; align-items: center; border-radius: var(--radius-lg); padding: clamp(1rem, 2.4vw, 1.4rem); background: linear-gradient(145deg, var(--color-primary), var(--color-primary-soft)); color: #fff; }
+  .result-card .pill { border-color: rgba(255, 255, 255, 0.24); background: rgba(255, 255, 255, 0.12); color: #bff8ff; }
+  .result-card strong { display: block; margin: 0 0 0.35rem; color: #fff; font-size: clamp(2.05rem, 4.6vw, 3.85rem); line-height: 1; letter-spacing: -0.06em; }
+  .result-card p { color: #dbeafe; }
+  .result-main p, .result-details p { margin: 0; }
+  .result-details p + p { margin-top: 0.55rem; }
+  .result-kicker { margin: 0.7rem 0 0; font-weight: 850; text-transform: uppercase; letter-spacing: 0.08em; }
+  .result-details { border-left: 1px solid rgba(255, 255, 255, 0.18); padding-left: 1rem; font-weight: 800; }
+  .ad-column { position: sticky; top: 104px; }
+  :global(.sidebar-ad) { min-height: 420px; }
+  :global(.wide-ad) { min-height: 92px; margin-bottom: clamp(2rem, 5vw, 4rem); }
+  :global(.article-ad) { min-height: 120px; margin: 2.5rem 0; }
+  :global(.calculator-mobile-ad) { display: none; min-height: 120px; margin: 2rem 0; }
+  .article-shell { padding-bottom: clamp(3rem, 7vw, 6rem); }
+  .article-shell.has-rail-ads {
+    display: grid;
+    grid-template-columns: minmax(140px, 1fr) minmax(0, 800px) minmax(140px, 1fr);
+    gap: clamp(1rem, 3vw, 2rem);
+    width: min(1420px, calc(100% - 40px));
+    margin-inline: auto;
+    align-items: start;
+  }
+  .article-main { min-width: 0; }
+  .article-shell.has-rail-ads .reading { width: 100%; }
+  .rail-ad { position: sticky; top: 104px; min-width: 0; }
+  :global(.rail-ad-unit) { min-height: 600px; }
+  .left-rail { grid-column: 1; }
+  .article-main { grid-column: 2; }
+  .right-rail { grid-column: 3; }
+  .content-card {
+    padding: clamp(1.35rem, 4vw, 2.75rem);
+    background: #fff;
+    border: 1px solid rgba(217, 229, 232, 0.7);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 1px 2px rgba(6, 25, 35, 0.025);
+  }
+  .side-panel { margin-top: 1.25rem; }
+  .checklist { border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: clamp(1.1rem, 3vw, 1.5rem); background: rgba(255, 255, 255, 0.7); }
+  .checklist h2 { margin-top: 0; font-size: 1.35rem; }
+  .checklist ul { margin: 0; padding-left: 1.25rem; color: var(--color-muted); }
+  .checklist li + li { margin-top: 0.55rem; }
+
+  @media (max-width: 920px) {
+    .calculator-layout.has-sidebar-ad { grid-template-columns: 1fr; }
+    .ad-column { position: static; }
+    :global(.sidebar-ad) { min-height: 120px; }
+    .result-card { grid-template-columns: 1fr; }
+    .result-details { border-top: 1px solid rgba(255, 255, 255, 0.18); border-left: 0; padding: 1rem 0 0; }
+    .article-shell.has-rail-ads { display: block; width: auto; }
+    .rail-ad { display: none; }
+    :global(.calculator-mobile-ad) { display: block; }
+  }
+
+  @media (max-width: 620px) {
+    .field-grid { grid-template-columns: 1fr; }
+  }
+</style>

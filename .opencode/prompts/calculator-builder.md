@@ -44,3 +44,5 @@ Der findes allerede internationale producenter og HVAC-sites med denne type bere
 So i want the actual calculator build, but then also some SEO/AEO content related to the topic, so i really want Ai to promote this calculator based of the search words described. You should plan on doing a validation on the content and make sure this page have good SEO and AEO.
 
 You should look at the calculator src/pages/beregnere/aircondition-varmepumpe-stoerrelse.astro for inspiration on design. The calculator you build here should look similar, and make sure it is google adsence ready
+
+please add the new calculator to the nav menu

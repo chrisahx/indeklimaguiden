@@ -139,7 +139,15 @@ const calculatorJsonLd = {
               <input name="summerMonths" type="number" inputmode="numeric" min="1" max="6" step="1" value="3" required />
             </label>
             <label class="wide">
-              <span>SEER/SCOP, hvis du kender tallet</span>
+              <span class="label-with-help">
+                SEER/SCOP, hvis du kender tallet
+                <span class="tooltip">
+                  <button type="button" class="tooltip-trigger" aria-describedby="seer-scop-help">?</button>
+                  <span id="seer-scop-help" class="tooltip-content" role="tooltip">
+                    SEER bruges til køling og SCOP til opvarmning. Du finder typisk tallet i produktets datablad, energimærke eller tilbud fra installatøren. Lad feltet stå tomt, hvis du indtaster apparatets faktiske strømforbrug.
+                  </span>
+                </span>
+              </span>
               <input name="seer" type="number" inputmode="decimal" min="1" max="12" step="0.1" placeholder="Valgfrit" />
             </label>
           </div>
@@ -388,6 +396,13 @@ const calculatorJsonLd = {
   .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1rem; }
   label { display: grid; gap: 0.4rem; color: var(--color-primary); font-weight: 800; }
   label span { font-size: 0.95rem; }
+  .label-with-help { display: inline-flex; align-items: center; gap: 0.45rem; width: fit-content; }
+  .tooltip { position: relative; display: inline-flex; }
+  .tooltip-trigger { display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; border: 1px solid var(--color-border-strong); border-radius: 999px; background: #fff; color: var(--color-primary); font: inherit; font-size: 0.78rem; font-weight: 900; cursor: help; }
+  .tooltip-trigger:focus { outline: 3px solid rgba(32, 199, 215, 0.2); border-color: var(--color-accent-dark); }
+  .tooltip-content { position: absolute; left: 50%; bottom: calc(100% + 0.6rem); z-index: 2; width: min(300px, calc(100vw - 3rem)); transform: translateX(-50%); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.75rem 0.85rem; background: var(--color-primary); color: #fff; box-shadow: 0 14px 32px rgba(6, 25, 35, 0.18); font-size: 0.88rem; font-weight: 650; line-height: 1.45; opacity: 0; pointer-events: none; transition: opacity 0.15s ease, transform 0.15s ease; }
+  .tooltip-content::after { content: ''; position: absolute; left: 50%; top: 100%; width: 0.75rem; height: 0.75rem; transform: translate(-50%, -50%) rotate(45deg); background: var(--color-primary); border-right: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+  .tooltip:hover .tooltip-content, .tooltip:focus-within .tooltip-content { opacity: 1; transform: translateX(-50%) translateY(-0.15rem); }
   input, select { width: 100%; border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); padding: 0.85rem 0.9rem; background: #fff; color: var(--color-primary); font: inherit; }
   input:focus, select:focus { outline: 3px solid rgba(32, 199, 215, 0.2); border-color: var(--color-accent-dark); }
   .wide { grid-column: 1 / -1; }
