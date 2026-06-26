@@ -1,0 +1,462 @@
+---
+import AnswerBox from './AnswerBox.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import FAQ from './FAQ.astro';
+import GoogleAd from './GoogleAd.astro';
+import JsonLd from './JsonLd.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { absoluteUrl } from '../lib/seo';
+import { breadcrumbsJsonLd, faqJsonLd } from '../lib/structured-data';
+import type { CoolingDemandPage } from '../lib/cooling-demand-calculator';
+
+interface Props {
+  page: CoolingDemandPage;
+}
+
+const { page } = Astro.props;
+const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
+const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
+const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
+const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
+const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
+const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
+const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
+const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
+const showWideAd = import.meta.env.DEV || wideAdSlot;
+const showArticleAd = import.meta.env.DEV || articleAdSlot;
+const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
+const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
+const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
+const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
+const breadcrumbs = [
+  { name: 'Forside', url: '/' },
+  { name: 'Beregnere', url: '/beregnere/' },
+  { name: page.breadcrumbName, url: page.path },
+];
+const currentRelatedRooms = page.relatedRooms.filter((room) => room.href !== page.path);
+
+const calculatorJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: page.h1,
+  description: page.description,
+  url: absoluteUrl(page.path),
+  applicationCategory: 'CalculatorApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'da-DK',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'DKK',
+  },
+};
+---
+
+<BaseLayout title={page.title} description={page.description} path={page.path}>
+  <section class="calculator-hero">
+    <div class="container hero-copy">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="pill">{page.pill}</span>
+      <h1>{page.h1}</h1>
+      <p>{page.intro}</p>
+      <div class="hero-actions">
+        <a class="button" href="#beregner">Brug beregneren</a>
+        <a class="button secondary" href="#forklaring">Se beregningsmetode</a>
+      </div>
+      <aside class="surface quick-answer" aria-label="Kort svar">
+        <span class="pill">Kort svar</span>
+        <p>{page.quickAnswer}</p>
+      </aside>
+    </div>
+  </section>
+
+  <section id="beregner" class="section container calculator-section" aria-labelledby="calculator-heading">
+    <div class="section-heading">
+      <span class="pill">Aircondition kW beregner</span>
+      <h2 id="calculator-heading">Beregn kølebehov i kW og BTU/h</h2>
+      <p>Resultatet er et vejledende estimat. Den faktiske dimensionering afhænger også af placering, luftfordeling, installation og lokale forhold.</p>
+    </div>
+
+    <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
+      <div class="surface calculator-panel">
+        <form class="calculator-form" data-calculator novalidate>
+          <div class="field-grid">
+            <label>
+              <span>Rumstørrelse i m²</span>
+              <input name="area" type="number" inputmode="decimal" min="4" max="500" step="1" value={page.defaultValues.area} required />
+            </label>
+            <label>
+              <span class="label-with-help">
+                Loftshøjde i meter
+                <span class="tooltip">
+                  <button type="button" class="tooltip-trigger" aria-describedby="height-help">?</button>
+                  <span id="height-help" class="tooltip-content" role="tooltip">
+                    Standardloft i mange danske boliger er cirka 2,4 meter. Mål fra gulv til loft, eller brug 2,4 som groft udgangspunkt, hvis du ikke kender tallet.
+                  </span>
+                </span>
+              </span>
+              <input name="height" type="number" inputmode="decimal" min="2" max="6" step="0.1" value={page.defaultValues.height} required />
+            </label>
+            <label>
+              <span>Rumtype</span>
+              <select name="profile">
+                <option value="generic" selected={page.defaultValues.profile === 'generic'}>Almindeligt rum</option>
+                <option value="bedroom" selected={page.defaultValues.profile === 'bedroom'}>Soveværelse</option>
+                <option value="office" selected={page.defaultValues.profile === 'office'}>Hjemmekontor</option>
+                <option value="sunroom" selected={page.defaultValues.profile === 'sunroom'}>Udestue</option>
+                <option value="server" selected={page.defaultValues.profile === 'server'}>Serverrum</option>
+                <option value="shop" selected={page.defaultValues.profile === 'shop'}>Butik</option>
+              </select>
+            </label>
+            <label>
+              <span>Isolering</span>
+              <select name="insulation">
+                <option value="poor" selected={page.defaultValues.insulation === 'poor'}>Dårlig</option>
+                <option value="average" selected={page.defaultValues.insulation === 'average'}>Middel</option>
+                <option value="good" selected={page.defaultValues.insulation === 'good'}>God</option>
+              </select>
+            </label>
+            <label>
+              <span class="label-with-help">
+                Solindfald
+                <span class="tooltip">
+                  <button type="button" class="tooltip-trigger" aria-describedby="sun-help">?</button>
+                  <span id="sun-help" class="tooltip-content" role="tooltip">
+                    Vælg højt solindfald ved direkte sol i flere timer, især mod syd eller vest. Vælg lavt ved nordvendte rum eller effektiv udvendig solafskærmning.
+                  </span>
+                </span>
+              </span>
+              <select name="sun">
+                <option value="low" selected={page.defaultValues.sun === 'low'}>Lavt</option>
+                <option value="normal" selected={page.defaultValues.sun === 'normal'}>Normalt</option>
+                <option value="high" selected={page.defaultValues.sun === 'high'}>Højt</option>
+              </select>
+            </label>
+            <label>
+              <span class="label-with-help">
+                Vinduer og glaspartier
+                <span class="tooltip">
+                  <button type="button" class="tooltip-trigger" aria-describedby="windows-help">?</button>
+                  <span id="windows-help" class="tooltip-content" role="tooltip">
+                    Vælg store vinduer, hvis rummet har bred glasfacade, udestueglas, store terrassedøre eller markant mere glas end et almindeligt værelse.
+                  </span>
+                </span>
+              </span>
+              <select name="windows">
+                <option value="small" selected={page.defaultValues.windows === 'small'}>Små/få vinduer</option>
+                <option value="normal" selected={page.defaultValues.windows === 'normal'}>Almindelige vinduer</option>
+                <option value="large" selected={page.defaultValues.windows === 'large'}>Store vinduer/glaspartier</option>
+              </select>
+            </label>
+            <label>
+              <span>Antal personer i rummet</span>
+              <input name="people" type="number" inputmode="numeric" min="0" max="80" step="1" value={page.defaultValues.people} required />
+            </label>
+            <label>
+              <span class="label-with-help">
+                Elektronik/udstyr i watt
+                <span class="tooltip">
+                  <button type="button" class="tooltip-trigger" aria-describedby="equipment-help">?</button>
+                  <span id="equipment-help" class="tooltip-content" role="tooltip">
+                    Find watt på datablad, mærkat, strømforsyning, UPS, oplader eller med en energimåler. For serverrum og kontor bør pc, skærme, netværk og andet udstyr tælles med.
+                  </span>
+                </span>
+              </span>
+              <input name="equipment" type="number" inputmode="decimal" min="0" max="50000" step="10" value={page.defaultValues.equipment} required />
+            </label>
+          </div>
+          <p class="form-hint">Beregneren viser vejledende kølekapacitet. Ved serverrum, udestuer, butikker og kritisk drift bør resultatet kontrolleres af en fagperson.</p>
+          <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for rumstørrelse, loftshøjde, personer og udstyr.</p>
+          <button class="button" type="submit">Beregn kølebehov</button>
+        </form>
+
+        <aside class="result-card" aria-live="polite" data-result>
+          <div>
+            <span class="pill">Dit estimat</span>
+            <p class="result-kicker" data-profile-label>Kølebehov</p>
+          </div>
+          <div class="result-main">
+            <strong data-main-result>Ca. 3,0 kW</strong>
+            <p data-range-result>Du bør kigge efter en model omkring 2,6-3,5 kW.</p>
+          </div>
+          <div class="result-details">
+            <p data-btu-result>Ca. 10.200 BTU/h</p>
+            <p data-driver-result>Største driver: rum og sol</p>
+          </div>
+        </aside>
+      </div>
+
+      {showSidebarAd && (
+        <aside class="ad-column" aria-label="Annonce">
+          <GoogleAd slotId={sidebarAdSlot} className="sidebar-ad" />
+        </aside>
+      )}
+    </div>
+  </section>
+
+  {showWideAd && (
+    <aside class="container" aria-label="Annonce">
+      <GoogleAd slotId={wideAdSlot} className="wide-ad" />
+    </aside>
+  )}
+
+  <article class:list={['article-shell', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
+    {showLeftRailAd && (
+      <aside class="rail-ad left-rail" aria-label="Annonce">
+        <GoogleAd slotId={leftRailAdSlot} className="rail-ad-unit" />
+      </aside>
+    )}
+
+    <div class="article-main">
+      <div class="reading article-body content-card">
+        <AnswerBox>{page.answer}</AnswerBox>
+
+        {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
+
+        <h2>{page.primaryHeading}</h2>
+        {page.primaryCopy.map((paragraph) => <p>{paragraph}</p>)}
+
+        <h2 id="forklaring">Sådan beregner vi estimatet</h2>
+        <p>
+          Beregneren starter med rummets volumen ud fra m² og loftshøjde. Derefter justeres for isolering, solindfald, vinduesareal og rumtype. Til sidst lægges varme fra personer og elektronik oveni.
+        </p>
+        <p>
+          Resultatet vises både i kW og BTU/h. Omregningen bruger 1 kW som cirka 3.412 BTU/h, så du lettere kan sammenligne produkter, der oplyser kapacitet på forskellige måder.
+        </p>
+
+        <h2>{page.exampleHeading}</h2>
+        <p>{page.exampleCopy}</p>
+
+        {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
+
+        <h2>{page.adviceHeading}</h2>
+        {page.adviceCopy.map((paragraph) => <p>{paragraph}</p>)}
+
+        <div class="room-links">
+          <h2>Beregn kølebehov for andre rum</h2>
+          <p>Samme beregningsmotor kan bruges til flere rumtyper, men standardværdier og råd er tilpasset rummet.</p>
+          <div class="room-link-grid">
+            {currentRelatedRooms.map((room) => <a href={room.href}>{room.label}</a>)}
+          </div>
+        </div>
+
+        {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
+
+        <h2>Hvornår bør du få hjælp til dimensionering?</h2>
+        <p>
+          Få en installatør eller fagperson til at vurdere løsningen, hvis rummet har meget store glaspartier, dårlig isolering, flere sammenhængende rum, kritisk drift, usædvanligt mange personer eller meget udstyr.
+        </p>
+        <p>
+          Du kan også sammenligne med vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a>, læse mere om <a href="/aircondition/">aircondition</a> eller se guides til <a href="/varmepumper/">luft til luft-varmepumper</a>.
+        </p>
+
+        <FAQ items={page.faq} />
+      </div>
+
+      <aside class="reading side-panel">
+        <div class="checklist">
+          <h2>Det påvirker kølebehovet</h2>
+          <ul>
+            {page.checklist.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    {showRightRailAd && (
+      <aside class="rail-ad right-rail" aria-label="Annonce">
+        <GoogleAd slotId={rightRailAdSlot} className="rail-ad-unit" />
+      </aside>
+    )}
+  </article>
+
+  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+  <JsonLd data={faqJsonLd(page.faq)} />
+  <JsonLd data={calculatorJsonLd} />
+</BaseLayout>
+
+<script>
+  const form = document.querySelector('[data-calculator]');
+  const result = document.querySelector('[data-result]');
+  const error = document.querySelector('[data-error]');
+
+  const labels = {
+    generic: 'Almindeligt rum',
+    bedroom: 'Soveværelse',
+    office: 'Hjemmekontor',
+    sunroom: 'Udestue',
+    server: 'Serverrum',
+    shop: 'Butik',
+  };
+
+  const profileFactors = {
+    generic: 1,
+    bedroom: 0.92,
+    office: 1.04,
+    sunroom: 1.28,
+    server: 1.18,
+    shop: 1.12,
+  };
+
+  const roundKw = (value) => Math.round(value * 10) / 10;
+  const formatKw = (value) => roundKw(value).toLocaleString('da-DK', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const formatBtu = (value) => Math.round(value / 100) * 100;
+
+  function readData() {
+    if (!(form instanceof HTMLFormElement)) return null;
+    const formData = new FormData(form);
+    const area = Number(formData.get('area'));
+    const height = Number(formData.get('height'));
+    const people = Number(formData.get('people'));
+    const equipment = Number(formData.get('equipment'));
+    const insulation = String(formData.get('insulation'));
+    const sun = String(formData.get('sun'));
+    const windows = String(formData.get('windows'));
+    const profile = String(formData.get('profile'));
+
+    if (!Number.isFinite(area) || area < 4 || area > 500) return null;
+    if (!Number.isFinite(height) || height < 2 || height > 6) return null;
+    if (!Number.isFinite(people) || people < 0 || people > 80) return null;
+    if (!Number.isFinite(equipment) || equipment < 0 || equipment > 50000) return null;
+    if (!(insulation in { poor: 1, average: 1, good: 1 })) return null;
+    if (!(sun in { low: 1, normal: 1, high: 1 })) return null;
+    if (!(windows in { small: 1, normal: 1, large: 1 })) return null;
+    if (!(profile in profileFactors)) return null;
+
+    return { area, height, people, equipment, insulation, sun, windows, profile };
+  }
+
+  function calculate(data) {
+    const volume = data.area * data.height;
+    const insulationFactor = { poor: 1.18, average: 1, good: 0.9 }[data.insulation];
+    const sunFactor = { low: 0.9, normal: 1, high: 1.2 }[data.sun];
+    const windowFactor = { small: 0.92, normal: 1, large: 1.22 }[data.windows];
+    const profileFactor = profileFactors[data.profile];
+    const baseW = volume * 40 * insulationFactor * sunFactor * windowFactor * profileFactor;
+    const peopleW = data.people * (data.profile === 'shop' ? 130 : 110);
+    const equipmentW = data.equipment;
+    const safetyFactor = data.profile === 'server' ? 1.2 : data.profile === 'sunroom' ? 1.12 : 1.08;
+    const totalW = (baseW + peopleW + equipmentW) * safetyFactor;
+    return {
+      kw: Math.max(totalW / 1000, 1.2),
+      drivers: { rum: baseW, personer: peopleW, udstyr: equipmentW },
+    };
+  }
+
+  function largestDriver(drivers) {
+    const [driver] = Object.entries(drivers).sort((a, b) => b[1] - a[1]);
+    if (!driver) return 'Største driver: rum og sol';
+    const labels = { rum: 'rum, sol og vinduer', personer: 'personer', udstyr: 'elektronik og udstyr' };
+    return `Største driver: ${labels[driver[0]] ?? driver[0]}`;
+  }
+
+  function updateResult() {
+    const data = readData();
+    if (!data || !result) {
+      error?.removeAttribute('hidden');
+      return;
+    }
+
+    error?.setAttribute('hidden', '');
+    const estimate = calculate(data);
+    const low = Math.max(roundKw(estimate.kw * 0.85), 1.2);
+    const high = roundKw(estimate.kw * 1.15);
+    const btu = formatBtu(estimate.kw * 3412);
+
+    result.querySelector('[data-profile-label]').textContent = labels[data.profile] ?? 'Kølebehov';
+    result.querySelector('[data-main-result]').textContent = `Ca. ${formatKw(estimate.kw)} kW`;
+    result.querySelector('[data-range-result]').textContent = `Du bør kigge efter en model omkring ${formatKw(low)}-${formatKw(high)} kW.`;
+    result.querySelector('[data-btu-result]').textContent = `Ca. ${btu.toLocaleString('da-DK')} BTU/h`;
+    result.querySelector('[data-driver-result]').textContent = largestDriver(estimate.drivers);
+  }
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    updateResult();
+  });
+
+  form?.addEventListener('input', updateResult);
+  form?.addEventListener('change', updateResult);
+  updateResult();
+</script>
+
+<style>
+  .calculator-hero { padding: clamp(4rem, 8vw, 7rem) 0 clamp(2.25rem, 5vw, 4rem); }
+  .hero-copy { text-align: center; }
+  .hero-copy :global(.breadcrumbs) { justify-content: center; }
+  .hero-copy h1 { max-width: 1020px; margin: 0.85rem auto 1rem; font-size: clamp(2.65rem, 6vw, 5.35rem); }
+  .hero-copy p { max-width: 860px; margin-inline: auto; color: var(--color-muted); font-size: clamp(1.08rem, 2vw, 1.32rem); }
+  .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 1.4rem; }
+  .quick-answer { padding: 1.35rem; background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(220, 251, 255, 0.72)); }
+  .hero-copy .quick-answer { max-width: 780px; margin: 2rem auto 0; }
+  .quick-answer p { margin: 1rem 0 0; color: var(--color-primary); font-size: 1.12rem; }
+  .section-heading { margin-bottom: 1.5rem; }
+  .section-heading h2 { margin-top: 0.8rem; }
+  .section-heading p { max-width: 760px; color: var(--color-muted); font-size: 1.1rem; }
+  .calculator-layout { display: grid; gap: 1.15rem; align-items: start; }
+  .calculator-layout.has-sidebar-ad { grid-template-columns: minmax(0, 1fr) minmax(260px, 0.32fr); }
+  .calculator-panel { padding: clamp(1.2rem, 3vw, 2rem); }
+  .calculator-form { margin-bottom: 1.25rem; }
+  .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+  label { display: grid; gap: 0.4rem; color: var(--color-primary); font-weight: 800; }
+  label span { font-size: 0.95rem; }
+  .label-with-help { display: inline-flex; align-items: center; gap: 0.45rem; width: fit-content; }
+  .tooltip { position: relative; display: inline-flex; }
+  .tooltip-trigger { display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; border: 1px solid var(--color-border-strong); border-radius: 999px; background: #fff; color: var(--color-primary); font: inherit; font-size: 0.78rem; font-weight: 900; cursor: help; }
+  .tooltip-trigger:focus { outline: 3px solid rgba(32, 199, 215, 0.2); border-color: var(--color-accent-dark); }
+  .tooltip-content { position: absolute; left: 50%; bottom: calc(100% + 0.6rem); z-index: 2; width: min(320px, calc(100vw - 3rem)); transform: translateX(-50%); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.75rem 0.85rem; background: var(--color-primary); color: #fff; box-shadow: 0 14px 32px rgba(6, 25, 35, 0.18); font-size: 0.88rem; font-weight: 650; line-height: 1.45; opacity: 0; pointer-events: none; transition: opacity 0.15s ease, transform 0.15s ease; }
+  .tooltip-content::after { content: ''; position: absolute; left: 50%; top: 100%; width: 0.75rem; height: 0.75rem; transform: translate(-50%, -50%) rotate(45deg); background: var(--color-primary); border-right: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+  .tooltip:hover .tooltip-content, .tooltip:focus-within .tooltip-content { opacity: 1; transform: translateX(-50%) translateY(-0.15rem); }
+  input, select { width: 100%; border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); padding: 0.85rem 0.9rem; background: #fff; color: var(--color-primary); font: inherit; }
+  input:focus, select:focus { outline: 3px solid rgba(32, 199, 215, 0.2); border-color: var(--color-accent-dark); }
+  .form-hint { margin: 0 0 1rem; color: var(--color-muted); font-size: 0.95rem; }
+  .form-error { color: #9f1239; font-weight: 800; }
+  .result-card { display: grid; grid-template-columns: minmax(160px, 0.4fr) minmax(0, 1fr) minmax(190px, 0.55fr); gap: 1rem; align-items: center; border-radius: var(--radius-lg); padding: clamp(1rem, 2.4vw, 1.4rem); background: linear-gradient(145deg, var(--color-primary), var(--color-primary-soft)); color: #fff; }
+  .result-card .pill { border-color: rgba(255, 255, 255, 0.24); background: rgba(255, 255, 255, 0.12); color: #bff8ff; }
+  .result-card strong { display: block; margin: 0 0 0.35rem; color: #fff; font-size: clamp(2.1rem, 4.4vw, 3.8rem); line-height: 1; letter-spacing: -0.06em; }
+  .result-card p { color: #dbeafe; }
+  .result-main p, .result-details p { margin: 0; }
+  .result-details { border-left: 1px solid rgba(255, 255, 255, 0.18); padding-left: 1rem; font-weight: 800; }
+  .result-details p + p { margin-top: 0.5rem; font-weight: 650; }
+  .result-kicker { margin: 0.7rem 0 0; font-weight: 850; text-transform: uppercase; letter-spacing: 0.08em; }
+  .ad-column { position: sticky; top: 104px; }
+  :global(.sidebar-ad) { min-height: 420px; }
+  :global(.wide-ad) { min-height: 92px; margin-bottom: clamp(2rem, 5vw, 4rem); }
+  :global(.article-ad) { min-height: 120px; margin: 2.5rem 0; }
+  :global(.calculator-mobile-ad) { display: none; min-height: 120px; margin: 2rem 0; }
+  .article-shell { padding-bottom: clamp(3rem, 7vw, 6rem); }
+  .article-shell.has-rail-ads { display: grid; grid-template-columns: minmax(140px, 1fr) minmax(0, 800px) minmax(140px, 1fr); gap: clamp(1rem, 3vw, 2rem); width: min(1420px, calc(100% - 40px)); margin-inline: auto; align-items: start; }
+  .article-main { min-width: 0; }
+  .article-shell.has-rail-ads .reading { width: 100%; }
+  .rail-ad { position: sticky; top: 104px; min-width: 0; }
+  :global(.rail-ad-unit) { min-height: 600px; }
+  .left-rail { grid-column: 1; }
+  .article-main { grid-column: 2; }
+  .right-rail { grid-column: 3; }
+  .content-card { padding: clamp(1.35rem, 4vw, 2.75rem); background: #fff; border: 1px solid rgba(217, 229, 232, 0.7); border-radius: var(--radius-xl); box-shadow: 0 1px 2px rgba(6, 25, 35, 0.025); }
+  .room-links { margin: 2rem 0; border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: clamp(1rem, 3vw, 1.4rem); background: rgba(220, 251, 255, 0.42); }
+  .room-links h2 { margin-top: 0; }
+  .room-link-grid { display: flex; flex-wrap: wrap; gap: 0.65rem; }
+  .room-link-grid a { border: 1px solid var(--color-border-strong); border-radius: 999px; padding: 0.55rem 0.8rem; background: #fff; color: var(--color-primary); font-weight: 850; text-decoration: none; }
+  .room-link-grid a:hover { border-color: var(--color-accent-dark); color: var(--color-accent-dark); }
+  .side-panel { margin-top: 1.25rem; }
+  .checklist { border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: clamp(1.1rem, 3vw, 1.5rem); background: rgba(255, 255, 255, 0.7); }
+  .checklist h2 { margin-top: 0; font-size: 1.35rem; }
+  .checklist ul { margin: 0; padding-left: 1.25rem; color: var(--color-muted); }
+  .checklist li + li { margin-top: 0.55rem; }
+
+  @media (max-width: 920px) {
+    .calculator-layout.has-sidebar-ad { grid-template-columns: 1fr; }
+    .ad-column { position: static; }
+    :global(.sidebar-ad) { min-height: 120px; }
+    .result-card { grid-template-columns: 1fr; }
+    .result-details { border-top: 1px solid rgba(255, 255, 255, 0.18); border-left: 0; padding: 1rem 0 0; }
+    .article-shell.has-rail-ads { display: block; width: auto; }
+    .rail-ad { display: none; }
+    :global(.calculator-mobile-ad) { display: block; }
+  }
+
+  @media (max-width: 620px) {
+    .field-grid { grid-template-columns: 1fr; }
+  }
+</style>
