@@ -7,7 +7,9 @@ Du skal skrive en artikel omkring følgende emne: `INTAST EMNE`
 # Context
 Here er følgende research lavet omkring emnet:
 
-`INSÆT RESEARCH`
+```
+
+```
 
 # Requirements
 - Skrive fuld SEO & AEO optimeret blog artikel omrking det givne emne udfra den leverede research
