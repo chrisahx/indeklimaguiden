@@ -34,22 +34,27 @@ const faq = [
   {
     question: 'Skal jeg vælge mobil aircondition eller split aircondition?',
     answer:
-      'Vælg typisk mobil aircondition, hvis du lejer, har lavt budget eller ikke må bore. Vælg split aircondition, hvis du må installere fast anlæg, bruger køling ofte og vil have lavere støj og bedre effektivitet.',
+      'Vælg typisk mobil aircondition, hvis du lejer, har lavt budget eller ikke må bore. Hvis du kan placere en midlertidig udedel udenfor vindue eller altan, kan en mobil split aircondition være et mellemvalg. Vælg fast split aircondition, hvis du må installere permanent anlæg.',
   },
   {
     question: 'Hvad er den bedste aircondition til lejlighed?',
     answer:
-      'I en lejlighed er mobil aircondition ofte det mest realistiske valg, hvis du ikke må ændre facaden eller bore hul. Hvis ejerforening og udlejer tillader fast installation, er split aircondition eller luft til luft-varmepumpe ofte bedre til støj og drift.',
+      'I en lejlighed er mobil aircondition ofte det mest realistiske valg, hvis du ikke må ændre facaden eller bore hul. En mobil split aircondition med midlertidig udedel ved vindue eller altan kan være relevant, hvis placeringen er sikker og tilladt. Hvis ejerforening og udlejer tillader fast installation, er split aircondition eller luft til luft-varmepumpe ofte bedre til støj og drift.',
   },
   {
     question: 'Findes der aircondition uden slange?',
     answer:
-      'En rigtig mobil aircondition skal normalt have en aftræksslange ud gennem vindue eller væg. Produkter uden slange er ofte luftkølere eller ventilatorer, ikke egentlig aircondition. Et splitanlæg har ikke samme synlige slange indendørs, men kræver fast installation.',
+      'En rigtig mobil aircondition skal normalt flytte varme ud af rummet. Det sker ofte med aftræksslange, men der findes også mobile splitløsninger, hvor kompressordelen placeres udenfor vinduet og forbindes med indedelen via en slange eller kabelpakke gennem vinduet. Produkter helt uden aftræk eller udedel er ofte luftkølere eller ventilatorer, ikke egentlig aircondition.',
+  },
+  {
+    question: 'Hvad er mobil split aircondition?',
+    answer:
+      'Mobil split aircondition er en midlertidig løsning med en indedel i rummet og en mindre udedel udenfor, ofte ved vindue, altan eller campingvogn. Den kræver normalt ikke hul i væggen, men vinduet skal kunne stå på klem, og udedelen skal placeres sikkert og lovligt.',
   },
   {
     question: 'Hvad er bedst til soveværelse?',
     answer:
-      'Til soveværelse er støj ofte afgørende. En fast split aircondition eller luft til luft-varmepumpe er normalt mere komfortabel end mobil aircondition, men kræver tilladelse og installation.',
+      'Til soveværelse er støj ofte afgørende. Fast split aircondition eller luft til luft-varmepumpe er normalt mest komfortabelt. Mobil split aircondition kan være et bedre kompromis end almindelig mobil aircondition, fordi en del af støjen flyttes udenfor.',
   },
   {
     question: 'Hvornår er en affugter eller ventilator nok?',
@@ -63,7 +68,7 @@ const calculatorJsonLd = {
   '@type': 'WebApplication',
   name: 'Mobil aircondition eller split aircondition vælger',
   description:
-    'Find ud af om du bør vælge mobil aircondition, split aircondition, luft til luft-varmepumpe eller et enklere alternativ ud fra boligtype, budget, rumstørrelse, støj, brug og installation.',
+    'Find ud af om du bør vælge mobil aircondition, mobil split aircondition, fast split aircondition, luft til luft-varmepumpe eller et enklere alternativ ud fra boligtype, budget, rumstørrelse, støj, brug og installation.',
   url: absoluteUrl(path),
   applicationCategory: 'CalculatorApplication',
   operatingSystem: 'Web',
@@ -78,7 +83,7 @@ const calculatorJsonLd = {
 
 <BaseLayout
   title="Mobil aircondition eller split aircondition? Vælg den rigtige løsning"
-  description="Brug vælgeren til at finde ud af om du bør vælge mobil aircondition, split aircondition, luft-til-luft varmepumpe eller et billigere alternativ til dit rum."
+  description="Brug vælgeren til at finde ud af om du bør vælge mobil aircondition, mobil split aircondition, fast split aircondition, luft-til-luft varmepumpe eller et billigere alternativ."
   path={path}
 >
   <section class="calculator-hero">
@@ -87,7 +92,7 @@ const calculatorJsonLd = {
       <span class="pill">Aircondition vælger</span>
       <h1>Mobil aircondition eller split aircondition?</h1>
       <p>
-        Svar på seks spørgsmål, og få en praktisk anbefaling til om du bør vælge mobil aircondition, split aircondition, luft til luft-varmepumpe eller et enklere alternativ.
+        Svar på syv spørgsmål, og få en praktisk anbefaling til om du bør vælge mobil aircondition, mobil split aircondition, fast split aircondition, luft til luft-varmepumpe eller et enklere alternativ.
       </p>
       <div class="hero-actions">
         <a class="button" href="#beregner">Brug vælgeren</a>
@@ -96,7 +101,7 @@ const calculatorJsonLd = {
       <aside class="surface quick-answer" aria-label="Kort svar">
         <span class="pill">Kort svar</span>
         <p>
-          <strong>Mobil aircondition</strong> passer ofte bedst til lejere og lavere budget. <strong>Split aircondition</strong> eller <strong>luft til luft-varmepumpe</strong> er normalt bedre ved fast installation, hyppig brug og lav støjtolerance.
+          <strong>Mobil aircondition</strong> passer ofte bedst til lejere og lavere budget. <strong>Mobil split aircondition</strong> kan være et godt mellemvalg, hvis en udedel kan stå sikkert udenfor vinduet. <strong>Fast split</strong> eller <strong>luft til luft-varmepumpe</strong> er bedst ved permanent installation.
         </p>
       </aside>
     </div>
@@ -106,7 +111,7 @@ const calculatorJsonLd = {
     <div class="section-heading">
       <span class="pill">Vælgertype</span>
       <h2 id="calculator-heading">Find den bedste løsning til dit rum</h2>
-      <p>Resultatet er vejledende. Tjek altid regler for udlejer, ejerforening, facade, støjkrav og installation, før du køber et fast anlæg.</p>
+      <p>Resultatet er vejledende. Tjek altid regler for udlejer, ejerforening, facade, vinduesplacering, støjkrav og installation, før du køber et anlæg.</p>
     </div>
 
     <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
@@ -184,6 +189,22 @@ const calculatorJsonLd = {
                 <option value="yes">Ja</option>
               </select>
             </label>
+            <label class="wide">
+              <span class="label-with-help">
+                Kan du placere en udedel udenfor vindue eller altan?
+                <span class="tooltip">
+                  <button type="button" class="tooltip-trigger" aria-describedby="window-split-help">?</button>
+                  <span id="window-split-help" class="tooltip-content" role="tooltip">
+                    Mobile splitanlæg kan have en indedel i rummet og en mindre udedel udenfor vinduet eller på altanen. Vurder om vinduet kan stå på klem, om udedelen står sikkert, og om regler/støj tillader det.
+                  </span>
+                </span>
+              </span>
+              <select name="windowPlacement">
+                <option value="no">Nej</option>
+                <option value="maybe" selected>Måske, hvis placeringen kan gøres sikker</option>
+                <option value="yes">Ja, ved vindue eller altan</option>
+              </select>
+            </label>
           </div>
           <p class="form-hint">Vælgeren prioriterer praktiske begrænsninger først: boligform, installation, støj og hvor ofte løsningen skal bruges.</p>
           <button class="button" type="submit">Vis anbefaling</button>
@@ -233,6 +254,7 @@ const calculatorJsonLd = {
           <ul>
             <li>Om du ejer eller lejer boligen</li>
             <li>Om fast installation er tilladt</li>
+            <li>Om en midlertidig udedel kan stå ved vindue eller altan</li>
             <li>Budget til køb og montering</li>
             <li>Rumstørrelse og solindfald</li>
             <li>Støjkrav i soveværelse eller kontor</li>
@@ -243,22 +265,28 @@ const calculatorJsonLd = {
 
       <div class="reading article-body content-card">
         <AnswerBox>
-          Hvis du ikke må bore eller ændre facaden, er mobil aircondition ofte det mest realistiske valg. Hvis du må installere fast anlæg og bruger køling ofte, er split aircondition eller luft til luft-varmepumpe normalt mere støjsvag og effektiv.
+          Hvis du ikke må bore eller ændre facaden, er mobil aircondition ofte det mest realistiske valg. Hvis du kan placere en midlertidig udedel udenfor vindue eller altan, kan mobil split aircondition være et bedre kompromis. Hvis du må installere fast anlæg, er fast split aircondition eller luft til luft-varmepumpe normalt mest støjsvag og effektiv.
         </AnswerBox>
 
         {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
 
         <h2>Mobil aircondition eller split: hvad skal du vælge?</h2>
         <p>
-          Valget mellem mobil aircondition eller split aircondition handler ikke kun om pris. Det handler især om installation, støj, effektivitet og om du bor til leje eller ejer boligen. En mobil aircondition kan flyttes og kræver typisk ikke fast montering, men den skal næsten altid have en slange ud gennem et vindue.
+          Valget mellem mobil aircondition eller split aircondition handler ikke kun om pris. Det handler især om installation, støj, effektivitet og om du bor til leje eller ejer boligen. En almindelig mobil aircondition kan flyttes og kræver typisk ikke fast montering, men den skal næsten altid have en slange ud gennem et vindue.
         </p>
         <p>
-          Split aircondition er mere permanent. Kompressoren placeres udenfor, mens indedelen sidder i rummet. Derfor er løsningen ofte mere behagelig til soveværelse, stue og hjemmekontor, men den kræver tilladelse, korrekt montering og et højere budget.
+          Der findes også mobile splitanlæg, hvor indedelen står i rummet, mens en mindre udedel placeres udenfor vinduet, på altanen eller et tilsvarende sikkert sted. Det kan reducere støjen i rummet sammenlignet med almindelig mobil aircondition, uden at du nødvendigvis skal bore hul i væggen.
+        </p>
+        <p>
+          Fast split aircondition er mere permanent. Kompressoren placeres udenfor, mens indedelen sidder i rummet. Derfor er løsningen ofte mere behagelig til soveværelse, stue og hjemmekontor, men den kræver tilladelse, korrekt montering og et højere budget.
         </p>
 
         <h2>Bedste aircondition til lejlighed</h2>
         <p>
-          Den bedste aircondition til lejlighed er ofte den løsning, du faktisk må installere. Mange lejere kan ikke montere udedel på facade eller bore gennem ydervæg. Her er mobil aircondition typisk nemmest, især hvis du kun har brug for køling få uger om året.
+          Den bedste aircondition til lejlighed er ofte den løsning, du faktisk må installere. Mange lejere kan ikke montere fast udedel på facade eller bore gennem ydervæg. Her er almindelig mobil aircondition typisk nemmest, især hvis du kun har brug for køling få uger om året.
+        </p>
+        <p>
+          En mobil split aircondition kan være relevant i en lejlighed, hvis du har vindue eller altan, hvor udedelen kan stå sikkert og uden at genere naboer. Du bør stadig tjekke husorden, udlejer, ejerforening og eventuelle støjkrav, fordi udedelen kan være synlig eller hørbar udenfor.
         </p>
         <p>
           Hvis du ejer lejligheden, bør du stadig tjekke vedtægter, ejerforening og kommunale regler. Et fast splitanlæg eller en luft til luft-varmepumpe kan være bedre i drift, men kun hvis installationen er tilladt.
@@ -266,10 +294,13 @@ const calculatorJsonLd = {
 
         <h2>Aircondition uden slange</h2>
         <p>
-          Mange søger efter aircondition uden slange, men en rigtig aircondition skal flytte varme ud af rummet. En mobil model bruger derfor normalt aftræksslange. Hvis et produkt ikke har slange eller udedel, er det ofte en luftkøler eller ventilator, som kan føles rar, men ikke køler rummet på samme måde.
+          Mange søger efter aircondition uden slange, men en rigtig aircondition skal flytte varme ud af rummet. En almindelig mobil model bruger derfor normalt aftræksslange. Hvis et produkt ikke har slange, rørføring eller udedel, er det ofte en luftkøler eller ventilator, som kan føles rar, men ikke køler rummet på samme måde.
         </p>
         <p>
-          Et splitanlæg har ikke en synlig aftræksslange gennem vinduet, men det er ikke slangeløst i teknisk forstand. Det har rørføring mellem inde- og udedel og skal installeres fast.
+          Mobile splitanlæg kan føles tættere på “aircondition uden slange”, fordi kompressordelen står udenfor, og der ikke nødvendigvis er en stor varm aftræksslange fra selve rummet. Men der er stadig en forbindelse mellem inde- og udedel, og vinduet skal typisk stå på klem.
+        </p>
+        <p>
+          Et fast splitanlæg har ikke en synlig aftræksslange gennem vinduet, men det er ikke slangeløst i teknisk forstand. Det har rørføring mellem inde- og udedel og skal installeres fast.
         </p>
 
         <h2 id="sammenligning">Sammenligning af løsninger</h2>
@@ -288,7 +319,12 @@ const calculatorJsonLd = {
               <td>Kræver aftræksslange og støjer ofte mere i rummet.</td>
             </tr>
             <tr>
-              <td>Split aircondition</td>
+              <td>Mobil split aircondition</td>
+              <td>Lejere eller ejere uden boring, men med sikkert vindue eller altan til udedel</td>
+              <td>Vindue skal typisk stå på klem, udedel skal stå sikkert, og støj/regler bør tjekkes.</td>
+            </tr>
+            <tr>
+              <td>Fast split aircondition</td>
               <td>Fast køling, lavere støj og bedre komfort</td>
               <td>Kræver installation, udedel og tilladelse.</td>
             </tr>
@@ -309,7 +345,7 @@ const calculatorJsonLd = {
 
         <h2>Aircondition til soveværelse</h2>
         <p>
-          Til soveværelse bør støj vægte højt. En mobil aircondition kan være effektiv, men mange modeller er tydeligt hørbare, fordi kompressoren står i rummet. Hvis du er lydfølsom og må installere fast anlæg, er split aircondition eller luft til luft-varmepumpe ofte et bedre valg.
+          Til soveværelse bør støj vægte højt. En almindelig mobil aircondition kan være effektiv, men mange modeller er tydeligt hørbare, fordi kompressoren står i rummet. Mobil split aircondition kan være et bedre kompromis, hvis udedelen kan placeres sikkert udenfor vinduet. Hvis du er lydfølsom og må installere fast anlæg, er fast split aircondition eller luft til luft-varmepumpe ofte et bedre valg.
         </p>
         <p>
           Hvis du er usikker på størrelsen, kan du bruge vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a> eller vores <a href="/beregnere/btu-beregner-aircondition/">BTU beregner til aircondition</a>.
@@ -352,8 +388,14 @@ const calculatorJsonLd = {
       reason: 'Godt valg, når du lejer, har begrænset budget eller ikke må bore hul i væggen.',
       warning: 'Husk at mobil aircondition normalt kræver aftræksslange ud gennem vindue eller væg.',
     },
+    windowSplit: {
+      title: 'Mobil split aircondition',
+      label: 'Mellemvalg uden boring',
+      reason: 'Godt valg, hvis du ikke må bore, men kan placere en midlertidig udedel sikkert udenfor vindue eller altan.',
+      warning: 'Tjek at vinduet kan stå på klem, at udedelen står sikkert, og at støj eller placering ikke bryder regler for lejemål eller ejerforening.',
+    },
     split: {
-      title: 'Split aircondition',
+      title: 'Fast split aircondition',
       label: 'Mest komfortabel køling',
       reason: 'Godt valg, når du må installere fast anlæg, vil have lavere støj og forventer at bruge køling flere uger hver sommer.',
       warning: 'Kræver fast installation, udedel og normalt tilladelse ved lejlighed eller lejemål.',
@@ -383,46 +425,55 @@ const calculatorJsonLd = {
       noise: String(formData.get('noise')),
       usage: String(formData.get('usage')),
       drilling: String(formData.get('drilling')),
+      windowPlacement: String(formData.get('windowPlacement')),
     };
   }
 
   function scoreOptions(data) {
-    const scores = { mobile: 0, split: 0, heatpump: 0, alternative: 0 };
+    const scores = { mobile: 0, windowSplit: 0, split: 0, heatpump: 0, alternative: 0 };
 
     if (data.housing === 'tenant') {
       scores.mobile += 3;
+      scores.windowSplit += 2;
       scores.alternative += 1;
       scores.split -= 1;
       scores.heatpump -= 1;
     } else {
+      scores.windowSplit += 1;
       scores.split += 2;
       scores.heatpump += 2;
     }
 
     if (data.budget === 'low') {
       scores.mobile += 3;
+      scores.windowSplit -= 1;
       scores.alternative += 3;
       scores.split -= 2;
       scores.heatpump -= 3;
     } else if (data.budget === 'medium') {
       scores.mobile += 1;
+      scores.windowSplit += 3;
       scores.split += 2;
       scores.heatpump += 1;
     } else {
+      scores.windowSplit += 1;
       scores.split += 2;
       scores.heatpump += 3;
     }
 
     if (data.area === 'small') {
       scores.mobile += 2;
+      scores.windowSplit += 2;
       scores.alternative += 1;
       scores.split += 1;
     } else if (data.area === 'medium') {
       scores.mobile += 1;
+      scores.windowSplit += 2;
       scores.split += 2;
       scores.heatpump += 2;
     } else {
       scores.mobile -= 2;
+      scores.windowSplit -= 1;
       scores.alternative -= 1;
       scores.split += 3;
       scores.heatpump += 3;
@@ -430,39 +481,59 @@ const calculatorJsonLd = {
 
     if (data.noise === 'low') {
       scores.mobile -= 3;
+      scores.windowSplit += 2;
       scores.alternative += 1;
       scores.split += 3;
       scores.heatpump += 3;
     } else if (data.noise === 'medium') {
+      scores.windowSplit += 1;
       scores.split += 1;
       scores.heatpump += 1;
     } else {
       scores.mobile += 1;
+      scores.windowSplit += 1;
     }
 
     if (data.usage === 'occasional') {
       scores.mobile += 2;
+      scores.windowSplit += 1;
       scores.alternative += 2;
     } else if (data.usage === 'seasonal') {
       scores.mobile += 1;
+      scores.windowSplit += 3;
       scores.split += 2;
     } else {
+      scores.windowSplit += 1;
       scores.split += 3;
       scores.heatpump += 4;
     }
 
     if (data.drilling === 'no') {
       scores.mobile += 3;
+      scores.windowSplit += 2;
       scores.alternative += 2;
       scores.split = -99;
       scores.heatpump = -99;
     } else if (data.drilling === 'maybe') {
       scores.mobile += 1;
+      scores.windowSplit += 2;
       scores.split += 1;
       scores.heatpump += 1;
     } else {
+      scores.windowSplit -= 1;
       scores.split += 3;
       scores.heatpump += 3;
+    }
+
+    if (data.windowPlacement === 'yes') {
+      scores.windowSplit += 5;
+      scores.mobile += 1;
+    } else if (data.windowPlacement === 'maybe') {
+      scores.windowSplit += 2;
+    } else {
+      scores.windowSplit = -99;
+      scores.mobile += 1;
+      scores.alternative += 1;
     }
 
     return scores;
@@ -474,7 +545,7 @@ const calculatorJsonLd = {
 
     const ranked = Object.entries(scoreOptions(data)).sort((a, b) => b[1] - a[1]);
     const primaryKey = ranked[0][0];
-    const secondaryKey = ranked.find(([key]) => key !== primaryKey && key !== 'split' && key !== 'heatpump')?.[0] ?? ranked[1][0];
+    const secondaryKey = ranked.find(([key, score]) => key !== primaryKey && score > -50)?.[0] ?? ranked[1][0];
     const primary = recommendations[primaryKey];
     const secondary = recommendations[secondaryKey];
 
@@ -543,9 +614,6 @@ const calculatorJsonLd = {
   .checklist h2 { margin-top: 0; font-size: 1.35rem; }
   .checklist ul { margin: 0; padding-left: 1.25rem; color: var(--color-muted); }
   .checklist li + li { margin-top: 0.55rem; }
-  table { width: 100%; border-collapse: collapse; margin: 1.4rem 0 2rem; overflow: hidden; border-radius: var(--radius-md); }
-  th, td { border: 1px solid var(--color-border); padding: 0.85rem; text-align: left; vertical-align: top; }
-  th { background: var(--color-warm-soft); color: var(--color-primary); }
   .tooltip { position: relative; display: inline-flex; }
   .tooltip-trigger { display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; border: 1px solid var(--color-border-strong); border-radius: 999px; background: #fff; color: var(--color-primary); font: inherit; font-size: 0.78rem; font-weight: 900; cursor: help; }
   .tooltip-trigger:focus { outline: 3px solid rgba(32, 199, 215, 0.2); border-color: var(--color-accent-dark); }
@@ -567,6 +635,5 @@ const calculatorJsonLd = {
     .field-grid, .result-card { grid-template-columns: 1fr; }
     :global(.calculator-mobile-ad) { display: block; }
     .result-card strong { font-size: 2.35rem; }
-    table { display: block; overflow-x: auto; }
   }
 </style>
