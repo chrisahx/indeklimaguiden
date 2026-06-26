@@ -31,6 +31,13 @@ const breadcrumbs = [
       <p>Indtast rumstørrelse, loftshøjde, isolering, solindfald og vinduer, og få et estimat på anbefalet kapacitet i kW.</p>
       <a class="button" href="/beregnere/aircondition-varmepumpe-stoerrelse/">Åbn beregner</a>
     </article>
+
+    <article class="surface calculator-card">
+      <span class="card-kicker">Populær beregner</span>
+      <h2><a href="/beregnere/hvad-koster-aircondition-i-stroem/">Hvad koster aircondition i strøm?</a></h2>
+      <p>Indtast watt eller kW, timer pr. dag, dage pr. måned og elpris, og få pris pr. dag, pr. måned og pr. sommer.</p>
+      <a class="button" href="/beregnere/hvad-koster-aircondition-i-stroem/">Åbn beregner</a>
+    </article>
   </section>
 
   <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
@@ -39,7 +46,7 @@ const breadcrumbs = [
 <style>
   .page-head { padding-bottom: 2rem; }
   .page-head p { max-width: 760px; color: var(--color-muted); font-size: 1.16rem; }
-  .calculators { padding-bottom: clamp(3rem, 7vw, 6rem); }
+  .calculators { display: grid; gap: 1.15rem; padding-bottom: clamp(3rem, 7vw, 6rem); }
   .calculator-card { max-width: 780px; padding: clamp(1.25rem, 3vw, 2rem); }
   .calculator-card h2 { margin: 0.8rem 0 0.75rem; font-size: clamp(1.7rem, 3.4vw, 2.5rem); }
   .calculator-card h2 a { color: var(--color-primary); text-decoration: none; }
