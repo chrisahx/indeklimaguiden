@@ -150,7 +150,7 @@ Rail ads are desktop-only and hidden on smaller screens. Use the `*_MOBILE_1` an
 - [ ] Bedste Aircondition til hus
 - [ ] Bedste mini aircondition 
 - [ ] Bedste mobile aircondition 
-- [ ] klimaanlæg vs aircondition
+- [x] klimaanlæg vs aircondition
 - [ ] Bedste klimanlæg til hus
 - [ ] Aircondition service
 
