@@ -143,11 +143,18 @@ Rail ads are desktop-only and hidden on smaller screens. Use the `*_MOBILE_1` an
 - [ ] Aircondition til soveværelse
 - [ ] Aircondition til lejlighed
 - [ ] Aircondition strømforbrug
-- [ ] Aircondition installation
+- [-] Aircondition installation
 - [ ] Aircondition uden aftræk
 - [ ] Kan man sove med aircondition?
 - [ ] Aircondition vs ventilator
 - [ ] Aircondition til hus
+
+**mulige første artikler fra ahref**
+- [ ] mini aircondition 
+- [ ] aircondition til hus
+- [ ] mobil aircondition
+- [ ] aircondition til soveværelse
+- [ ] aircondition service
 
 ### Varmepumper (10)
 - [ ] Bedste luft til luft varmepumpe
