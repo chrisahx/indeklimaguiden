@@ -157,7 +157,7 @@ Rail ads are desktop-only and hidden on smaller screens. Use the `*_MOBILE_1` an
 - [ ] Varmepumpe til sommerhus
 - [ ] Varmepumpe test
 - [ ] Hvilken varmepumpe skal jeg vælge?
-- [ ] Luft til luft vs luft til vand
+- [x] Luft til luft vs luft til vand
 - [ ] Tilskud til varmepumpe
 - [ ] Installation af varmepumpe
 
