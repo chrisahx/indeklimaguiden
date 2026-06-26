@@ -169,7 +169,7 @@ Rail ads are desktop-only and hidden on smaller screens. Use the `*_MOBILE_1` an
 - [x] Dårligt indeklima symptomer
 - [x] Hvorfor dugger vinduer?
 - [x] Fugt i soveværelse
-- [ ] Ventilation i hus
+- [-] Ventilation i hus
 - [ ] Genvindingsanlæg guide
 - [ ] Sådan forbedrer du indeklimaet
 
