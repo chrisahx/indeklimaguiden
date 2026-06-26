@@ -183,3 +183,6 @@ Rail ads are desktop-only and hidden on smaller screens. Use the `*_MOBILE_1` an
 jeg vil gerne have at du researcher følgende emne: "Dårligt indeklima symptomer". målet med din research er til at skrive en blog artikel til en hjemmeside omrking varmepumper / airconditions / affugtere
 Hvis du har eksterne links i forhold til gode resourcer så skriv gerne de fulde clean links
 ```
+
+
+google page index next page --> https://indeklimaguiden.dk/indeklima/fugt-i-sovevaerelse/
