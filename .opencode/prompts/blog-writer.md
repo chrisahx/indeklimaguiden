@@ -14,6 +14,7 @@ Here er følgende research lavet omkring emnet:
 - Brug skill: @seo-aeo-blog-writer til at skrive artiklen
 - sætte artiklen til draft
 - artiklen hører under category: `CATEGORY`
+- Link til evt relevante beregnere in "/beregnere/<navn-på-beregner>
 
 # Output / Success Criteria
 Fuld skrevet artikel ud fra den leverede research

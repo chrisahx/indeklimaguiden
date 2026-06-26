@@ -1,0 +1,192 @@
+---
+title: "Varmepumpe strømforbrug: Hvor meget strøm bruger en varmepumpe om året?"
+seoTitle: "Varmepumpe strømforbrug: Hvor meget strøm bruger en varmepumpe?"
+description: "Se hvor meget strøm en varmepumpe typisk bruger om året. Få konkrete kWh-eksempler for luft til luft, luft til vand og jordvarme og lær at beregne din egen udgift."
+seoDescription: "Se hvor meget strøm en varmepumpe typisk bruger om året. Få konkrete kWh-eksempler for luft til luft, luft til vand og jordvarme – og lær hvordan du beregner din egen udgift."
+pubDate: 2026-06-26
+category: "varmepumper"
+articleType: "guide"
+slug: "varmepumpe-stromforbrug"
+tags: ["varmepumpe", "strømforbrug", "luft til vand", "jordvarme", "luft til luft"]
+draft: true
+featured: false
+commercialDisclosure: true
+schemaType: "Article"
+faq:
+  - question: "Hvor mange kWh bruger en varmepumpe om året?"
+    answer: "Typisk omkring 3.000–5.500 kWh i et almindeligt dansk parcelhus, men forbruget afhænger af husets varmebehov, varmepumpetype og effektivitet."
+  - question: "Hvor meget strøm bruger en luft til vand-varmepumpe?"
+    answer: "Bolius' modelhus på 130 m² bruger 5.485 kWh om året med en almindelig luft til vand-varmepumpe og 4.259 kWh ved luft til vand med gulvvarme."
+  - question: "Hvor meget strøm bruger en luft til luft-varmepumpe?"
+    answer: "Bolius' modelhus på 130 m² angiver 2.946 kWh om året for en luft til luft-varmepumpe. Den dækker dog typisk kun rumopvarmning, ikke varmt brugsvand."
+  - question: "Hvorfor stiger strømforbruget om vinteren?"
+    answer: "Varmepumpen skal producere mere varme, når det er koldt, og luftbaserede varmepumper arbejder mindre effektivt ved lave udetemperaturer."
+  - question: "Er en varmepumpe billigere end elradiatorer?"
+    answer: "Ja, normalt markant billigere. En varmepumpe leverer 3–6 kWh varme for 1 kWh el, mens elradiatorer ligger omkring 1:1."
+  - question: "Kan solceller dække strømforbruget til en varmepumpe?"
+    answer: "Delvist, men produktionen fra solceller er højest om sommeren, mens varmepumpens forbrug er højest om vinteren. Derfor kræver det en separat beregning."
+---
+
+import AnswerBox from '../../../components/AnswerBox.astro';
+import ComparisonTable from '../../../components/ComparisonTable.astro';
+import ExpertTip from '../../../components/ExpertTip.astro';
+import SpecCard from '../../../components/SpecCard.astro';
+
+<AnswerBox title="Kort svar">
+  En almindelig varmepumpe bruger typisk mellem 3.000 og 5.500 kWh strøm om året i et dansk parcelhus. Det præcise forbrug afhænger af boligens størrelse, isolering, varmepumpetype og dit varmtvandsforbrug. Til sammenligning ville samme hus bruge omkring 18.000 kWh med direkte elvarme.
+</AnswerBox>
+
+## Hvad bruger en varmepumpe i strøm om året?
+
+Bolius har i 2026 opgjort det årlige strømforbrug for forskellige varmepumpetyper i et modelhus på 130 m² med et årligt varmebehov på 18.100 kWh inklusive varmt brugsvand.
+
+<ComparisonTable
+  headers={["Varmepumpetype", "Årligt elforbrug", "Bemærkning"]}
+  rows={[
+    ["Luft til luft-varmepumpe", "2.946 kWh", "Dækker typisk kun rumopvarmning"],
+    ["Luft til vand med gulvvarme", "4.259 kWh", "Dækker både rumvarme og varmt vand"],
+    ["Jord til vand med gulvvarme", "4.161 kWh", "Dækker både rumvarme og varmt vand"],
+    ["Luft til vand-varmepumpe", "5.485 kWh", "Standard (radiatorer eller gulvvarme)"],
+  ]}
+/>
+
+<ExpertTip>
+  Sammenlign ikke tallene direkte uden at tage højde for, hvad varmepumpen dækker. En luft til luft-varmepumpe leverer normalt ikke varmt brugsvand, mens luft til vand og jordvarme gør. Det er en væsentlig forskel, når du vurderer det samlede energiforbrug.
+</ExpertTip>
+
+## Sådan beregner du strømforbruget
+
+Du kan selv beregne varmepumpens forventede strømforbrug med en simpel formel:
+
+**Årligt strømforbrug = boligens varmebehov / varmepumpens SCOP**
+
+SCOP står for Seasonal Coefficient of Performance og viser varmepumpens gennemsnitlige effektivitet over en hel varmesæson.
+
+<SpecCard label="Eksempel" value="18.100 / 3,3 = 5.485 kWh" note="Et hus med 18.100 kWh varmebehov og en varmepumpe med SCOP 3,3 bruger cirka 5.485 kWh strøm om året." />
+
+Jo højere SCOP, desto mere varme får du ud af hver kWh strøm. Det er derfor SCOP er den vigtigste effektivitetsfaktor at kigge på, når du vælger varmepumpe.
+
+## Hvad betyder COP og SCOP?
+
+COP (Coefficient of Performance) angiver varmepumpens effektivitet på et bestemt tidspunkt. Har pumpen COP 4, leverer den 4 kWh varme for hver 1 kWh strøm.
+
+SCOP (Seasonal Coefficient of Performance) er den gennemsnitlige effektivitet over en hel varmesæson. Det er SCOP, du bør bruge til at estimere årsforbruget.
+
+Ifølge SparEnergi skal en luft til vand-varmepumpe leve op til EU's ECOdesignkrav med en SCOP på mindst 2,83 ved radiatorer og 3,2 ved gulvvarme.
+
+## Strømforbrug for forskellige typer varmepumper
+
+<div class="spec-grid">
+  <SpecCard label="Luft til luft" value="2.500–3.500 kWh/år" note="Billigst i drift, men dækker sjældent varmt brugsvand." />
+  <SpecCard label="Luft til vand" value="4.000–5.500 kWh/år" note="Dækker både rumvarme og varmt vand. Forbruget afhænger af fremløbstemperatur." />
+  <SpecCard label="Jord til vand" value="3.500–4.500 kWh/år" note="Stabil effektivitet hele året, men dyrere at installere." />
+</div>
+
+### Luft til luft-varmepumpe
+
+Luft til luft-varmepumper er ofte de mest energieffektive at drifte, fordi de kun opvarmer luften i boligen. De kan dog normalt ikke levere varmt brugsvand. I et velisoleret hus på 130 m² ligger forbruget omkring 2.946 kWh om året ifølge Bolius.
+
+### Luft til vand-varmepumpe
+
+En luft til vand-varmepumpe dækker både rumopvarmning og varmt brugsvand. Det giver et højere samlet strømforbrug, men til gengæld erstatter den både olie-, gas- og elforbrug til varmt vand. Med gulvvarme og lav fremløbstemperatur kan forbruget reduceres betydeligt – fra 5.485 kWh til 4.259 kWh i Bolius' modelhus.
+
+### Jord til vand-varmepumpe
+
+Jordvarme udnytter jordens konstante temperatur og er derfor mindre påvirket af udetemperaturen. Det giver en stabil og høj effektivitet året rundt. I Bolius' modelhus bruger en jordvarmepumpe med gulvvarme 4.161 kWh om året.
+
+## Hvad koster en varmepumpe i strøm?
+
+Den årlige strømpris beregner du sådan her:
+
+**Årlig pris = varmepumpens kWh-forbrug × din elpris pr. kWh**
+
+<ComparisonTable
+  headers={["Årligt forbrug", "Ved 2,00 kr./kWh", "Ved 2,50 kr./kWh", "Ved 3,00 kr./kWh"]}
+  rows={[
+    ["3.000 kWh", "6.000 kr.", "7.500 kr.", "9.000 kr."],
+    ["4.500 kWh", "9.000 kr.", "11.250 kr.", "13.500 kr."],
+    ["5.500 kWh", "11.000 kr.", "13.750 kr.", "16.500 kr."],
+  ]}
+/>
+
+<ExpertTip>
+  Elpriserne ændrer sig løbende, så brug tabellen som en beregningsmodel frem for et fast prisskilt. Udskift priserne med din aktuelle elpris for at få et retvisende billede.
+</ExpertTip>
+
+Bolius' 2026-beregning for en luft til vand-varmepumpe i modelhuset viser en årlig energiudgift på cirka 8.702 kr. eksklusive afskrivning, service og rente. Inklusiv disse poster lyder den samlede årlige pris på 18.497 kr.
+
+Du kan også bruge vores [beregner til strømforbrug](/beregnere/hvad-koster-aircondition-i-stroem/) til at estimere dine egne udgifter.
+
+## Hvorfor varierer strømforbruget?
+
+### Boligens varmebehov
+
+Jo større og dårligere isoleret boligen er, desto mere varme skal varmepumpen producere. Husets energistandard er ofte vigtigere end selve varmepumpens mærke.
+
+### Varmepumpetype
+
+Luft til luft, luft til vand og jordvarme har forskellige styrker og forbrugsniveauer. Forskellen handler især om, hvorvidt pumpen også skal dække varmt brugsvand.
+
+### Gulvvarme vs. radiatorer
+
+Gulvvarme arbejder ved lavere fremløbstemperatur end radiatorer. Det forbedrer varmepumpens effektivitet markant. Bolius fremhæver, at luft til vand-varmepumper er særligt fordelagtige ved vandbåren gulvvarme eller store radiatorer.
+
+### Udetemperatur
+
+Luftbaserede varmepumper bliver mindre effektive ved lave udetemperaturer. I meget kolde perioder kan elpatronen hjælpe til, især ved højt varmtvandsforbrug, men det øger strømforbruget.
+
+### Elpatron
+
+Elpatronen fungerer som direkte elvarme (1:1). Hvis den kører meget, stiger strømforbruget markant. Et højt elforbrug kan være tegn på forkert indstilling, underdimensioneret varmepumpe eller for høj fremløbstemperatur.
+
+## Elafgift på varmepumper i 2026–2027
+
+I 2026 og 2027 er elafgiften midlertidigt sænket til 1 øre/kWh inkl. moms for alle forbrugere. Det betyder, at den tidligere fordel med reduceret elafgift for elopvarmede boliger over 4.000 kWh ikke giver yderligere rabat i disse to år.
+
+Alligevel kan det være en god idé at få boligen korrekt registreret som elopvarmet i BBR, hvis reglerne ændrer sig igen efter 2027.
+
+## Varmepumpe vs. elvarme
+
+Direkte elvarme (elradiatorer, elpatron) omdanner strøm til varme cirka 1:1. Det vil sige, at 1 kWh strøm giver cirka 1 kWh varme.
+
+En varmepumpe kan derimod typisk levere 3–6 kWh varme for hver 1 kWh strøm. Forskellen er afgørende for driftsøkonomien.
+
+<ComparisonTable
+  headers={["Løsning", "Varme pr. kWh strøm", "Årligt forbrug i modelhus"]}
+  rows={[
+    ["Elvarme (radiatorer)", "1 kWh varme", "18.100 kWh"],
+    ["Luft til luft-varmepumpe", "3–4 kWh varme", "2.946 kWh"],
+    ["Luft til vand-varmepumpe", "3–4 kWh varme", "5.485 kWh"],
+    ["Jord til vand-varmepumpe", "4–6 kWh varme", "4.161 kWh"],
+  ]}
+/>
+
+I Bolius' modelhus på 130 m² ville elvarme kræve 18.100 kWh om året, mens en luft til vand-varmepumpe klarer samme opgave med 5.485 kWh. Det illustrerer, hvorfor varmepumper ofte er langt billigere i drift.
+
+Overvejer du at skifte til varmepumpe? Brug vores [beregner til at se, om en varmepumpe kan betale sig](/beregnere/kan-varmepumpe-betale-sig/) i netop din bolig.
+
+## Sådan sænker du strømforbruget
+
+<ExpertTip>
+  Mange oplever højere strømforbrug end nødvendigt på grund af enkle justeringer. Få tjekket dit anlæg, før du overvejer at udskifte det.
+</ExpertTip>
+
+- **Sænk fremløbstemperaturen**, hvis boligen stadig holdes varm. Lavere fremløb giver bedre effektivitet.
+- **Undgå unødvendig brug af elpatron.** Hvis den ofte slår til, bør anlægget tjekkes.
+- **Hold en stabil temperatur** i stedet for store nat- og dagsænkninger. Det giver lavere gennemsnitligt forbrug.
+- **Få anlægget dimensioneret korrekt.** En for lille varmepumpe giver højere elforbrug og mere elpatrondrift.
+- **Brug gulvvarme eller store radiatorer**, hvor det er muligt. Lav fremløbstemperatur passer bedre til varmepumpen.
+- **Efterisolér og tæt utætheder**, hvis varmebehovet er højt. Det betaler sig ofte hurtigt.
+- **Vælg model fra Varmepumpelisten**, hvor effektiviteten er testet af et uafhængigt laboratorium. SparEnergi opdaterer listen 1–2 gange om måneden.
+
+<style>{`
+  .spec-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  @media (max-width: 760px) {
+    .spec-grid { grid-template-columns: 1fr; }
+  }
+`}</style>
