@@ -1,0 +1,525 @@
+---
+import AnswerBox from '../../components/AnswerBox.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FAQ from '../../components/FAQ.astro';
+import GoogleAd from '../../components/GoogleAd.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { absoluteUrl } from '../../lib/seo';
+import { breadcrumbsJsonLd, faqJsonLd } from '../../lib/structured-data';
+
+const path = '/beregnere/btu-beregner-aircondition/';
+const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
+const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
+const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
+const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
+const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
+const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
+const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
+const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
+const showWideAd = import.meta.env.DEV || wideAdSlot;
+const showArticleAd = import.meta.env.DEV || articleAdSlot;
+const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
+const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
+const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
+const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
+const breadcrumbs = [
+  { name: 'Forside', url: '/' },
+  { name: 'Beregnere', url: '/beregnere/' },
+  { name: 'BTU beregner til aircondition', url: path },
+];
+const faq = [
+  {
+    question: 'Hvor mange m2 dækker 12000 BTU?',
+    answer:
+      '12000 BTU svarer til cirka 3,5 kW kølekapacitet. Det passer ofte til omkring 30-40 m2, men solindfald, loftshøjde, isolering og personer kan ændre behovet markant.',
+  },
+  {
+    question: 'Hvordan omregner man kW til BTU aircondition?',
+    answer:
+      '1 kW kølekapacitet svarer til cirka 3412 BTU/h. Gang kW med 3412 for BTU, eller divider BTU med 3412 for at få kW.',
+  },
+  {
+    question: 'Hvor mange BTU skal min aircondition være?',
+    answer:
+      'Det afhænger af m2, loftshøjde, solindfald, isolering og antal personer. Beregneren giver et vejledende BTU- og kW-estimat til et enkelt rum.',
+  },
+  {
+    question: 'Er 9000 BTU nok til et soveværelse?',
+    answer:
+      '9000 BTU kan ofte være nok til et mindre eller mellemstort soveværelse med normal loftshøjde og begrænset sol. Store sydvendte vinduer kan kræve mere kapacitet.',
+  },
+  {
+    question: 'Skal jeg vælge mobil aircondition eller split aircondition?',
+    answer:
+      'Mobil aircondition passer bedst til midlertidig køling i mindre rum. Split aircondition er typisk bedre ved større kølebehov, lavere støjkrav og fast brug gennem sommeren.',
+  },
+];
+
+const calculatorJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'BTU beregner til aircondition',
+  description:
+    'Beregn anbefalet BTU og kW til aircondition ud fra m2, loftshøjde, solindfald, isolering og antal personer.',
+  url: absoluteUrl(path),
+  applicationCategory: 'CalculatorApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'da-DK',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'DKK',
+  },
+};
+---
+
+<BaseLayout
+  title="BTU beregner til aircondition: m2 til kW og BTU"
+  description="Brug vores BTU beregner til aircondition. Indtast m2, loftshøjde, solindfald, isolering og personer, og få anbefalet BTU og kW."
+  path={path}
+>
+  <section class="calculator-hero">
+    <div class="container hero-copy">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="pill">BTU beregner</span>
+      <h1>Hvor mange BTU / kW skal min aircondition være?</h1>
+      <p>
+        Indtast rummets m2, loftshøjde, solindfald, isolering og antal personer. Beregneren giver et praktisk estimat på anbefalet kølekapacitet i både BTU og kW.
+      </p>
+      <div class="hero-actions">
+        <a class="button" href="#beregner">Brug BTU beregneren</a>
+        <a class="button secondary" href="#forklaring">Se BTU og kW forklaret</a>
+      </div>
+      <aside class="surface quick-answer" aria-label="Kort svar">
+        <span class="pill">Kort svar</span>
+        <p>
+          12000 BTU svarer til cirka <strong>3,5 kW</strong> og passer ofte til omkring <strong>30-40 m2</strong> under normale forhold. Brug beregneren, hvis rummet har meget sol, høj loftshøjde eller dårlig isolering.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <section id="beregner" class="section container calculator-section" aria-labelledby="calculator-heading">
+    <div class="section-heading">
+      <span class="pill">Aircondition BTU m2</span>
+      <h2 id="calculator-heading">Beregn anbefalet BTU og kW</h2>
+      <p>Resultatet er et vejledende estimat til køling af ét rum. Ved store åbne rum, mange vinduer eller fast splitanlæg bør kapaciteten vurderes konkret.</p>
+    </div>
+
+    <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
+      <div class="surface calculator-panel">
+        <form class="calculator-form" data-calculator novalidate>
+          <div class="field-grid">
+            <label>
+              <span class="label-with-help">
+                Rumstørrelse i m2
+                <span class="tooltip">
+                  <button type="button" class="tooltip-trigger" aria-describedby="area-help">?</button>
+                  <span id="area-help" class="tooltip-content" role="tooltip">
+                    Brug det gulvareal, som airconditionen reelt skal køle. Ved åben planløsning bør du medregne sammenhængende rum, hvor dørene typisk står åbne.
+                  </span>
+                </span>
+              </span>
+              <input name="area" type="number" inputmode="decimal" min="5" max="180" step="1" value="35" required />
+            </label>
+            <label>
+              <span class="label-with-help">
+                Loftshøjde i meter
+                <span class="tooltip">
+                  <button type="button" class="tooltip-trigger" aria-describedby="height-help">?</button>
+                  <span id="height-help" class="tooltip-content" role="tooltip">
+                    Mål fra gulv til loft. Standardloft i mange danske boliger er cirka 2,4-2,5 meter. Højere loft giver mere luftvolumen og kræver ofte mere kapacitet.
+                  </span>
+                </span>
+              </span>
+              <input name="height" type="number" inputmode="decimal" min="2" max="5" step="0.1" value="2.4" required />
+            </label>
+            <label>
+              <span class="label-with-help">
+                Solindfald
+                <span class="tooltip">
+                  <button type="button" class="tooltip-trigger" aria-describedby="sun-help">?</button>
+                  <span id="sun-help" class="tooltip-content" role="tooltip">
+                    Vælg højt ved syd- eller vestvendte rum, store vinduer eller meget direkte sommersol. Vælg lavt ved nordvendte rum eller effektiv solafskærmning.
+                  </span>
+                </span>
+              </span>
+              <select name="sun">
+                <option value="low">Lavt</option>
+                <option value="normal" selected>Normalt</option>
+                <option value="high">Højt</option>
+              </select>
+            </label>
+            <label>
+              <span class="label-with-help">
+                Isolering
+                <span class="tooltip">
+                  <button type="button" class="tooltip-trigger" aria-describedby="insulation-help">?</button>
+                  <span id="insulation-help" class="tooltip-content" role="tooltip">
+                    Vælg god ved nyere eller efterisoleret bolig. Vælg dårlig ved ældre bolig, utætte vinduer, udestue eller rum der hurtigt bliver varmt om sommeren.
+                  </span>
+                </span>
+              </span>
+              <select name="insulation">
+                <option value="poor">Dårlig</option>
+                <option value="average" selected>Middel</option>
+                <option value="good">God</option>
+              </select>
+            </label>
+            <label class="wide">
+              <span class="label-with-help">
+                Antal personer i rummet
+                <span class="tooltip">
+                  <button type="button" class="tooltip-trigger" aria-describedby="people-help">?</button>
+                  <span id="people-help" class="tooltip-content" role="tooltip">
+                    Angiv det typiske antal personer, der opholder sig i rummet samtidig. Flere personer afgiver varme og kan øge kølebehovet.
+                  </span>
+                </span>
+              </span>
+              <input name="people" type="number" inputmode="numeric" min="0" max="20" step="1" value="2" required />
+            </label>
+          </div>
+          <p class="form-hint">BTU-tallet er BTU/h, som er den kapacitetsenhed mange mobile aircondition-enheder bruger. kW-tallet er samme køleydelse omregnet til kilowatt.</p>
+          <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for m2, loftshøjde og antal personer.</p>
+          <button class="button" type="submit">Beregn BTU og kW</button>
+        </form>
+
+        <aside class="result-card" aria-live="polite" data-result>
+          <div>
+            <span class="pill">Dit estimat</span>
+            <p class="result-kicker" data-room-label>35 m2 rum</p>
+          </div>
+          <div class="result-main">
+            <strong data-btu-result>Ca. 12.000 BTU</strong>
+            <p data-kw-result>Det svarer til cirka 3,5 kW kølekapacitet.</p>
+          </div>
+          <div class="result-details">
+            <p data-range-result>Kig efter ca. 10.000-14.000 BTU.</p>
+            <p data-type-result>Mobil eller split kan være relevant.</p>
+          </div>
+        </aside>
+      </div>
+
+      {showSidebarAd && (
+        <aside class="ad-column" aria-label="Annonce">
+          <GoogleAd slotId={sidebarAdSlot} className="sidebar-ad" />
+        </aside>
+      )}
+    </div>
+  </section>
+
+  {showWideAd && (
+    <aside class="container" aria-label="Annonce">
+      <GoogleAd slotId={wideAdSlot} className="wide-ad" />
+    </aside>
+  )}
+
+  <article class:list={['article-shell', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
+    {showLeftRailAd && (
+      <aside class="rail-ad left-rail" aria-label="Annonce">
+        <GoogleAd slotId={leftRailAdSlot} className="rail-ad-unit" />
+      </aside>
+    )}
+
+    <div class="article-main">
+      <aside class="reading side-panel">
+        <div class="checklist">
+          <h2>Det påvirker BTU-behovet</h2>
+          <ul>
+            <li>Rumstørrelse i m2 og loftshøjde</li>
+            <li>Solindfald gennem vinduer</li>
+            <li>Boligens isolering</li>
+            <li>Antal personer i rummet</li>
+            <li>Om du vælger mobil aircondition eller split aircondition</li>
+          </ul>
+        </div>
+      </aside>
+
+      <div class="reading article-body content-card">
+        <AnswerBox>
+          En BTU beregner hjælper dig med at omsætte rummets størrelse og varmebelastning til anbefalet kølekapacitet. Som tommelfingerregel svarer 12000 BTU til cirka 3,5 kW, men m2 alene er ikke nok, fordi sol, loftshøjde og isolering kan ændre behovet.
+        </AnswerBox>
+
+        {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
+
+        <h2>BTU beregner til aircondition</h2>
+        <p>
+          Når du søger efter en BTU beregner, er målet typisk at finde ud af, om en aircondition på for eksempel 9000, 12000 eller 14000 BTU passer til rummet. BTU bruges især på mobile aircondition-enheder, mens faste splitanlæg og luft til luft-varmepumper ofte markedsføres med kW.
+        </p>
+        <p>
+          Beregneren ovenfor bruger m2, loftshøjde, solindfald, isolering og antal personer til at give et praktisk estimat. Den er bedst som første pejlemærke, før du sammenligner konkrete modeller.
+        </p>
+
+        <h2 id="forklaring">kW til BTU aircondition</h2>
+        <p>
+          Omregningen mellem kW og BTU er enkel: 1 kW kølekapacitet svarer til cirka 3412 BTU/h. En aircondition på 3,5 kW svarer derfor til cirka 11942 BTU/h, som i praksis ofte omtales som 12000 BTU.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>BTU/h</th>
+              <th>Ca. kW</th>
+              <th>Typisk brug</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>9000 BTU</td>
+              <td>2,6 kW</td>
+              <td>Mindre rum og soveværelser med moderat sol.</td>
+            </tr>
+            <tr>
+              <td>12000 BTU</td>
+              <td>3,5 kW</td>
+              <td>Mellemstore rum, ofte omkring 30-40 m2 under normale forhold.</td>
+            </tr>
+            <tr>
+              <td>14000 BTU</td>
+              <td>4,1 kW</td>
+              <td>Større eller varmere rum, især med meget sol.</td>
+            </tr>
+            <tr>
+              <td>18000 BTU</td>
+              <td>5,3 kW</td>
+              <td>Store rum, alrum eller behov hvor splitanlæg ofte bør vurderes.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Aircondition BTU m2: hvorfor m2 ikke er nok</h2>
+        <p>
+          Mange søger efter “aircondition BTU m2”, men to rum på samme antal m2 kan kræve forskellig kapacitet. Et nordvendt soveværelse med god isolering kan klare sig med mindre køling end en sydvendt stue med store vinduer og flere personer.
+        </p>
+        <p>
+          Loftshøjde er også vigtig, fordi airconditionen skal køle luftvolumen - ikke kun gulvarealet. Et rum på 35 m2 med 3 meter til loftet har markant mere luft end et rum på 35 m2 med 2,4 meter til loftet.
+        </p>
+
+        {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
+
+        <h2>12000 BTU hvor mange m2?</h2>
+        <p>
+          12000 BTU dækker ofte omkring 30-40 m2 i et almindeligt dansk rum med normal loftshøjde, middel isolering og normalt solindfald. I et varmt, sydvendt rum kan samme model være bedre egnet til et mindre areal, mens et skyggefuldt og godt isoleret rum kan klare et større areal.
+        </p>
+        <p>
+          Hvis beregneren lander tæt på grænsen mellem to størrelser, bør du ikke kun vælge den største model automatisk. Se også på støj, aftræk, placering, energieffektivitet og om anlægget kan regulere ned uden korte start-stop-cyklusser.
+        </p>
+
+        {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
+
+        <h2>Mobil aircondition vs split aircondition</h2>
+        <p>
+          Mobil aircondition er mest relevant, når du vil køle et enkelt rum midlertidigt og kan føre varm luft ud gennem vindue eller dør. Den er fleksibel, men støjer typisk mere, bruger ofte mere strøm for samme komfort og kræver god håndtering af aftræksslangen.
+        </p>
+        <p>
+          Split aircondition eller en luft til luft-varmepumpe er ofte bedre ved højere BTU-behov, fast brug, lavere støjkrav eller hvis du også vil kunne bruge anlægget til opvarmning. Til gengæld kræver den installation og en konkret vurdering af placering og kapacitet.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Løsning</th>
+              <th>Bedst til</th>
+              <th>Vigtig begrænsning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mobil aircondition</td>
+              <td>Lejlighed, soveværelse og midlertidig køling</td>
+              <td>Aftræk og støj kan begrænse komforten.</td>
+            </tr>
+            <tr>
+              <td>Split aircondition</td>
+              <td>Fast køling, større rum og lavere støj</td>
+              <td>Kræver installation og egnet placering.</td>
+            </tr>
+            <tr>
+              <td>Luft til luft-varmepumpe</td>
+              <td>Køling om sommeren og opvarmning i overgangsperioder</td>
+              <td>Kapacitet og placering bør vurderes af fagperson.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Sådan bruger du resultatet, når du vælger model</h2>
+        <p>
+          Brug BTU-resultatet som et interval, ikke som et absolut facit. Hvis beregneren foreslår cirka 12000 BTU, bør du sammenligne modeller omkring 10000-14000 BTU og se på støjniveau, aftræksløsning, energieffektivitet og rummets faktiske varmebelastning.
+        </p>
+        <p>
+          Hvis du også vil vurdere økonomien, kan du bruge vores <a href="/beregnere/hvad-koster-aircondition-i-stroem/">beregner til aircondition strømforbrug</a>. Hvis du overvejer fast installation, kan du også sammenligne med vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a> og læse mere om <a href="/aircondition/">aircondition</a>.
+        </p>
+
+        <FAQ items={faq} />
+      </div>
+    </div>
+
+    {showRightRailAd && (
+      <aside class="rail-ad right-rail" aria-label="Annonce">
+        <GoogleAd slotId={rightRailAdSlot} className="rail-ad-unit" />
+      </aside>
+    )}
+  </article>
+
+  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+  <JsonLd data={faqJsonLd(faq)} />
+  <JsonLd data={calculatorJsonLd} />
+</BaseLayout>
+
+<script>
+  const form = document.querySelector('[data-calculator]');
+  const result = document.querySelector('[data-result]');
+  const error = document.querySelector('[data-error]');
+
+  const formatKw = (value) => value.toLocaleString('da-DK', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const formatBtu = (value) => Math.round(value / 500) * 500;
+  const displayBtu = (value) => formatBtu(value).toLocaleString('da-DK');
+
+  function calculateKw(data) {
+    const volume = data.area * data.height;
+    const insulationFactor = { poor: 1.18, average: 1, good: 0.88 }[data.insulation];
+    const sunFactor = { low: 0.9, normal: 1, high: 1.2 }[data.sun];
+    return volume * 0.038 * insulationFactor * sunFactor + data.people * 0.12;
+  }
+
+  function getTypeRecommendation(kw) {
+    if (kw <= 3.2) return 'Mobil aircondition kan være relevant.';
+    if (kw <= 4.4) return 'Mobil eller split kan være relevant.';
+    return 'Split aircondition bør vurderes.';
+  }
+
+  function readData() {
+    if (!(form instanceof HTMLFormElement)) return null;
+    const formData = new FormData(form);
+    const area = Number(formData.get('area'));
+    const height = Number(formData.get('height'));
+    const people = Number(formData.get('people'));
+    const sun = String(formData.get('sun'));
+    const insulation = String(formData.get('insulation'));
+
+    if (!Number.isFinite(area) || area < 5 || area > 180) return null;
+    if (!Number.isFinite(height) || height < 2 || height > 5) return null;
+    if (!Number.isFinite(people) || people < 0 || people > 20) return null;
+
+    return { area, height, people, sun, insulation };
+  }
+
+  function updateResult() {
+    const data = readData();
+    if (!data || !result) {
+      error?.removeAttribute('hidden');
+      return;
+    }
+
+    error?.setAttribute('hidden', '');
+    const kw = Math.max(calculateKw(data), 1.5);
+    const btu = kw * 3412.142;
+    const lowBtu = btu * 0.85;
+    const highBtu = btu * 1.15;
+
+    result.querySelector('[data-room-label]').textContent = `${data.area.toLocaleString('da-DK')} m2 rum`;
+    result.querySelector('[data-btu-result]').textContent = `Ca. ${displayBtu(btu)} BTU`;
+    result.querySelector('[data-kw-result]').textContent = `Det svarer til cirka ${formatKw(kw)} kW kølekapacitet.`;
+    result.querySelector('[data-range-result]').textContent = `Kig efter ca. ${displayBtu(lowBtu)}-${displayBtu(highBtu)} BTU.`;
+    result.querySelector('[data-type-result]').textContent = getTypeRecommendation(kw);
+  }
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    updateResult();
+  });
+
+  form?.addEventListener('input', updateResult);
+  form?.addEventListener('change', updateResult);
+  updateResult();
+</script>
+
+<style>
+  .calculator-hero { padding: clamp(4rem, 8vw, 7rem) 0 clamp(2.25rem, 5vw, 4rem); }
+  .hero-copy { text-align: center; }
+  .hero-copy :global(.breadcrumbs) { justify-content: center; }
+  .hero-copy h1 { max-width: 1020px; margin: 0.85rem auto 1rem; font-size: clamp(2.65rem, 6vw, 5.35rem); }
+  .hero-copy p { max-width: 860px; margin-inline: auto; color: var(--color-muted); font-size: clamp(1.08rem, 2vw, 1.32rem); }
+  .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 1.4rem; }
+  .quick-answer { padding: 1.35rem; background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(220, 251, 255, 0.72)); }
+  .hero-copy .quick-answer { max-width: 780px; margin: 2rem auto 0; }
+  .quick-answer p { margin: 1rem 0 0; color: var(--color-primary); font-size: 1.12rem; }
+  .section-heading { margin-bottom: 1.5rem; }
+  .section-heading h2 { margin-top: 0.8rem; }
+  .section-heading p { max-width: 760px; color: var(--color-muted); font-size: 1.1rem; }
+  .calculator-layout { display: grid; gap: 1.15rem; align-items: start; }
+  .calculator-layout.has-sidebar-ad { grid-template-columns: minmax(0, 1fr) minmax(260px, 0.32fr); }
+  .calculator-panel { padding: clamp(1.2rem, 3vw, 2rem); }
+  .calculator-form { margin-bottom: 1.25rem; }
+  .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+  label { display: grid; gap: 0.4rem; color: var(--color-primary); font-weight: 800; }
+  label span { font-size: 0.95rem; }
+  .label-with-help { display: inline-flex; align-items: center; gap: 0.45rem; width: fit-content; }
+  .tooltip { position: relative; display: inline-flex; }
+  .tooltip-trigger { display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; border: 1px solid var(--color-border-strong); border-radius: 999px; background: #fff; color: var(--color-primary); font: inherit; font-size: 0.78rem; font-weight: 900; cursor: help; }
+  .tooltip-trigger:focus { outline: 3px solid rgba(32, 199, 215, 0.2); border-color: var(--color-accent-dark); }
+  .tooltip-content { position: absolute; left: 50%; bottom: calc(100% + 0.6rem); z-index: 2; width: min(320px, calc(100vw - 3rem)); transform: translateX(-50%); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.75rem 0.85rem; background: var(--color-primary); color: #fff; box-shadow: 0 14px 32px rgba(6, 25, 35, 0.18); font-size: 0.88rem; font-weight: 650; line-height: 1.45; opacity: 0; pointer-events: none; transition: opacity 0.15s ease, transform 0.15s ease; }
+  .tooltip-content::before { content: ''; position: absolute; left: 0; top: 100%; width: 100%; height: 0.75rem; }
+  .tooltip-content::after { content: ''; position: absolute; left: 50%; top: 100%; width: 0.75rem; height: 0.75rem; transform: translate(-50%, -50%) rotate(45deg); background: var(--color-primary); border-right: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+  .tooltip:hover .tooltip-content, .tooltip:focus-within .tooltip-content { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(-0.15rem); }
+  input, select { width: 100%; border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); padding: 0.85rem 0.9rem; background: #fff; color: var(--color-primary); font: inherit; }
+  input:focus, select:focus { outline: 3px solid rgba(32, 199, 215, 0.2); border-color: var(--color-accent-dark); }
+  .wide { grid-column: 1 / -1; }
+  .form-hint { margin: 0 0 1rem; color: var(--color-muted); font-size: 0.95rem; }
+  .form-error { color: #9f1239; font-weight: 800; }
+  .result-card { display: grid; grid-template-columns: minmax(160px, 0.4fr) minmax(0, 1fr) minmax(190px, 0.55fr); gap: 1rem; align-items: center; border-radius: var(--radius-lg); padding: clamp(1rem, 2.4vw, 1.4rem); background: linear-gradient(145deg, var(--color-primary), var(--color-primary-soft)); color: #fff; }
+  .result-card .pill { border-color: rgba(255, 255, 255, 0.24); background: rgba(255, 255, 255, 0.12); color: #bff8ff; }
+  .result-card strong { display: block; margin: 0 0 0.35rem; color: #fff; font-size: clamp(2.1rem, 4.4vw, 3.8rem); line-height: 1; letter-spacing: -0.06em; }
+  .result-card p { color: #dbeafe; }
+  .result-main p, .result-details p { margin: 0; }
+  .result-details { border-left: 1px solid rgba(255, 255, 255, 0.18); padding-left: 1rem; font-weight: 800; }
+  .result-details p + p { margin-top: 0.5rem; font-weight: 650; }
+  .result-kicker { margin: 0.7rem 0 0; font-weight: 850; text-transform: uppercase; letter-spacing: 0.08em; }
+  .ad-column { position: sticky; top: 104px; }
+  :global(.sidebar-ad) { min-height: 420px; }
+  :global(.wide-ad) { min-height: 92px; margin-bottom: clamp(2rem, 5vw, 4rem); }
+  :global(.article-ad) { min-height: 120px; margin: 2.5rem 0; }
+  :global(.calculator-mobile-ad) { display: none; min-height: 120px; margin: 2rem 0; }
+  .article-shell { padding-bottom: clamp(3rem, 7vw, 6rem); }
+  .article-shell.has-rail-ads {
+    display: grid;
+    grid-template-columns: minmax(140px, 1fr) minmax(0, 800px) minmax(140px, 1fr);
+    gap: clamp(1rem, 3vw, 2rem);
+    width: min(1420px, calc(100% - 40px));
+    margin-inline: auto;
+    align-items: start;
+  }
+  .article-main { min-width: 0; }
+  .article-shell.has-rail-ads .reading { width: 100%; }
+  .rail-ad { position: sticky; top: 104px; min-width: 0; }
+  :global(.rail-ad-unit) { min-height: 600px; }
+  .left-rail { grid-column: 1; }
+  .article-main { grid-column: 2; }
+  .right-rail { grid-column: 3; }
+  .content-card {
+    padding: clamp(1.35rem, 4vw, 2.75rem);
+    background: #fff;
+    border: 1px solid rgba(217, 229, 232, 0.7);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 1px 2px rgba(6, 25, 35, 0.025);
+  }
+  .side-panel { margin: 0 0 1.25rem; }
+  .checklist { border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: clamp(1.1rem, 3vw, 1.5rem); background: rgba(255, 255, 255, 0.7); }
+  .checklist h2 { margin-top: 0; font-size: 1.35rem; }
+  .checklist ul { margin: 0; padding-left: 1.25rem; color: var(--color-muted); }
+  .checklist li + li { margin-top: 0.55rem; }
+
+  @media (max-width: 920px) {
+    .calculator-layout.has-sidebar-ad { grid-template-columns: 1fr; }
+    .ad-column { position: static; }
+    :global(.sidebar-ad) { min-height: 120px; }
+    .result-card { grid-template-columns: 1fr; }
+    .result-details { border-top: 1px solid rgba(255, 255, 255, 0.18); border-left: 0; padding: 1rem 0 0; }
+    .article-shell.has-rail-ads { display: block; width: auto; }
+    .rail-ad { display: none; }
+    :global(.calculator-mobile-ad) { display: block; }
+  }
+
+  @media (max-width: 620px) {
+    .field-grid { grid-template-columns: 1fr; }
+  }
+</style>
