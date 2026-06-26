@@ -604,6 +604,7 @@ const calculatorJsonLd = {
   .article-shell { width: min(800px, calc(100% - 40px)); margin-inline: auto; padding-bottom: clamp(3rem, 7vw, 6rem); }
   .article-shell.has-rail-ads { display: grid; grid-template-columns: minmax(140px, 1fr) minmax(0, 800px) minmax(140px, 1fr); gap: clamp(1rem, 3vw, 2rem); width: min(1420px, calc(100% - 40px)); margin-inline: auto; align-items: start; }
   .article-main { min-width: 0; }
+  .article-shell:not(.has-rail-ads) .reading { width: 100%; margin-inline: 0; }
   .article-shell.has-rail-ads .reading { width: 100%; }
   .left-rail { grid-column: 1; }
   .article-main { grid-column: 2; }
