@@ -166,9 +166,14 @@ Rail ads are desktop-only and hidden on smaller screens. Use the `*_MOBILE_1` an
 - [x] Sådan måler du luftkvalitet
 - [ ] Bedste affugter
 - [ ] Bedste luftrenser
-- [ ] Dårligt indeklima symptomer
+- [x] Dårligt indeklima symptomer
 - [ ] Hvorfor dugger vinduer?
 - [ ] Fugt i soveværelse
 - [ ] Ventilation i hus
 - [ ] Genvindingsanlæg guide
 - [ ] Sådan forbedrer du indeklimaet
+
+
+```
+jeg vil gerne have at du researcher følgende emne: "Dårligt indeklima symptomer". målet med din research er til at skrive en blog artikel til en hjemmeside omrking varmepumper / airconditions / affugtere
+```
