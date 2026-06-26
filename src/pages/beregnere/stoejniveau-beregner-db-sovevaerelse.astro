@@ -1,0 +1,498 @@
+---
+import AnswerBox from '../../components/AnswerBox.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FAQ from '../../components/FAQ.astro';
+import GoogleAd from '../../components/GoogleAd.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { absoluteUrl } from '../../lib/seo';
+import { breadcrumbsJsonLd, faqJsonLd } from '../../lib/structured-data';
+
+const path = '/beregnere/stoejniveau-beregner-db-sovevaerelse/';
+const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
+const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
+const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
+const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
+const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
+const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
+const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
+const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
+const showWideAd = import.meta.env.DEV || wideAdSlot;
+const showArticleAd = import.meta.env.DEV || articleAdSlot;
+const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
+const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
+const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
+const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
+const breadcrumbs = [
+  { name: 'Forside', url: '/' },
+  { name: 'Beregnere', url: '/beregnere/' },
+  { name: 'Støjniveau beregner til soveværelse', url: path },
+];
+const faq = [
+  {
+    question: 'Hvor mange dB må en aircondition larme i soveværelse?',
+    answer:
+      'Til søvn bør du typisk sigte efter cirka 30-35 dB ved sengen. Lavere er bedre, især hvis lyden er ujævn, klikker eller starter og stopper ofte.',
+  },
+  {
+    question: 'Er 50 dB for højt til soveværelse?',
+    answer:
+      'Ja, 50 dB vil for mange være for højt til søvn. Det kan være acceptabelt i en stue eller kortvarigt brug, men ikke som konstant natstøj tæt på sengen.',
+  },
+  {
+    question: 'Hvorfor larmer min varmepumpe mere end databladet siger?',
+    answer:
+      'Databladet kan være målt ved bestemte afstande og driftstrin. Placering, vægmontering, vibrationer, høj belastning og reflekterende flader kan få varmepumpen til at opleves højere.',
+  },
+  {
+    question: 'Hvad er en støjsvag aircondition?',
+    answer:
+      'En støjsvag aircondition til soveværelse bør have lav nattilstand omkring 20-35 dB for indedelen. Se altid laveste dB-tal og ved hvilken afstand det er målt.',
+  },
+  {
+    question: 'Bliver støjen lavere, hvis enheden står længere væk?',
+    answer:
+      'Ja. I frit felt falder lydtrykket cirka 6 dB for hver fordobling af afstanden. I små rum kan vægge og møbler dog ændre oplevelsen.',
+  },
+];
+
+const calculatorJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Støjniveau beregner: dB i soveværelse',
+  description:
+    'Beregn om støjniveauet fra aircondition eller varmepumpe er egnet til soveværelse, kontor eller stue ud fra dB, afstand, rumtype og brug.',
+  url: absoluteUrl(path),
+  applicationCategory: 'CalculatorApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'da-DK',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'DKK',
+  },
+};
+---
+
+<BaseLayout
+  title="Støjniveau beregner: dB i soveværelse"
+  description="Beregn om aircondition eller varmepumpe larmer for meget til soveværelse. Sammenlign dB med hvisken, køleskab og normal samtale."
+  path={path}
+>
+  <section class="calculator-hero">
+    <div class="container hero-copy">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="pill">Støjniveau beregner</span>
+      <h1>Støjniveau beregner: er dB-niveauet egnet til soveværelse?</h1>
+      <p>
+        Indtast produktets dB-niveau, afstand til enheden, rumtype og brug. Beregneren vurderer, om støjen passer til søvn, kontor eller stue, og sammenligner med kendte lydniveauer.
+      </p>
+      <div class="hero-actions">
+        <a class="button" href="#beregner">Brug beregneren</a>
+        <a class="button secondary" href="#forklaring">Se anbefalede dB-grænser</a>
+      </div>
+      <aside class="surface quick-answer" aria-label="Kort svar">
+        <span class="pill">Kort svar</span>
+        <p>
+          Til soveværelse bør aircondition eller varmepumpe helst ligge omkring <strong>30-35 dB ved sengen</strong>. Over cirka 40 dB bliver støjen ofte tydelig om natten.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <section id="beregner" class="section container calculator-section" aria-labelledby="calculator-heading">
+    <div class="section-heading">
+      <span class="pill">dB soveværelse</span>
+      <h2 id="calculator-heading">Beregn oplevet støjniveau ved din placering</h2>
+      <p>Resultatet er vejledende. Lyd opleves forskelligt, og rumakustik, vibrationer og driftsmønster kan gøre enheden mere eller mindre generende.</p>
+    </div>
+
+    <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
+      <div class="surface calculator-panel">
+        <form class="calculator-form" data-calculator novalidate>
+          <div class="field-grid">
+            <label>
+              <span class="label-with-help">
+                dB-niveau fra produkt
+                <span class="tooltip">
+                  <button type="button" class="tooltip-trigger" aria-describedby="db-help">?</button>
+                  <span id="db-help" class="tooltip-content" role="tooltip">
+                    Brug lydtryksniveauet for indedelen i dB(A), helst laveste nattilstand. Du finder typisk tallet i produktets datablad, energimærke, webshop eller installatørens tilbud.
+                  </span>
+                </span>
+              </span>
+              <input name="db" type="number" inputmode="decimal" min="15" max="75" step="1" value="38" required />
+            </label>
+            <label>
+              <span class="label-with-help">
+                Afstand til enhed i meter
+                <span class="tooltip">
+                  <button type="button" class="tooltip-trigger" aria-describedby="distance-help">?</button>
+                  <span id="distance-help" class="tooltip-content" role="tooltip">
+                    Mål cirka fra indedelen til din seng, arbejdsplads eller sofa. Beregneren antager, at produktets dB-tal er oplyst ved 1 meter, medmindre andet står i databladet.
+                  </span>
+                </span>
+              </span>
+              <input name="distance" type="number" inputmode="decimal" min="0.5" max="10" step="0.1" value="2.5" required />
+            </label>
+            <label>
+              <span>Rumtype</span>
+              <select name="room">
+                <option value="bedroom" selected>Soveværelse</option>
+                <option value="office">Kontor</option>
+                <option value="living">Stue</option>
+                <option value="childroom">Børneværelse</option>
+              </select>
+            </label>
+            <label>
+              <span>Brug</span>
+              <select name="use">
+                <option value="sleep" selected>Søvn</option>
+                <option value="office">Kontor</option>
+                <option value="living">Stue</option>
+              </select>
+            </label>
+          </div>
+          <p class="form-hint">Hvis produktet oplyser flere dB-tal, så brug laveste nattilstand til soveværelse og normal drift til kontor eller stue.</p>
+          <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for dB-niveau og afstand.</p>
+          <button class="button" type="submit">Beregn støjniveau</button>
+        </form>
+
+        <aside class="result-card" aria-live="polite" data-result>
+          <div>
+            <span class="pill">Din vurdering</span>
+            <p class="result-kicker" data-use-label>Søvn</p>
+          </div>
+          <div class="result-main">
+            <strong data-main-result>Egnet</strong>
+            <p data-level-result>Ca. 30 dB ved din placering.</p>
+          </div>
+          <div class="result-details">
+            <p data-comparison-result>Omtrent som hvisken.</p>
+            <p data-limit-result>Anbefalet maks.: 35 dB</p>
+          </div>
+        </aside>
+      </div>
+
+      {showSidebarAd && (
+        <aside class="ad-column" aria-label="Annonce">
+          <GoogleAd slotId={sidebarAdSlot} className="sidebar-ad" />
+        </aside>
+      )}
+    </div>
+  </section>
+
+  {showWideAd && (
+    <aside class="container" aria-label="Annonce">
+      <GoogleAd slotId={wideAdSlot} className="wide-ad" />
+    </aside>
+  )}
+
+  <article class:list={['article-shell', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
+    {showLeftRailAd && (
+      <aside class="rail-ad left-rail" aria-label="Annonce">
+        <GoogleAd slotId={leftRailAdSlot} className="rail-ad-unit" />
+      </aside>
+    )}
+
+    <div class="article-main">
+      <aside class="reading side-panel">
+        <div class="checklist">
+          <h2>Det påvirker oplevet støj</h2>
+          <ul>
+            <li>dB(A)-niveau i laveste og normal drift</li>
+            <li>Afstand fra indedel til seng, skrivebord eller sofa</li>
+            <li>Om rummet bruges til søvn, arbejde eller ophold</li>
+            <li>Placering på væg, vibrationer og resonans</li>
+            <li>Om lyden er jævn, pulserende eller starter og stopper</li>
+            <li>Små rum og hårde flader, der kan reflektere lyd</li>
+          </ul>
+        </div>
+      </aside>
+
+      <div class="reading article-body content-card">
+        <AnswerBox>
+          En støjsvag aircondition eller varmepumpe til soveværelse bør normalt ligge omkring 30-35 dB ved sengen. Til kontor kan lidt højere støj ofte accepteres, mens stuebrug afhænger af TV, samtale og hvor længe anlægget kører.
+        </AnswerBox>
+
+        {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
+
+        <h2>Aircondition støjniveau: hvad betyder dB i praksis?</h2>
+        <p>
+          Når du sammenligner aircondition støjniveau, er det ikke nok at se på kapacitet og pris. dB-skalaen er logaritmisk, så en forskel på få dB kan opleves tydeligt, især i et stille soveværelse om natten.
+        </p>
+        <p>
+          En model på 38 dB kan være acceptabel i en stue, men føles for tydelig tæt på hovedpuden. Derfor vurderer beregneren støjen ved den afstand, hvor du faktisk opholder dig.
+        </p>
+
+        <h2 id="forklaring">Anbefalet maksimal dB til soveværelse</h2>
+        <p>
+          Som praktisk tommelfingerregel bør støj ved sengen holdes under cirka 35 dB, hvis anlægget skal køre mens du sover. Under 30 dB opleves ofte som meget støjsvagt, mens 40 dB og derover kan være generende for lette sovende.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Brug</th>
+              <th>Anbefalet maksimum</th>
+              <th>Praktisk vurdering</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Søvn i soveværelse</td>
+              <td>Ca. 30-35 dB</td>
+              <td>Vælg lav nattilstand og god afstand fra sengen.</td>
+            </tr>
+            <tr>
+              <td>Kontor og hjemmearbejde</td>
+              <td>Ca. 40 dB</td>
+              <td>Jævn susen kan være acceptabel; klik og vibrationer er mere forstyrrende.</td>
+            </tr>
+            <tr>
+              <td>Stue og ophold</td>
+              <td>Ca. 45 dB</td>
+              <td>Kan fungere, men bør ikke overdøve TV eller samtale.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Varmepumpe larmer: hvorfor kan tallet snyde?</h2>
+        <p>
+          Hvis en varmepumpe larmer mere end forventet, skyldes det ofte placering, vibrationer, høj belastning eller at databladets dB-tal gælder en lavere driftstilstand. Lyd fra indedelen kan også reflekteres af hårde vægge, skabe og hjørner.
+        </p>
+        <p>
+          Se derfor både på laveste dB-niveau, normal drift og om produktet har nattilstand. Til soveværelse er en jævn, lav susen typisk mindre generende end skiftende blæsertrin eller hyppige start-stop.
+        </p>
+
+        {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
+
+        <h2>Sammenligning: hvisken, køleskab og normal samtale</h2>
+        <p>
+          Beregneren sammenligner resultatet med tre kendte lydniveauer, så dB-tallet bliver lettere at forstå: hvisken omkring 30 dB, et køleskab omkring 40 dB og normal samtale omkring 60 dB. Det er grove pejlemærker, men de hjælper i købsbeslutningen.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Lyd</th>
+              <th>Typisk niveau</th>
+              <th>Relevans ved køb</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Hvisken</td>
+              <td>Ca. 30 dB</td>
+              <td>Godt mål for støjsvag aircondition til soveværelse.</td>
+            </tr>
+            <tr>
+              <td>Køleskab</td>
+              <td>Ca. 40 dB</td>
+              <td>Kan være acceptabelt i stue eller kontor, men ofte tydeligt om natten.</td>
+            </tr>
+            <tr>
+              <td>Normal samtale</td>
+              <td>Ca. 60 dB</td>
+              <td>For højt til søvn og normalt ikke ønskeligt som konstant baggrundsstøj.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
+
+        <h2>Sådan bruger du støjniveauet i en købsbeslutning</h2>
+        <p>
+          Hvis du leder efter støjsvag aircondition, bør du sammenligne dB-tal ved samme driftstilstand. Et produkt kan markedsføres med lav nattilstand, men larme væsentligt mere, når det køler hårdt på en varm sommerdag.
+        </p>
+        <p>
+          Brug beregneren sammen med kapacitets- og strømforbrugsberegninger. En for lille model kan larme mere, fordi den arbejder hårdere, mens en korrekt dimensioneret model ofte kan køre roligere. Se også vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a>, <a href="/beregnere/hvad-koster-aircondition-i-stroem/">strømforbrugsberegner</a> og guides om <a href="/aircondition/">aircondition</a> og <a href="/varmepumper/">varmepumper</a>.
+        </p>
+
+        <FAQ items={faq} />
+      </div>
+    </div>
+
+    {showRightRailAd && (
+      <aside class="rail-ad right-rail" aria-label="Annonce">
+        <GoogleAd slotId={rightRailAdSlot} className="rail-ad-unit" />
+      </aside>
+    )}
+  </article>
+
+  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+  <JsonLd data={faqJsonLd(faq)} />
+  <JsonLd data={calculatorJsonLd} />
+</BaseLayout>
+
+<script>
+  const form = document.querySelector('[data-calculator]');
+  const result = document.querySelector('[data-result]');
+  const error = document.querySelector('[data-error]');
+
+  const useLabels = {
+    sleep: 'Søvn',
+    office: 'Kontor',
+    living: 'Stue',
+  };
+
+  const recommendedLimits = {
+    sleep: 35,
+    office: 40,
+    living: 45,
+  };
+
+  const roomPenalties = {
+    bedroom: 0,
+    childroom: -2,
+    office: 0,
+    living: 2,
+  };
+
+  const formatDb = (value) => Math.round(value).toLocaleString('da-DK');
+
+  function adjustedDb(productDb, distance) {
+    return productDb - 20 * Math.log10(distance);
+  }
+
+  function comparisonText(db) {
+    if (db < 35) return 'Omtrent som hvisken eller et meget stille rum.';
+    if (db < 50) return 'Omtrent som et stille køleskab i baggrunden.';
+    if (db < 65) return 'Nærmer sig normal samtale og kan virke tydelig.';
+    return 'Højere end normal samtale og sjældent egnet til roligt ophold.';
+  }
+
+  function readData() {
+    if (!(form instanceof HTMLFormElement)) return null;
+    const formData = new FormData(form);
+    const db = Number(formData.get('db'));
+    const distance = Number(formData.get('distance'));
+    const room = String(formData.get('room'));
+    const use = String(formData.get('use'));
+
+    if (!Number.isFinite(db) || db < 15 || db > 75) return null;
+    if (!Number.isFinite(distance) || distance < 0.5 || distance > 10) return null;
+    if (!(use in recommendedLimits)) return null;
+
+    return { db, distance, room, use };
+  }
+
+  function updateResult() {
+    const data = readData();
+    if (!data || !result) {
+      error?.removeAttribute('hidden');
+      return;
+    }
+
+    error?.setAttribute('hidden', '');
+    const estimatedDb = adjustedDb(data.db, data.distance);
+    const limit = recommendedLimits[data.use] + (roomPenalties[data.room] ?? 0);
+    const margin = limit - estimatedDb;
+    const verdict = margin >= 0 ? 'Egnet' : margin >= -3 ? 'På grænsen' : 'Ikke egnet';
+    const verdictText = margin >= 0
+      ? `Ca. ${formatDb(estimatedDb)} dB ved din placering.`
+      : `Ca. ${formatDb(estimatedDb)} dB ved din placering, hvilket er over anbefalingen.`;
+
+    result.querySelector('[data-use-label]').textContent = useLabels[data.use] ?? 'Vurdering';
+    result.querySelector('[data-main-result]').textContent = verdict;
+    result.querySelector('[data-level-result]').textContent = verdictText;
+    result.querySelector('[data-comparison-result]').textContent = comparisonText(estimatedDb);
+    result.querySelector('[data-limit-result]').textContent = `Anbefalet maks.: ${formatDb(limit)} dB`;
+  }
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    updateResult();
+  });
+
+  form?.addEventListener('input', updateResult);
+  form?.addEventListener('change', updateResult);
+  updateResult();
+</script>
+
+<style>
+  .calculator-hero { padding: clamp(4rem, 8vw, 7rem) 0 clamp(2.25rem, 5vw, 4rem); }
+  .hero-copy { text-align: center; }
+  .hero-copy :global(.breadcrumbs) { justify-content: center; }
+  .hero-copy h1 { max-width: 1060px; margin: 0.85rem auto 1rem; font-size: clamp(2.65rem, 6vw, 5.35rem); }
+  .hero-copy p { max-width: 880px; margin-inline: auto; color: var(--color-muted); font-size: clamp(1.08rem, 2vw, 1.32rem); }
+  .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 1.4rem; }
+  .quick-answer { padding: 1.35rem; background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(220, 251, 255, 0.72)); }
+  .hero-copy .quick-answer { max-width: 780px; margin: 2rem auto 0; }
+  .quick-answer p { margin: 1rem 0 0; color: var(--color-primary); font-size: 1.12rem; }
+  .section-heading { margin-bottom: 1.5rem; }
+  .section-heading h2 { margin-top: 0.8rem; }
+  .section-heading p { max-width: 760px; color: var(--color-muted); font-size: 1.1rem; }
+  .calculator-layout { display: grid; gap: 1.15rem; align-items: start; }
+  .calculator-layout.has-sidebar-ad { grid-template-columns: minmax(0, 1fr) minmax(260px, 0.32fr); }
+  .calculator-panel { padding: clamp(1.2rem, 3vw, 2rem); }
+  .calculator-form { margin-bottom: 1.25rem; }
+  .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+  label { display: grid; gap: 0.4rem; color: var(--color-primary); font-weight: 800; }
+  label span { font-size: 0.95rem; }
+  .label-with-help { display: inline-flex; align-items: center; gap: 0.45rem; width: fit-content; }
+  .tooltip { position: relative; display: inline-flex; }
+  .tooltip-trigger { display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; border: 1px solid var(--color-border-strong); border-radius: 999px; background: #fff; color: var(--color-primary); font: inherit; font-size: 0.78rem; font-weight: 900; cursor: help; }
+  .tooltip-trigger:focus { outline: 3px solid rgba(32, 199, 215, 0.2); border-color: var(--color-accent-dark); }
+  .tooltip-content { position: absolute; left: 50%; bottom: calc(100% + 0.6rem); z-index: 2; width: min(320px, calc(100vw - 3rem)); transform: translateX(-50%); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.75rem 0.85rem; background: var(--color-primary); color: #fff; box-shadow: 0 14px 32px rgba(6, 25, 35, 0.18); font-size: 0.88rem; font-weight: 650; line-height: 1.45; opacity: 0; pointer-events: none; transition: opacity 0.15s ease, transform 0.15s ease; }
+  .tooltip-content::after { content: ''; position: absolute; left: 50%; top: 100%; width: 0.75rem; height: 0.75rem; transform: translate(-50%, -50%) rotate(45deg); background: var(--color-primary); border-right: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+  .tooltip:hover .tooltip-content, .tooltip:focus-within .tooltip-content { opacity: 1; transform: translateX(-50%) translateY(-0.15rem); }
+  input, select { width: 100%; border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); padding: 0.85rem 0.9rem; background: #fff; color: var(--color-primary); font: inherit; }
+  input:focus, select:focus { outline: 3px solid rgba(32, 199, 215, 0.2); border-color: var(--color-accent-dark); }
+  .form-hint { margin: 0 0 1rem; color: var(--color-muted); font-size: 0.95rem; }
+  .form-error { color: #9f1239; font-weight: 800; }
+  .result-card { display: grid; grid-template-columns: minmax(160px, 0.4fr) minmax(0, 1fr) minmax(210px, 0.55fr); gap: 1rem; align-items: center; border-radius: var(--radius-lg); padding: clamp(1rem, 2.4vw, 1.4rem); background: linear-gradient(145deg, var(--color-primary), var(--color-primary-soft)); color: #fff; }
+  .result-card .pill { border-color: rgba(255, 255, 255, 0.24); background: rgba(255, 255, 255, 0.12); color: #bff8ff; }
+  .result-card strong { display: block; margin: 0 0 0.35rem; color: #fff; font-size: clamp(2.1rem, 4.4vw, 3.8rem); line-height: 1; letter-spacing: -0.06em; }
+  .result-card p { color: #dbeafe; }
+  .result-main p, .result-details p { margin: 0; }
+  .result-details { border-left: 1px solid rgba(255, 255, 255, 0.18); padding-left: 1rem; font-weight: 800; }
+  .result-details p + p { margin-top: 0.5rem; font-weight: 650; }
+  .result-kicker { margin: 0.7rem 0 0; font-weight: 850; text-transform: uppercase; letter-spacing: 0.08em; }
+  .ad-column { position: sticky; top: 104px; }
+  :global(.sidebar-ad) { min-height: 420px; }
+  :global(.wide-ad) { min-height: 92px; margin-bottom: clamp(2rem, 5vw, 4rem); }
+  :global(.article-ad) { min-height: 120px; margin: 2.5rem 0; }
+  :global(.calculator-mobile-ad) { display: none; min-height: 120px; margin: 2rem 0; }
+  .article-shell { padding-bottom: clamp(3rem, 7vw, 6rem); }
+  .article-shell.has-rail-ads {
+    display: grid;
+    grid-template-columns: minmax(140px, 1fr) minmax(0, 800px) minmax(140px, 1fr);
+    gap: clamp(1rem, 3vw, 2rem);
+    width: min(1420px, calc(100% - 40px));
+    margin-inline: auto;
+    align-items: start;
+  }
+  .article-main { min-width: 0; }
+  .article-shell.has-rail-ads .reading { width: 100%; }
+  .rail-ad { position: sticky; top: 104px; min-width: 0; }
+  :global(.rail-ad-unit) { min-height: 600px; }
+  .left-rail { grid-column: 1; }
+  .article-main { grid-column: 2; }
+  .right-rail { grid-column: 3; }
+  .content-card {
+    padding: clamp(1.35rem, 4vw, 2.75rem);
+    background: #fff;
+    border: 1px solid rgba(217, 229, 232, 0.7);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 1px 2px rgba(6, 25, 35, 0.025);
+  }
+  .side-panel { margin: 0 0 1.25rem; }
+  .checklist { border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: clamp(1.1rem, 3vw, 1.5rem); background: rgba(255, 255, 255, 0.7); }
+  .checklist h2 { margin-top: 0; font-size: 1.35rem; }
+  .checklist ul { margin: 0; padding-left: 1.25rem; color: var(--color-muted); }
+  .checklist li + li { margin-top: 0.55rem; }
+
+  @media (max-width: 920px) {
+    .calculator-layout.has-sidebar-ad { grid-template-columns: 1fr; }
+    .ad-column { position: static; }
+    :global(.sidebar-ad) { min-height: 120px; }
+    .result-card { grid-template-columns: 1fr; }
+    .result-details { border-top: 1px solid rgba(255, 255, 255, 0.18); border-left: 0; padding: 1rem 0 0; }
+    .article-shell.has-rail-ads { display: block; width: auto; }
+    .rail-ad { display: none; }
+    :global(.calculator-mobile-ad) { display: block; }
+  }
+
+  @media (max-width: 620px) {
+    .field-grid { grid-template-columns: 1fr; }
+  }
+</style>

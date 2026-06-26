@@ -131,3 +131,44 @@ Only configured slots render in production. If an env var is missing, that place
 ## Notes
 
 Rail ads are desktop-only and hidden on smaller screens. Use the `*_MOBILE_1` and `*_MOBILE_2` slots for mobile-only in-content ads so mobile pages still have ad inventory without crowding the layout.
+
+
+
+
+## ARTICLES TODO
+
+### Aircondition (10)
+- [ ] Bedste mobile aircondition
+- [ ] Aircondition prisguide
+- [ ] Aircondition til soveværelse
+- [ ] Aircondition til lejlighed
+- [ ] Aircondition strømforbrug
+- [ ] Aircondition installation
+- [ ] Aircondition uden aftræk
+- [ ] Kan man sove med aircondition?
+- [ ] Aircondition vs ventilator
+- [ ] Aircondition til hus
+
+### Varmepumper (10)
+- [ ] Bedste luft til luft varmepumpe
+- [ ] Luft til luft varmepumpe pris
+- [ ] Luft til vand varmepumpe pris
+- [ ] Varmepumpe strømforbrug
+- [ ] Varmepumpe til sommerhus
+- [ ] Varmepumpe test
+- [ ] Hvilken varmepumpe skal jeg vælge?
+- [ ] Luft til luft vs luft til vand
+- [ ] Tilskud til varmepumpe
+- [ ] Installation af varmepumpe
+
+### Indeklima (10)
+- [x] Optimal luftfugtighed i hjemmet
+- [x] Sådan måler du luftkvalitet
+- [ ] Bedste affugter
+- [ ] Bedste luftrenser
+- [ ] Dårligt indeklima symptomer
+- [ ] Hvorfor dugger vinduer?
+- [ ] Fugt i soveværelse
+- [ ] Ventilation i hus
+- [ ] Genvindingsanlæg guide
+- [ ] Sådan forbedrer du indeklimaet

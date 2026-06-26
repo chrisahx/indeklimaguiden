@@ -47,4 +47,4 @@ You should look at the calculator src/pages/beregnere/aircondition-varmepumpe-st
 
 please add the new calculator to the nav menu
 
-if there are any input fields which require some knowledge or specific places to find the input needed, then please add a tooltip similar as for the SEER/SCOP input field in the hvad-koster-aircondition-i-stroem calculator.
+if there are any input fields which require some knowledge or specific places to find the input needed, then please add a tooltip similar as for the SEER/SCOP input field in the hvad-koster-aircondition-i-stroem
