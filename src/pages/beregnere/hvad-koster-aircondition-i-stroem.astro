@@ -194,6 +194,20 @@ const calculatorJsonLd = {
     )}
 
     <div class="article-main">
+      <aside class="reading side-panel">
+        <div class="checklist">
+          <h2>Det påvirker prisen</h2>
+          <ul>
+            <li>Effektforbrug i watt eller kW</li>
+            <li>Antal timer pr. dag</li>
+            <li>Antal dage pr. måned</li>
+            <li>Din faktiske elpris pr. kWh</li>
+            <li>Rummets varmebelastning og solindfald</li>
+            <li>Anlæggets effektivitet, for eksempel SEER</li>
+          </ul>
+        </div>
+      </aside>
+
       <div class="reading article-body content-card">
         <AnswerBox>
           Hvad aircondition koster i strøm afhænger især af effektforbrug, antal timer og elpris. Som hurtig tommelfingerregel kan du gange kW med timer og elpris: 1 kW x 6 timer x 3 kr. = 18 kr. pr. dag.
@@ -282,20 +296,6 @@ const calculatorJsonLd = {
 
         <FAQ items={faq} />
       </div>
-
-      <aside class="reading side-panel">
-        <div class="checklist">
-          <h2>Det påvirker prisen</h2>
-          <ul>
-            <li>Effektforbrug i watt eller kW</li>
-            <li>Antal timer pr. dag</li>
-            <li>Antal dage pr. måned</li>
-            <li>Din faktiske elpris pr. kWh</li>
-            <li>Rummets varmebelastning og solindfald</li>
-            <li>Anlæggets effektivitet, for eksempel SEER</li>
-          </ul>
-        </div>
-      </aside>
     </div>
 
     {showRightRailAd && (
@@ -444,7 +444,7 @@ const calculatorJsonLd = {
     border-radius: var(--radius-xl);
     box-shadow: 0 1px 2px rgba(6, 25, 35, 0.025);
   }
-  .side-panel { margin-top: 1.25rem; }
+  .side-panel { margin: 0 0 1.25rem; }
   .checklist { border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: clamp(1.1rem, 3vw, 1.5rem); background: rgba(255, 255, 255, 0.7); }
   .checklist h2 { margin-top: 0; font-size: 1.35rem; }
   .checklist ul { margin: 0; padding-left: 1.25rem; color: var(--color-muted); }

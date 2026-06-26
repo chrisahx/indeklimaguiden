@@ -208,6 +208,15 @@ const calculatorJsonLd = {
     )}
 
     <div class="article-main">
+      <aside class="reading side-panel">
+        <div class="checklist">
+          <h2>Det påvirker kølebehovet</h2>
+          <ul>
+            {page.checklist.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      </aside>
+
       <div class="reading article-body content-card">
         <AnswerBox>{page.answer}</AnswerBox>
 
@@ -252,15 +261,6 @@ const calculatorJsonLd = {
 
         <FAQ items={page.faq} />
       </div>
-
-      <aside class="reading side-panel">
-        <div class="checklist">
-          <h2>Det påvirker kølebehovet</h2>
-          <ul>
-            {page.checklist.map((item) => <li>{item}</li>)}
-          </ul>
-        </div>
-      </aside>
     </div>
 
     {showRightRailAd && (
@@ -439,7 +439,7 @@ const calculatorJsonLd = {
   .room-link-grid { display: flex; flex-wrap: wrap; gap: 0.65rem; }
   .room-link-grid a { border: 1px solid var(--color-border-strong); border-radius: 999px; padding: 0.55rem 0.8rem; background: #fff; color: var(--color-primary); font-weight: 850; text-decoration: none; }
   .room-link-grid a:hover { border-color: var(--color-accent-dark); color: var(--color-accent-dark); }
-  .side-panel { margin-top: 1.25rem; }
+  .side-panel { margin: 0 0 1.25rem; }
   .checklist { border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: clamp(1.1rem, 3vw, 1.5rem); background: rgba(255, 255, 255, 0.7); }
   .checklist h2 { margin-top: 0; font-size: 1.35rem; }
   .checklist ul { margin: 0; padding-left: 1.25rem; color: var(--color-muted); }

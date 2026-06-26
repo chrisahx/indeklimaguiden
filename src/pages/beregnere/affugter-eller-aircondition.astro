@@ -219,6 +219,18 @@ const calculatorJsonLd = {
     )}
 
     <div class="article-main">
+      <aside class="reading side-panel">
+        <div class="checklist">
+          <h2>Hurtig tommelfingerregel</h2>
+          <ul>
+            <li>Over 60 % fugt i længere tid peger mod fugtproblem.</li>
+            <li>Over 25-26 °C om sommeren peger mod varmeproblem.</li>
+            <li>Kondens, skimmel og lugt kræver kontrol af ventilation.</li>
+            <li>Dry mode er mest relevant ved varm og fugtig sommerluft.</li>
+          </ul>
+        </div>
+      </aside>
+
       <div class="reading article-body content-card">
         <AnswerBox>
           Hvis du er i tvivl om affugter eller aircondition, skal du først finde hovedproblemet. Fugt, kondens og kælderlugt peger typisk mod affugter eller bedre ventilation. Varme og dårlig søvn om sommeren peger typisk mod aircondition. Ved både varme og fugt kan aircondition med dry mode være relevant.
@@ -317,18 +329,6 @@ const calculatorJsonLd = {
 
         <FAQ items={faq} />
       </div>
-
-      <aside class="reading side-panel">
-        <div class="checklist">
-          <h2>Hurtig tommelfingerregel</h2>
-          <ul>
-            <li>Over 60 % fugt i længere tid peger mod fugtproblem.</li>
-            <li>Over 25-26 °C om sommeren peger mod varmeproblem.</li>
-            <li>Kondens, skimmel og lugt kræver kontrol af ventilation.</li>
-            <li>Dry mode er mest relevant ved varm og fugtig sommerluft.</li>
-          </ul>
-        </div>
-      </aside>
     </div>
 
     {showRightRailAd && (
@@ -590,7 +590,7 @@ const calculatorJsonLd = {
     border-radius: var(--radius-xl);
     box-shadow: 0 1px 2px rgba(6, 25, 35, 0.025);
   }
-  .side-panel { margin-top: 1.25rem; }
+  .side-panel { margin: 0 0 1.25rem; }
   .checklist { border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: clamp(1.1rem, 3vw, 1.5rem); background: rgba(255, 255, 255, 0.7); }
   .checklist h2 { margin-top: 0; font-size: 1.35rem; }
   .checklist ul { margin: 0; padding-left: 1.25rem; color: var(--color-muted); }

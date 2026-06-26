@@ -193,6 +193,20 @@ const calculatorJsonLd = {
     )}
 
     <div class="article-main">
+      <aside class="reading side-panel">
+        <div class="checklist">
+          <h2>Det vurderer beregneren</h2>
+          <ul>
+            <li>Temperatur og relativ luftfugtighed</li>
+            <li>Om fugtniveauet er lavt, normalt eller højt</li>
+            <li>Rumtype: soveværelse, kælder, stue eller badeværelse</li>
+            <li>Symptomer som dug, tør hals, skimmel og tung luft</li>
+            <li>Risiko for kondens og skimmel</li>
+            <li>Om ventilation, affugter, dry mode eller bedre udluftning bør overvejes</li>
+          </ul>
+        </div>
+      </aside>
+
       <div class="reading article-body content-card">
         <AnswerBox>
           En luftfugtighed beregner kan hurtigt vise, om dit indeklima peger mod tør luft, normalt fugtniveau eller for høj fugt. Det vigtigste er ikke kun tallet på hygrometeret, men også rumtype og symptomer som dug på ruder, tung luft eller skimmel.
@@ -273,20 +287,6 @@ const calculatorJsonLd = {
 
         <FAQ items={faq} />
       </div>
-
-      <aside class="reading side-panel">
-        <div class="checklist">
-          <h2>Det vurderer beregneren</h2>
-          <ul>
-            <li>Temperatur og relativ luftfugtighed</li>
-            <li>Om fugtniveauet er lavt, normalt eller højt</li>
-            <li>Rumtype: soveværelse, kælder, stue eller badeværelse</li>
-            <li>Symptomer som dug, tør hals, skimmel og tung luft</li>
-            <li>Risiko for kondens og skimmel</li>
-            <li>Om ventilation, affugter, dry mode eller bedre udluftning bør overvejes</li>
-          </ul>
-        </div>
-      </aside>
     </div>
 
     {showRightRailAd && (
@@ -526,7 +526,7 @@ const calculatorJsonLd = {
     border-radius: var(--radius-xl);
     box-shadow: 0 1px 2px rgba(6, 25, 35, 0.025);
   }
-  .side-panel { margin-top: 1.25rem; }
+  .side-panel { margin: 0 0 1.25rem; }
   .checklist { border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: clamp(1.1rem, 3vw, 1.5rem); background: rgba(255, 255, 255, 0.7); }
   .checklist h2 { margin-top: 0; font-size: 1.35rem; }
   .checklist ul { margin: 0; padding-left: 1.25rem; color: var(--color-muted); }
