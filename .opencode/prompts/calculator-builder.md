@@ -46,3 +46,5 @@ So i want the actual calculator build, but then also some SEO/AEO content relate
 You should look at the calculator src/pages/beregnere/aircondition-varmepumpe-stoerrelse.astro for inspiration on design. The calculator you build here should look similar, and make sure it is google adsence ready
 
 please add the new calculator to the nav menu
+
+if there are any input fields which require some knowledge or specific places to find the input needed, then please add a tooltip similar as for the SEER/SCOP input field in the hvad-koster-aircondition-i-stroem calculator.
