@@ -1,6 +1,9 @@
 # Task
 Du skal skrive en artikel omkring følgende emne: `INTAST EMNE`
 
+# Article Type
+`TYPE`
+
 # Context
 Here er følgende research lavet omkring emnet:
 
