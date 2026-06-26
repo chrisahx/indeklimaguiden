@@ -146,7 +146,7 @@ Rail ads are desktop-only and hidden on smaller screens. Use the `*_MOBILE_1` an
 - [x] Aircondition installation
 - [x] Aircondition uden aftræk
 - [x] Kan man sove med aircondition?
-- [ ] Aircondition vs ventilator
+- [x] Aircondition vs ventilator
 - [ ] Aircondition til hus
 
 **mulige første artikler fra ahref**
