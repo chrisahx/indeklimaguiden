@@ -1,20 +1,23 @@
 :root {
-  --color-background: #f4f7f8;
+  --color-background: #f7f3ea;
   --color-surface: #ffffff;
-  --color-surface-strong: #fafdff;
-  --color-primary: #061923;
-  --color-primary-soft: #0e2b38;
-  --color-accent: #20c7d7;
-  --color-accent-dark: #007987;
-  --color-accent-soft: #dcfbff;
-  --color-warm: #f4a62a;
-  --color-warm-soft: #fff2d8;
-  --color-text: #0a1d26;
-  --color-muted: #53636b;
-  --color-border: #d9e5e8;
-  --color-border-strong: #abc1c8;
-  --shadow-soft: 0 18px 60px rgba(6, 25, 35, 0.08);
-  --shadow-card: 0 20px 40px rgba(6, 25, 35, 0.1);
+  --color-surface-strong: #fbfaf6;
+  --color-primary: #07304f;
+  --color-primary-soft: #0b4b78;
+  --color-accent: #079bd3;
+  --color-accent-dark: #006f9e;
+  --color-accent-soft: #e4f7fd;
+  --color-leaf: #70b62c;
+  --color-leaf-dark: #4f8f1f;
+  --color-leaf-soft: #eef8df;
+  --color-warm: #d9a45f;
+  --color-warm-soft: #fbefd8;
+  --color-text: #183044;
+  --color-muted: #64717a;
+  --color-border: #dce6df;
+  --color-border-strong: #adc4c5;
+  --shadow-soft: 0 18px 60px rgba(7, 48, 79, 0.09);
+  --shadow-card: 0 22px 44px rgba(7, 48, 79, 0.12);
   --container: 1280px;
   --reading: 720px;
   --radius-sm: 0.55rem;
@@ -29,8 +32,9 @@
 html {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background:
-    radial-gradient(circle at top left, rgba(32, 199, 215, 0.16), transparent 34rem),
-    radial-gradient(circle at top right, rgba(244, 166, 42, 0.12), transparent 30rem),
+    radial-gradient(circle at top left, rgba(7, 155, 211, 0.13), transparent 34rem),
+    radial-gradient(circle at top right, rgba(112, 182, 44, 0.15), transparent 32rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(247, 243, 234, 0.88) 28rem),
     var(--color-background);
   color: var(--color-text);
   scroll-behavior: smooth;
@@ -49,13 +53,17 @@ body::before {
   z-index: -1;
   pointer-events: none;
   content: '';
-  background-image: linear-gradient(rgba(6, 25, 35, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 25, 35, 0.035) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: linear-gradient(to bottom, #000 0%, transparent 64%);
+  background:
+    radial-gradient(18rem 8rem at 10% 14rem, rgba(7, 155, 211, 0.12), transparent 70%),
+    radial-gradient(22rem 9rem at 88% 12rem, rgba(112, 182, 44, 0.13), transparent 72%),
+    linear-gradient(rgba(7, 48, 79, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(7, 48, 79, 0.025) 1px, transparent 1px);
+  background-size: auto, auto, 60px 60px, 60px 60px;
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 68%);
 }
 
 a { color: var(--color-accent-dark); text-decoration-thickness: 0.08em; text-underline-offset: 0.18em; }
-a:hover { color: var(--color-primary); }
+a:hover { color: var(--color-leaf-dark); }
 
 img { max-width: 100%; height: auto; }
 
@@ -100,7 +108,7 @@ p { margin: 0 0 1rem; }
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--color-accent-dark);
-  background: rgba(220, 251, 255, 0.82);
+  background: linear-gradient(135deg, var(--color-accent-soft), var(--color-leaf-soft));
 }
 
 .button {
@@ -110,7 +118,7 @@ p { margin: 0 0 1rem; }
   border: 1px solid var(--color-primary);
   border-radius: 999px;
   padding: 0.9rem 1.25rem;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-soft));
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent-dark));
   color: #fff;
   font-weight: 800;
   text-decoration: none;

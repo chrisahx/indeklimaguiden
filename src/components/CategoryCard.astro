@@ -18,10 +18,10 @@ const { title, description, href, cta = 'Se guides' } = Astro.props;
 
 <style>
   .category-card { position: relative; display: flex; min-height: 260px; flex-direction: column; overflow: hidden; padding: 1.35rem; color: inherit; text-decoration: none; transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease; }
-  .category-card::after { position: absolute; right: -3rem; bottom: -3rem; width: 9rem; height: 9rem; border-radius: 999px; background: rgba(32, 199, 215, 0.14); content: ''; transition: transform 160ms ease; }
+  .category-card::after { position: absolute; right: -3rem; bottom: -3rem; width: 9rem; height: 9rem; border-radius: 999px; background: radial-gradient(circle, rgba(112, 182, 44, 0.16), rgba(7, 155, 211, 0.12)); content: ''; transition: transform 160ms ease; }
   .category-card:hover { border-color: var(--color-accent); box-shadow: var(--shadow-card); transform: translateY(-4px); }
   .category-card:hover::after { transform: scale(1.2); }
-  .icon { display: grid; width: 3rem; height: 3rem; place-items: center; border: 1px solid rgba(32, 199, 215, 0.3); border-radius: 1rem; background: linear-gradient(135deg, var(--color-accent-soft), #fff); color: var(--color-primary); font-weight: 900; }
+  .icon { display: grid; width: 3rem; height: 3rem; place-items: center; border: 1px solid rgba(7, 155, 211, 0.28); border-radius: 1rem; background: linear-gradient(135deg, var(--color-accent-soft), var(--color-leaf-soft)); color: var(--color-primary); font-weight: 900; }
   h2 { margin: 1.35rem 0 0.6rem; font-size: 1.55rem; }
   p { color: var(--color-muted); }
   .card-link { position: relative; z-index: 1; margin-top: auto; color: var(--color-accent-dark); font-weight: 850; }

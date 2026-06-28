@@ -10,6 +10,7 @@ export function organizationJsonLd() {
     name: SITE.name,
     url: SITE.url,
     email: SITE.contactEmail,
+    logo: absoluteUrl('/logo.svg'),
   };
 }
 

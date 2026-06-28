@@ -4,7 +4,7 @@
   "description": "Danske guides til aircondition, varmepumper og indeklima.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f8f9ff",
-  "theme_color": "#0f172a",
+  "background_color": "#f7f3ea",
+  "theme_color": "#07304f",
   "lang": "da"
 }

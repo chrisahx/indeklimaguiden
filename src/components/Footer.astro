@@ -5,7 +5,10 @@ import { CATEGORIES, SITE } from '../lib/constants';
 <footer class="site-footer">
   <div class="container footer-grid">
     <div>
-      <a class="footer-brand" href="/">{SITE.name}</a>
+      <a class="footer-brand" href="/">
+        <img src="/logo.svg" alt="" width="54" height="37" loading="lazy" />
+        <span>{SITE.name}</span>
+      </a>
       <p>Uafhængig, praktisk vejledning om aircondition, varmepumper og indeklima til danske boligejere.</p>
       <p><a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a></p>
     </div>
@@ -31,7 +34,10 @@ import { CATEGORIES, SITE } from '../lib/constants';
   .site-footer {
     margin-top: 4rem;
     padding: 3rem 0;
-    background: var(--color-primary);
+    background:
+      radial-gradient(circle at 16% 20%, rgba(7, 155, 211, 0.24), transparent 18rem),
+      radial-gradient(circle at 84% 18%, rgba(112, 182, 44, 0.2), transparent 17rem),
+      linear-gradient(135deg, var(--color-primary), #06263f 72%);
     color: #eaf1ff;
   }
 
@@ -42,12 +48,19 @@ import { CATEGORIES, SITE } from '../lib/constants';
   }
 
   .footer-brand {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
     margin-bottom: 0.8rem;
     color: #fff;
     font-size: 1.2rem;
     font-weight: 800;
     text-decoration: none;
+  }
+
+  .footer-brand img {
+    width: 3.4rem;
+    height: auto;
   }
 
   .site-footer h2 {

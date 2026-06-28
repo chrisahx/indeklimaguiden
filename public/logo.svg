@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" role="img" aria-labelledby="title desc">
+  <title id="title">Indeklima Guiden logo</title>
+  <desc id="desc">Et hus med et grønt blad og blå luftbølger.</desc>
+  <defs>
+    <linearGradient id="navy" x1="72" x2="250" y1="32" y2="168" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#07304f"/>
+      <stop offset="1" stop-color="#00406c"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="118" x2="208" y1="74" y2="155" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8cc640"/>
+      <stop offset="1" stop-color="#5ea923"/>
+    </linearGradient>
+    <linearGradient id="wave" x1="23" x2="290" y1="152" y2="192" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0084c7"/>
+      <stop offset="0.55" stop-color="#08a7dc"/>
+      <stop offset="1" stop-color="#7ed0ed"/>
+    </linearGradient>
+  </defs>
+  <path fill="none" stroke="url(#navy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" d="M68 118 160 40l92 78M85 116v59M235 116v59"/>
+  <path fill="url(#leaf)" d="M130 156c-11-45 20-77 84-89 2 57-27 93-76 88 20-32 49-51 49-51-31 12-50 29-57 52Z"/>
+  <path fill="none" stroke="#fff" stroke-linecap="round" stroke-width="8" d="M128 158c15-32 37-52 68-64"/>
+  <path fill="none" stroke="url(#wave)" stroke-linecap="round" stroke-width="11" d="M31 170c43-20 76-15 111 0 32 14 65 15 106-1 19-8 35-9 48-6"/>
+  <path fill="none" stroke="#1098d0" stroke-linecap="round" stroke-width="9" d="M111 188c37 21 77 21 121-1 28-14 49-17 72-8" opacity="0.95"/>
+  <path fill="none" stroke="#6bc6e8" stroke-linecap="round" stroke-width="9" d="M172 204c32-4 54-21 88-23" opacity="0.9"/>
+</svg>
