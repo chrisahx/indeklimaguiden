@@ -1,22 +1,22 @@
 ---
-import CookieConsent from '../components/CookieConsent.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import JsonLd from '../components/JsonLd.astro';
-import { SITE } from '../lib/constants';
-import { absoluteUrl, titleWithBrand, type SeoProps } from '../lib/seo';
-import { organizationJsonLd, websiteJsonLd } from '../lib/structured-data';
-import '../styles/global.css';
+import CookieConsent from "../components/CookieConsent.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import JsonLd from "../components/JsonLd.astro";
+import { SITE } from "../lib/constants";
+import { absoluteUrl, titleWithBrand, type SeoProps } from "../lib/seo";
+import { organizationJsonLd, websiteJsonLd } from "../lib/structured-data";
+import "../styles/global.css";
 
 interface Props extends SeoProps {}
 
 const {
-  title,
-  description,
-  path = Astro.url.pathname,
-  image = '/favicon.svg',
-  noindex = false,
-  type = 'website',
+    title,
+    description,
+    path = Astro.url.pathname,
+    image = "/favicon.svg",
+    noindex = false,
+    type = "website",
 } = Astro.props;
 
 const pageTitle = titleWithBrand(title);
@@ -27,37 +27,48 @@ const adsenseClient = import.meta.env.PUBLIC_GOOGLE_ADSENSE_CLIENT;
 
 <!doctype html>
 <html lang={SITE.lang}>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{pageTitle}</title>
-    <meta name="description" content={description} />
-    <meta name="robots" content={noindex ? 'noindex,nofollow' : 'index,follow'} />
-    <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <meta property="og:type" content={type} />
-    <meta property="og:locale" content={SITE.locale} />
-    <meta property="og:site_name" content={SITE.name} />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={imageUrl} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={description} />
-    {adsenseClient && <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`} crossorigin="anonymous"></script>}
-    <JsonLd data={organizationJsonLd()} />
-    <JsonLd data={websiteJsonLd()} />
-  </head>
-  <body>
-    <Header />
-    <main>
-      <slot />
-    </main>
-    <Footer />
-    {import.meta.env.PROD && <CookieConsent />}
-  </body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{pageTitle}</title>
+        <meta name="description" content={description} />
+        <meta
+            name="robots"
+            content={noindex ? "noindex,nofollow" : "index,follow"}
+        />
+        <link rel="canonical" href={canonical} />
+        <!-- <link rel="icon" type="image/svg+xml" href="/favicon.svg" /> -->
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <meta property="og:type" content={type} />
+        <meta property="og:locale" content={SITE.locale} />
+        <meta property="og:site_name" content={SITE.name} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={imageUrl} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={description} />
+        {
+            adsenseClient && (
+                <script
+                    async
+                    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+                    crossorigin="anonymous"
+                />
+            )
+        }
+        <JsonLd data={organizationJsonLd()} />
+        <JsonLd data={websiteJsonLd()} />
+    </head>
+    <body>
+        <Header />
+        <main>
+            <slot />
+        </main>
+        <Footer />
+        {import.meta.env.PROD && <CookieConsent />}
+    </body>
 </html>
