@@ -1,23 +1,24 @@
-# Task
-Du skal skrive en artikel omkring følgende emne: `INTAST EMNE`
+# task
+du skal skrive en artikel omkring følgende emne: `intast emne`
 
-# Article Type
-`TYPE`
+# article type
+`type`
 
-# Context
-Here er følgende research lavet omkring emnet:
-
-```
+# context
+here er følgende research lavet omkring emnet:
 
 ```
 
-# Requirements
-- Skrive fuld SEO & AEO optimeret blog artikel omrking det givne emne udfra den leverede research
-- Brug skill: @seo-aeo-blog-writer til at skrive artiklen
+```
+
+# requirements
+- skrive fuld seo & aeo optimeret blog artikel omrking det givne emne udfra den leverede research
+- brug skill: @seo-aeo-blog-writer til at skrive artiklen
 - sætte artiklen til draft
-- artiklen hører under category: `CATEGORY`
-- Link til evt relevante beregnere in "/beregnere/<navn-på-beregner>
+- artiklen hører under category: `category`
+- link til evt relevante beregnere in "/beregnere/<navn-på-beregner>
 - altid husk at hav en ankertekst hvis du referer til eksterne links, også hvis det er en sektion med resourcer til sidst.
+- Alle interner links skal være "rigtige" links og du skal tjekke at artiklen der linkes til allerede eksisterer
 
-# Output / Success Criteria
-Fuld skrevet artikel ud fra den leverede research
+# output / success criteria
+fuld skrevet artikel ud fra den leverede research
