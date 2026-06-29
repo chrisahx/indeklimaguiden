@@ -1,0 +1,419 @@
+---
+title: "Sådan fungerer en varmepumpe"
+seoTitle: "Sådan fungerer en varmepumpe: Guide"
+description: "Forstå hvordan en varmepumpe virker, hvorfor den er energieffektiv, hvad COP og SCOP betyder, og hvilken type varmepumpe der passer til forskellige boliger."
+seoDescription: "Sådan fungerer en varmepumpe: forstå virkemåde, COP, SCOP, typer, frostvejr, køling, støj og hvad du skal tjekke før køb."
+pubDate: 2026-06-29
+updatedDate: 2026-06-29
+category: "varmepumper"
+articleType: "guide"
+slug: "saadan-fungerer-en-varmepumpe"
+tags: ["varmepumpe", "varmepumpe funktion", "COP", "SCOP", "luft til luft", "luft til vand", "jordvarme"]
+draft: true
+featured: false
+commercialDisclosure: true
+schemaType: "Article"
+faq:
+  - question: "Hvordan fungerer en varmepumpe?"
+    answer: "En varmepumpe flytter varmeenergi fra luft, jord eller ventilationsluft ind i boligen. El bruges primært til kompressoren, som hæver temperaturen i kølemidlet, så varmen kan afgives inde."
+  - question: "Hvordan kan en varmepumpe varme, når det er koldt udenfor?"
+    answer: "Selv kold luft indeholder varmeenergi. Varmepumpen kan hente energien ud, men effektiviteten falder typisk i frostvejr, fordi anlægget skal arbejde hårdere og nogle gange afrime udedelen."
+  - question: "Hvad betyder SCOP på en varmepumpe?"
+    answer: "SCOP viser varmepumpens gennemsnitlige effektivitet over en varmesæson. En SCOP på 4 betyder forenklet, at varmepumpen leverer cirka 4 kWh varme for hver 1 kWh el."
+  - question: "Hvad er forskellen på luft til luft og luft til vand?"
+    answer: "Luft til luft blæser varm luft direkte ind i boligen. Luft til vand sender varmen til radiatorer, gulvvarme og typisk varmt brugsvand via et vandbårent varmesystem."
+  - question: "Kan en varmepumpe også køle?"
+    answer: "Ja, mange luft til luft-varmepumper kan også køle. Ved køledrift flyttes varme fra indeluften og ud af boligen, men det bruger strøm og bør bruges med omtanke."
+  - question: "Hvilken varmepumpe passer bedst til helårsbolig?"
+    answer: "Luft til vand eller jordvarme passer ofte bedst til helårsboliger med radiatorer eller gulvvarme. Luft til luft er typisk bedre som supplement, til sommerhus eller til boliger uden vandbårent varmesystem."
+---
+
+import AnswerBox from '../../../components/AnswerBox.astro';
+import ComparisonTable from '../../../components/ComparisonTable.astro';
+import DisclosureBox from '../../../components/DisclosureBox.astro';
+import ExpertTip from '../../../components/ExpertTip.astro';
+import ProsCons from '../../../components/ProsCons.astro';
+import SpecCard from '../../../components/SpecCard.astro';
+
+<DisclosureBox title="Om guiden">
+  Denne guide er en forklarende artikel om varmepumpers virkemåde og praktiske valg. Den erstatter ikke en konkret dimensionering fra en autoriseret installatør. Effektivitet, støj og økonomi afhænger af bolig, installation, indstillinger og den konkrete model.
+</DisclosureBox>
+
+<AnswerBox title="Kort svar">
+  En varmepumpe fungerer ved at flytte varmeenergi fra omgivelserne ind i boligen. Den bruger el til at drive en kompressor, som hæver temperaturen i et kølemiddel, så varmen kan bruges til indeluft, radiatorer, gulvvarme eller varmt brugsvand. Derfor kan en varmepumpe typisk levere flere kWh varme, end den bruger i kWh el.
+</AnswerBox>
+
+Når man spørger **sådan fungerer en varmepumpe**, er det vigtigste at forstå, at varmepumpen ikke laver varme på samme måde som en elradiator. En elradiator omdanner strøm direkte til varme. En varmepumpe bruger strøm til at hente og flytte varme, der allerede findes i udeluft, jord eller ventilationsluft.
+
+Det er derfor varmepumper kan være så effektive i danske boliger. De skaber ikke "gratis varme", men de kan udnytte strømmen bedre end direkte elvarme, hvis anlægget passer til huset og er korrekt installeret.
+
+## Hvad er en varmepumpe?
+
+En varmepumpe er et varmeanlæg, der flytter varmeenergi fra et sted med lavere temperatur til et sted med højere temperatur. I en bolig betyder det typisk, at varmepumpen henter energi fra udeluften, jorden eller ventilationsluften og afleverer den inde i huset.
+
+Den nemmeste forklaring er at tænke på et **omvendt køleskab**. Et køleskab flytter varme ud af skabet og afgiver den til rummet bag eller omkring køleskabet. En varmepumpe gør det modsatte for boligen: Den henter varme udefra og afgiver den inde.
+
+<div class="spec-grid">
+  <SpecCard label="Grundprincip" value="Flytter varme" note="Varmepumpen bruger el til at transportere energi, ikke kun til at lave varme direkte." />
+  <SpecCard label="Typisk effektivitet" value="Flere kWh varme pr. kWh el" note="SCOP viser den gennemsnitlige effektivitet over en hel varmesæson." />
+  <SpecCard label="Vigtigste krav" value="Rigtig dimensionering" note="Boligens varmebehov, isolering og varmesystem betyder mindst lige så meget som mærket." />
+</div>
+
+## Hvordan fungerer en varmepumpe trin for trin?
+
+<AnswerBox title="Hvordan virker en varmepumpe?">
+  En varmepumpe optager varme fra luft, jord eller ventilation i en fordamper. Et kølemiddel transporterer energien til en kompressor, hvor tryk og temperatur hæves. Derefter afgives varmen i en kondensator til boligens luft, radiatorvand, gulvvarme eller brugsvand.
+</AnswerBox>
+
+Selve processen gentager sig i et lukket kredsløb. Den kan virke teknisk, men grundideen er enkel: Kølemidlet skifter mellem væske og gas, mens tryk og temperatur ændres.
+
+### 1. Varmepumpen optager varme fra omgivelserne
+
+Først henter varmepumpen energi fra en varmekilde. Det kan være udeluft, jordvarmevæske i nedgravede slanger, en boring eller ventilationsluft.
+
+Selv om luften føles kold, indeholder den stadig energi. Varmepumpens opgave er at udnytte den energi og flytte den ind i boligen.
+
+### 2. Kølemidlet fordamper
+
+I fordamperen møder et koldt kølemiddel energien fra omgivelserne. Kølemidlet har et lavt kogepunkt og kan derfor fordampe ved lave temperaturer.
+
+Når kølemidlet fordamper, optager det varmeenergi. Det er denne proces, der gør det muligt at hente energi fra kold luft eller jord.
+
+### 3. Kompressoren hæver temperaturen
+
+Den fordampede kølemiddelgas sendes videre til kompressoren. Kompressoren presser gassen sammen, så trykket stiger. Når trykket stiger, stiger temperaturen også.
+
+Det er kompressoren, der bruger størstedelen af varmepumpens strøm. Til gengæld gør den varmen brugbar ved en temperatur, der kan opvarme boligen.
+
+### 4. Varmen afgives til boligen
+
+I kondensatoren afgiver det varme kølemiddel sin energi. Afhængigt af varmepumpetypen kan varmen afleveres til:
+
+- Indeluft via en indedel
+- Radiatorvand
+- Gulvvarme
+- Varmtvandsbeholder
+- Ventilationsluft
+
+Når kølemidlet afgiver varmen, kondenserer det tilbage til væske.
+
+### 5. Trykket sænkes, og processen starter forfra
+
+Til sidst passerer kølemidlet en ekspansionsventil, hvor trykket sænkes. Kølemidlet bliver igen koldt og klar til at optage ny varme i fordamperen.
+
+Processen kører igen og igen, så længe varmepumpen skal levere varme.
+
+## De vigtigste dele i en varmepumpe
+
+<ComparisonTable
+  headers={["Del", "Hvad gør den?", "Hvorfor er den vigtig?"]}
+  rows={[
+    ["Fordamper", "Optager varme fra luft, jord eller ventilation", "Starter energiflytningen ind i varmepumpen"],
+    ["Kompressor", "Hæver tryk og temperatur i kølemidlet", "Gør varmen varm nok til boligen"],
+    ["Kondensator", "Afgiver varmen til luft eller vand", "Overfører energien til husets varmesystem"],
+    ["Ekspansionsventil", "Sænker trykket i kølemidlet", "Gør kølemidlet klar til at optage varme igen"],
+    ["Kølemiddel", "Transporterer varme rundt i kredsløbet", "Skifter mellem væske og gas under processen"],
+  ]}
+/>
+
+### Fordamper
+
+Fordamperen er den del, hvor varmepumpen optager energi fra omgivelserne. På en luftbaseret varmepumpe sidder fordamperen typisk i udedelen. På jordvarme hentes energien gennem slanger eller boring, før den overføres til varmepumpen.
+
+### Kompressor
+
+Kompressoren er varmepumpens motor. Den bruger strøm til at presse kølemidlet sammen og hæve temperaturen. En effektiv kompressor er afgørende for både strømforbrug, støj og drift.
+
+### Kondensator
+
+Kondensatoren afleverer varmen til huset. I en luft til luft-varmepumpe sker det via indedelen, der blæser varm luft ud i rummet. I en luft til vand- eller jordvarmepumpe sker det til vandet i varmesystemet.
+
+### Ekspansionsventil
+
+Ekspansionsventilen sænker trykket på kølemidlet, så det igen bliver koldt nok til at optage varme. Uden denne del kunne kredsløbet ikke gentage processen effektivt.
+
+### Kølemiddel
+
+Kølemidlet er væsken/gassen, der flytter energien rundt i systemet. Det er valgt, fordi det kan fordampe og kondensere ved temperaturer, der passer til varmepumpens drift.
+
+## Hvilke typer varmepumper findes der?
+
+Der findes flere typer varmepumper til danske boliger. De adskiller sig især ved, hvor de henter varmen fra, og hvordan de afleverer den til huset.
+
+<ComparisonTable
+  headers={["Type", "Henter varme fra", "Afgiver varme til", "Bedst til"]}
+  rows={[
+    ["Luft til luft", "Udeluft", "Indeluft via indedel", "Sommerhus, supplement, mindre boliger og køling"],
+    ["Luft til vand", "Udeluft", "Radiatorer, gulvvarme og brugsvand", "Helårsboliger med vandbårent varmesystem"],
+    ["Jordvarme / væske til vand", "Jord eller boring", "Radiatorer, gulvvarme og brugsvand", "Egnede grunde med plads og høj varmeefterspørgsel"],
+    ["Brugsvandsvarmepumpe", "Luft omkring anlægget eller afkastluft", "Varmt brugsvand", "Boliger hvor kun brugsvand skal opvarmes effektivt"],
+  ]}
+/>
+
+### Luft til luft-varmepumpe
+
+En luft til luft-varmepumpe henter varme fra udeluften og blæser varm luft ind i boligen. Den kræver ikke radiatorer eller gulvvarme og er derfor ofte relevant i sommerhuse, mindre boliger, kolonihavehuse, værksteder og boliger med elradiatorer.
+
+Den største begrænsning er, at den normalt ikke laver varmt brugsvand. Den varmer også bedst i de rum, hvor luften kan cirkulere frit. I huse med mange lukkede rum kan varmen blive ujævnt fordelt.
+
+Læs mere i guiden [luft til luft vs luft til vand](/varmepumper/luft-til-luft-vs-luft-til-vand/), hvis du overvejer de to mest almindelige luftbaserede løsninger.
+
+### Luft til vand-varmepumpe
+
+En luft til vand-varmepumpe henter varme fra udeluften og overfører den til husets vandbårne varmesystem. Den kan typisk levere både rumvarme og varmt brugsvand.
+
+Den er ofte relevant som erstatning for olie-, gas- eller pillefyr i helårsboliger. Den kræver dog radiatorer, gulvvarme eller et andet vandbårent system. Hvis huset kun har elradiatorer, bliver installationen mere omfattende.
+
+### Jordvarme / væske til vand-varmepumpe
+
+Jordvarme henter energi fra jorden via nedgravede slanger eller boring. Fordelen er, at jordtemperaturen er mere stabil end udeluften, hvilket kan give høj og stabil effektivitet.
+
+Ulempen er etableringen. Jordvarme kræver plads, gravearbejde eller boring og kan være dyrere at installere. Det er derfor ikke kun et spørgsmål om effektivitet, men også om grundens størrelse, jordforhold og lokale krav.
+
+### Brugsvandsvarmepumpe
+
+En brugsvandsvarmepumpe er en mindre varmepumpe, der primært opvarmer varmt brugsvand. Den opvarmer normalt ikke hele boligen, men kan være relevant i bestemte installationer, hvor brugsvand ønskes produceret mere effektivt end med direkte el.
+
+## Hvad betyder COP og SCOP?
+
+<AnswerBox title="Hvad betyder SCOP?">
+  SCOP er et mål for varmepumpens gennemsnitlige effektivitet over en hel varmesæson. En SCOP på 4 betyder forenklet, at varmepumpen i gennemsnit leverer cirka 4 kWh varme for hver 1 kWh el, den bruger.
+</AnswerBox>
+
+COP og SCOP bruges til at beskrive varmepumpens effektivitet. Begge tal handler om forholdet mellem den varme, varmepumpen leverer, og den strøm, den bruger.
+
+### COP forklaret enkelt
+
+COP står for Coefficient of Performance. Det er et øjebliksbillede af effektiviteten under bestemte testforhold.
+
+Hvis en varmepumpe har COP 4 i et bestemt driftspunkt, betyder det, at den leverer 4 kWh varme for 1 kWh el netop under de forhold.
+
+### SCOP forklaret enkelt
+
+SCOP står for Seasonal Coefficient of Performance. Det er et sæsonmål, der siger mere om den gennemsnitlige effektivitet over en varmesæson.
+
+Hvis en varmepumpe har SCOP 3, betyder det forenklet, at 1 kWh el giver cirka 3 kWh varme i gennemsnit over sæsonen.
+
+### Hvorfor SCOP er vigtigere i praksis
+
+COP kan være nyttigt, men det kan også være misvisende, hvis du bruger det alene. En varmepumpe kan have høj COP på en mild dag og lavere COP på en kold dag.
+
+SCOP er normalt mere relevant, når du sammenligner modeller og estimerer årsforbrug, fordi det bedre afspejler skiftende vejr og drift gennem en sæson.
+
+Vil du regne på dit eget forbrug, kan du bruge formlen i vores guide til [varmepumpe strømforbrug](/varmepumper/varmepumpe-stromforbrug/) eller sammenligne direkte elvarme med varmepumpe i [varmepumpe vs elradiator-beregneren](/beregnere/varmepumpe-vs-elradiator/).
+
+## Hvor effektiv er en varmepumpe?
+
+En varmepumpe kan ofte levere flere gange mere varmeenergi, end den bruger i el. Men effektiviteten er ikke fast. Den afhænger af udetemperatur, fremløbstemperatur, varmepumpetype, dimensionering, indstillinger og boligens varmebehov.
+
+<ProsCons
+  pros={[
+    "Kan levere flere kWh varme pr. kWh el end direkte elvarme",
+    "Kan reducere varmeregningen ved skift fra olie, gas eller elradiatorer",
+    "Luft til vand og jordvarme kan typisk levere både rumvarme og brugsvand",
+    "Luft til luft kan ofte også bruges til køling om sommeren",
+    "Kan give mere jævn temperatur, hvis anlægget er korrekt indstillet",
+  ]}
+  cons={[
+    "Effektiviteten falder ofte i koldt vejr",
+    "Høj fremløbstemperatur kan give dårligere økonomi",
+    "Forkert dimensionering kan øge elforbruget og slid",
+    "Udedelen kan give støj, hvis den placeres forkert",
+    "Luft til luft opvarmer normalt ikke brugsvand og ikke altid alle rum jævnt",
+  ]}
+/>
+
+### Derfor varierer effektiviteten med årstid og temperatur
+
+Luftbaserede varmepumper arbejder typisk lettest, når udeluften er mild. Når temperaturen falder, skal varmepumpen hæve temperaturen mere, og effektiviteten falder.
+
+Jordvarme påvirkes mindre af udetemperaturen, fordi jorden holder en mere stabil temperatur. Til gengæld er installationen ofte dyrere og mere omfattende.
+
+### Betydningen af isolering og fremløbstemperatur
+
+En varmepumpe fungerer bedst, når huset kan varmes op med lav fremløbstemperatur. Fremløbstemperatur er temperaturen på det vand, der sendes ud i radiatorer eller gulvvarme.
+
+Gulvvarme og store radiatorer passer ofte godt til varmepumper, fordi de kan afgive varme ved lavere vandtemperatur. Små ældre radiatorer kan kræve højere fremløb, og det kan reducere effektiviteten.
+
+### Hvorfor korrekt dimensionering er vigtig
+
+En varmepumpe skal passe til boligens varmebehov. En for lille varmepumpe kan få svært ved at dække behovet og kan bruge elpatron eller backupvarme for meget. En for stor varmepumpe kan få uhensigtsmæssig drift med mange start og stop.
+
+Derfor bør varmebehovet beregnes ud fra husets størrelse, isolering, vinduer, varmesystem, varmtvandsforbrug og brugsmønster. Du kan få et indledende estimat med vores [størrelsesberegner til aircondition og varmepumpe](/beregnere/aircondition-varmepumpe-stoerrelse/), men en endelig dimensionering bør laves af installatøren.
+
+## Kan en varmepumpe fungere i frostvejr?
+
+<AnswerBox title="Kan varmepumper virke om vinteren?">
+  Ja, varmepumper kan godt virke i frostvejr. Selv kold luft indeholder varmeenergi. Effektiviteten falder dog typisk, når udetemperaturen bliver lav, og luftbaserede varmepumper kan skulle afrime udedelen i koldt og fugtigt vejr.
+</AnswerBox>
+
+En udbredt misforståelse er, at en varmepumpe ikke kan varme, når det fryser. Det kan den godt. Spørgsmålet er ikke, om der findes varmeenergi i luften, men hvor hårdt varmepumpen skal arbejde for at hente den.
+
+### Der er stadig varmeenergi i kold luft
+
+Luft ved 0 grader eller minusgrader indeholder stadig energi. Varmepumpen udnytter kølemidlets lave kogepunkt og kompressoren til at hæve temperaturen, så energien kan bruges i boligen.
+
+### Afrimning og lavere effektivitet om vinteren
+
+I koldt og fugtigt vejr kan der danne sig rim på udedelen. Derfor har luftbaserede varmepumper en afrimningsfunktion. Under afrimning kan varmeproduktionen kortvarigt falde, og der kan løbe vand fra udedelen.
+
+Det er normalt. Men hyppig afrimning, isopbygning eller meget højt strømforbrug kan være tegn på forkert placering, manglende vedligehold eller indstillingsproblemer.
+
+### Hvornår kan supplerende varme være nødvendig?
+
+Supplerende varme kan være nødvendig, hvis huset har stort varmetab, varmepumpen er underdimensioneret, radiatorerne kræver høj temperatur, eller der er meget højt varmtvandsforbrug.
+
+I luft til vand-anlæg kan elpatron hjælpe, men den fungerer som direkte elvarme. Hvis den kører meget, bør anlægget tjekkes.
+
+## Kan en varmepumpe også køle?
+
+<AnswerBox title="Kan en varmepumpe køle?">
+  Mange luft til luft-varmepumper kan både varme og køle. Ved køling vendes processen, så varme flyttes fra indeluften og ud. Det kan give bedre komfort om sommeren, men køledrift bruger strøm og bør ikke erstatte solafskærmning og god ventilation.
+</AnswerBox>
+
+En luft til luft-varmepumpe er ofte den mest oplagte varmepumpe, hvis du også vil have køling. Den fungerer i praksis som en fast installeret aircondition-lignende løsning, når den kører i køledrift.
+
+### Luft til luft-varmepumper og køling
+
+Ved køledrift optager indedelen varme fra rummet og sender den ud via udedelen. Det kan være nyttigt i soveværelser, sommerhuse, hjemmekontorer og boliger med store vinduespartier.
+
+Du kan læse mere i guiden [kan en varmepumpe også køle?](/varmepumper/kan-en-varmepumpe-ogsa-koele/), hvis køling er en vigtig del af dit valg.
+
+### Komfortkøling vs. egentlig aircondition
+
+I praksis kan en luft til luft-varmepumpe give effektiv komfortkøling. Men resultatet afhænger af placering, kapacitet, rumstørrelse, solindfald og hvor godt luften fordeles.
+
+Hvis du primært køber anlægget for køling, bør du også se på støjniveau, nattilstand, kondensvand og placering af indedelen.
+
+### Energiforbrug ved køledrift
+
+Køling bruger strøm. Hvis du vil holde forbruget nede, bør du kombinere køledrift med solafskærmning, udluftning på de kølige tidspunkter og realistiske temperaturindstillinger.
+
+## Hvad betyder varmepumpen for indeklimaet?
+
+En varmepumpe kan give bedre komfort, fordi temperaturen bliver mere jævn, og opvarmningen kan styres mere præcist. Men effekten på indeklimaet afhænger meget af varmepumpetypen og brugen.
+
+### Temperatur og komfort
+
+Luft til vand og jordvarme giver en varmeoplevelse, der minder om traditionel centralvarme via radiatorer eller gulvvarme. Luft til luft giver hurtigere opvarmning i de rum, hvor indedelen blæser.
+
+En stabil temperatur opleves ofte mere behagelig end store udsving. Det kan også hjælpe med at reducere kolde overflader og kondensrisiko, men ventilation og fugtstyring er stadig vigtig.
+
+### Luftbevægelse og oplevet tør luft
+
+Luft til luft-varmepumper flytter luft rundt i rummet. Hvis indedelen blæser direkte på opholdszoner, kan det føles som træk. Hvis temperaturen sættes for højt, kan luften også opleves tør eller tung.
+
+Oplevet tør luft skyldes ikke altid lav relativ luftfugtighed alene. Støv, høj temperatur og luftbevægelse kan også spille ind. Sundhed.dk beskriver generelt sammenhængen mellem temperatur, luftkvalitet og gener i deres <a href="https://www.sundhed.dk/borger/patienthaandbogen/sundhedsoplysning/indeklima/indeklima-oversigt/" rel="nofollow noopener noreferrer" target="_blank">oversigt om indeklima</a>.
+
+### Fugt, kondens og jævn opvarmning
+
+En varmepumpe er ikke en affugter i sig selv, men jævn opvarmning kan hjælpe med at holde overflader varmere og reducere kondensrisiko. Har du fugtproblemer, skal ventilation, kuldebroer, opvarmning og eventuel affugtning vurderes samlet.
+
+Se også vores guide til [optimal luftfugtighed i hjemmet](/indeklima/optimal-luftfugtighed-i-hjemmet/) og [hvorfor vinduer dugger](/indeklima/hvorfor-dugger-vinduer/), hvis problemet handler om fugt og kondens.
+
+## Hvad skal du være opmærksom på før køb?
+
+<AnswerBox title="Hvad er den bedste varmepumpe?">
+  Den bedste varmepumpe afhænger af boligen. Luft til luft er ofte god til sommerhuse, mindre boliger og supplement til elvarme. Luft til vand og jordvarme passer typisk bedre til helårsboliger med radiatorer eller gulvvarme og behov for varmt brugsvand.
+</AnswerBox>
+
+Før du vælger varmepumpe, bør du ikke kun se på pris og mærke. Det vigtigste er, om løsningen passer til huset.
+
+### Boligens størrelse og isoleringsniveau
+
+Jo større varmebehov, desto mere skal varmepumpen levere. Et dårligt isoleret hus kræver mere effekt og kan give højere elforbrug. Efterisolering, tætte vinduer og mindre varmetab kan gøre varmepumpen mere effektiv.
+
+### Radiatorer, gulvvarme og varmt brugsvand
+
+Hvis varmepumpen skal erstatte et fyr, skal den typisk kunne levere varme til radiatorer, gulvvarme og varmt brugsvand. Gulvvarme og store radiatorer er ofte bedst, fordi de kan arbejde med lav fremløbstemperatur.
+
+Hvis du ikke har vandbårent varmesystem, er luft til luft ofte den enklere løsning. Men den laver normalt ikke varmt brugsvand.
+
+### Placering af udedel og støj
+
+Luft til luft og luft til vand har en udedel, som kan støje. Placering tæt ved naboskel, soveværelsesvinduer, terrasser eller hårde reflekterende flader kan give problemer.
+
+Miljøstyrelsen og Energistyrelsen arbejder med en vejledende støjgrænse på 35 dB om natten i skel til nabo i mange vurderinger. Brug Energistyrelsens <a href="https://ens.dk/forsyning-og-forbrug/stoejberegner-varmepumper" rel="nofollow noopener noreferrer" target="_blank">støjberegner for varmepumper</a> tidligt i processen, og læs også vores guide til [hvor en varmepumpe skal placeres](/varmepumper/hvor-skal-en-varmepumpe-placeres/).
+
+### Service og levetid
+
+En varmepumpe skal vedligeholdes. Luft til luft-filtre skal renses jævnligt, udedelen skal holdes fri for blade, sne og snavs, og anlægget bør serviceres efter producentens og installatørens anbefalinger.
+
+Få installatøren til at gennemgå styring, temperaturindstillinger og vedligeholdelse ved installationen. Mange unødige udgifter skyldes forkerte indstillinger.
+
+### Energimærkning og Varmepumpelisten
+
+Sammenlign ikke kun pris. Se også på SCOP, støjniveau, garanti, serviceadgang og dokumenteret ydeevne. SparEnergi driver <a href="https://sparenergi.dk/varmepumpelisten" rel="nofollow noopener noreferrer" target="_blank">Varmepumpelisten</a>, hvor du kan sammenligne testede modeller.
+
+## Tjekliste før, under og efter installation
+
+<ExpertTip>
+  Den billigste varmepumpe er ikke nødvendigvis den billigste løsning. En korrekt dimensioneret og rigtigt placeret model med lav fremløbstemperatur kan være langt bedre end en billig installation, der giver støj, elpatrondrift eller dårlig varmefordeling.
+</ExpertTip>
+
+### Før køb
+
+- Få beregnet boligens varmebehov.
+- Tjek isolering, vinduer og varmetab.
+- Undersøg om radiatorer eller gulvvarme passer til lav fremløbstemperatur.
+- Afklar om varmepumpen skal levere varmt brugsvand.
+- Sammenlign SCOP, støjniveau og garanti, ikke kun pris.
+- Brug <a href="https://sparenergi.dk/varmepumpelisten" rel="nofollow noopener noreferrer" target="_blank">SparEnergis Varmepumpeliste</a> til modeltjek.
+- Overvej økonomien med vores [beregner til om varmepumpe kan betale sig](/beregnere/kan-varmepumpe-betale-sig/).
+
+### Under installation
+
+- Sørg for korrekt dimensionering.
+- Få placeringen af udedelen vurderet i forhold til støj.
+- Undgå placering tæt på naboskel og soveværelsesvinduer.
+- Sørg for fri luftcirkulation omkring udedelen.
+- Få styring, temperaturkurve og eventuel elpatron forklaret.
+- Sørg for korrekt håndtering af kondensvand.
+
+### Efter installation
+
+- Hold en jævn temperatur frem for store hyppige ændringer.
+- Rens filtre på luft til luft-varmepumper.
+- Hold udedelen fri for blade, sne og snavs.
+- Følg strømforbruget de første måneder.
+- Få serviceeftersyn efter anbefalingerne.
+- Juster indstillinger, hvis luften føles tør, der er træk, eller forbruget virker højt.
+
+## Kilder og videre læsning
+
+Hvis du vil dykke dybere ned i officielle anbefalinger, krav og forbrugerinformation, er disse kilder særligt relevante:
+
+- SparEnergi: <a href="https://sparenergi.dk/privat/tid-til-skifte-varmekilde/hvilken-type-varmepumpe-skal-du-vaelge" rel="nofollow noopener noreferrer" target="_blank">guide til valg af varmepumpetype</a>
+- SparEnergi: <a href="https://sparenergi.dk/varmepumpelisten" rel="nofollow noopener noreferrer" target="_blank">Varmepumpelisten med testede modeller</a>
+- Energistyrelsen: <a href="https://ens.dk/forsyning-og-forbrug/produkter-med-energikrav/varmepumper-til-varmeanlaeg" rel="nofollow noopener noreferrer" target="_blank">energikrav til varmepumper til varmeanlæg</a>
+- Energistyrelsen: <a href="https://ens.dk/forsyning-og-forbrug/stoejberegner-varmepumper" rel="nofollow noopener noreferrer" target="_blank">støjberegner for varmepumper</a>
+- Miljøstyrelsen: <a href="https://mst.dk/borger/hjem-og-have/hjem-og-indeklima/varmepumper" rel="nofollow noopener noreferrer" target="_blank">forbrugerinformation om varmepumper</a>
+- Bolius: <a href="https://www.bolius.dk/hvordan-virker-en-varmepumpe-egentlig-98034" rel="nofollow noopener noreferrer" target="_blank">forbrugerforklaring af hvordan varmepumper virker</a>
+- Forbrugerrådet Tænk: <a href="https://taenk.dk/forbrugerliv/bolig/varmepumpe-tjekliste" rel="nofollow noopener noreferrer" target="_blank">tjekliste før køb af varmepumpe</a>
+
+## Kort opsummering: Sådan virker en varmepumpe
+
+En varmepumpe virker ved at flytte varmeenergi fra omgivelserne ind i boligen. Den bruger el til en kompressor, som hæver temperaturen i kølemidlet, så varmen kan afgives til luft, radiatorer, gulvvarme eller brugsvand.
+
+Det vigtigste at huske er:
+
+- Varmepumper flytter varme i stedet for kun at lave varme direkte fra el.
+- COP er et øjebliksbillede, mens SCOP siger mere om effektivitet over en sæson.
+- Luft til luft er ofte bedst til sommerhus, supplement og køling.
+- Luft til vand og jordvarme er ofte bedst til helårsboliger med vandbårent varmesystem.
+- Lav fremløbstemperatur, god isolering og korrekt dimensionering er afgørende for økonomien.
+- Støj, placering og service bør tænkes ind før køb, ikke efter installation.
+
+Hvis du overvejer varmepumpe som erstatning for din nuværende varmekilde, er næste skridt at regne på økonomien. Start med vores [beregner til om en varmepumpe kan betale sig](/beregnere/kan-varmepumpe-betale-sig/) og læs derefter guiden [hvad koster en varmepumpe?](/varmepumper/hvad-koster-en-varmepumpe/).
+
+<style>{`
+  .spec-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  @media (max-width: 760px) {
+    .spec-grid { grid-template-columns: 1fr; }
+  }
+`}</style>
