@@ -1,5 +1,4 @@
 ---
-import CookieConsent from "../components/CookieConsent.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import JsonLd from "../components/JsonLd.astro";
@@ -24,6 +23,7 @@ const pageTitle = titleWithBrand(title);
 const canonical = absoluteUrl(path);
 const imageUrl = absoluteUrl(image);
 const adsenseClient = import.meta.env.PROD ? ADSENSE_CLIENT : undefined;
+const gaMeasurementId = import.meta.env.PROD ? SITE.gaMeasurementId : undefined;
 ---
 
 <!doctype html>
@@ -61,6 +61,22 @@ const adsenseClient = import.meta.env.PROD ? ADSENSE_CLIENT : undefined;
                 />
             )
         }
+        {
+            gaMeasurementId && (
+                <>
+                    <script
+                        async
+                        src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+                    />
+                    <script is:inline define:vars={{ gaMeasurementId }}>
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){window.dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', gaMeasurementId, { anonymize_ip: true });
+                    </script>
+                </>
+            )
+        }
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={websiteJsonLd()} />
     </head>
@@ -70,6 +86,5 @@ const adsenseClient = import.meta.env.PROD ? ADSENSE_CLIENT : undefined;
             <slot />
         </main>
         <Footer />
-        {import.meta.env.PROD && <CookieConsent />}
     </body>
 </html>
