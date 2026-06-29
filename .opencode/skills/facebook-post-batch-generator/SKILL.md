@@ -296,7 +296,11 @@ If no relevant current news is found, use seasonal relevance based on the postin
 
 ### Price
 
-Price posts should target people close to a decision.
+Price posts should give the reader concrete price value directly in the Facebook post.
+
+Do not treat price posts as thin commercial teasers or simple "click to see prices" posts. They should be useful even if the reader does not click.
+
+Price posts can target people close to a decision, but the primary goal is to help the reader understand costs, tradeoffs, and realistic expectations.
 
 Use topics such as:
 
@@ -309,6 +313,69 @@ Use topics such as:
 * mobile aircondition vs split aircondition
 * heat pump vs aircondition
 * affugter running cost
+
+Price posts should usually include several of these elements directly in the post:
+
+* concrete price ranges or realistic examples when supported by the article or reliable context
+* what drives the price up or down
+* what is typically included and not included
+* what can make the cheap option expensive later
+* simple running-cost examples when relevant
+* a practical rule of thumb the reader can use before buying or requesting an offer
+
+Price posts can be written as a small, standalone article for Facebook.
+
+When the source article supports it, prefer a "tinyfied article" format with a strong headline and numbered points, for example:
+
+```text
+7 ting der afgør, hvad en aircondition faktisk koster
+```
+
+Then give useful short sections such as:
+
+```text
+1. Selve anlægget er kun én del af prisen
+Forklar kort hvad brugeren ofte glemmer at regne med.
+
+2. Installation kan gøre den store forskel
+Forklar hvorfor placering, rørføring eller el kan ændre prisen.
+
+3. Den billigste løsning kan blive dyrere i drift
+Forklar med et simpelt eksempel eller en praktisk tommelfingerregel.
+```
+
+Use numbered points when it improves readability. Good formats include:
+
+* `5 ting der påvirker prisen`
+* `7 typiske udgifter du bør kende`
+* `3 steder hvor den billige løsning kan blive dyr`
+* `6 spørgsmål du bør stille før du køber`
+
+Each point should teach something concrete. Avoid list items that are only vague teasers.
+
+Good price-post hooks:
+
+```text
+Hvad koster en affugter egentlig i strøm?
+Er en mobil aircondition billigere end split aircondition i længden?
+Hvorfor kan to tilbud på aircondition-installation være så forskellige?
+```
+
+Good price posts should still link to the website article, but the CTA should feel like a next step for more detail, examples, caveats, or buying guidance.
+
+Avoid CTAs that withhold the entire answer, such as:
+
+```text
+Se prisen her.
+Klik for at finde ud af hvad det koster.
+```
+
+Prefer CTAs such as:
+
+```text
+Vi har samlet flere regneeksempler og typiske faldgruber i guiden.
+Se den fulde oversigt, hvis du vil sammenligne pris, drift og installation.
+```
 
 Do not overdo commercial intent unless the user asks for it.
 
@@ -457,6 +524,16 @@ Most posts should be 90-140 words.
 
 Shorter posts are allowed when appropriate.
 
+Price posts should usually be longer than other posts because they should deliver concrete value directly in the post.
+
+For normal price posts, aim for 150-250 words.
+
+For mini-article price posts with numbered points, 250-450 words is allowed when the post remains useful, skimmable, and specific.
+
+Do not make every price post long. Use the longer format when the article contains enough substance to support it.
+
+In a normal 10-post weekly batch, at least one price post should usually use the longer mini-article format, unless no suitable price-focused article is available.
+
 Avoid very long posts unless the format clearly benefits from it.
 
 ## Engagement strategy
@@ -493,29 +570,25 @@ D) Indelukket luft
 
 ## Link strategy
 
-Because the user wants to automate and schedule posts, each post should include a direct-link version by default.
+The user only uses the comment-link version.
 
-Also include an optional first-comment link version.
+Do not generate a scheduling version or any post text with the direct URL inside the post body.
 
 For every post, output:
 
-1. `Post text - scheduling version`
+1. `Post text - comment-link version`
 
-   * Includes the article link directly in the post.
-
-2. `Optional first comment`
-
-   * Contains the same article link.
-   * Use this if posting manually and the user wants to test link-in-comment.
-
-3. `Post text - comment-link version`
-
-   * Same post but without the direct URL.
+   * Publication-ready Facebook post without the direct URL.
    * Ends with a sentence such as:
 
 ```text
 Jeg linker til guiden i kommentaren.
 ```
+
+2. `First comment`
+
+   * Contains the direct article link with UTM tracking.
+   * This is the only place the link should appear for each post.
 
 Do not overuse the pointing-down emoji.
 
@@ -614,15 +687,11 @@ List short source notes for human review.
 **Tracked URL:** [URL with UTM]  
 **Engagement mechanic:** [A/B/C/D question, myth/fact, saveable checklist, etc.]
 
-### Post text - scheduling version
-
-[Publication-ready Facebook post with direct URL.]
-
 ### Post text - comment-link version
 
 [Publication-ready Facebook post without direct URL. Ends with comment-link CTA.]
 
-### Optional first comment
+### First comment
 
 [Direct article link with UTM.]
 
