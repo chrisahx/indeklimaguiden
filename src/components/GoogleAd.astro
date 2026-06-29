@@ -15,8 +15,8 @@ const {
   fullWidthResponsive = true,
 } = Astro.props;
 const client = ADSENSE_CLIENT;
-const shouldRenderAd = Boolean(client && slotId);
-const shouldRenderPlaceholder = import.meta.env.DEV && !shouldRenderAd;
+const shouldRenderAd = import.meta.env.PROD && Boolean(client && slotId);
+const shouldRenderPlaceholder = import.meta.env.DEV;
 ---
 
 {shouldRenderAd && (
@@ -38,6 +38,7 @@ const shouldRenderPlaceholder = import.meta.env.DEV && !shouldRenderAd;
 {shouldRenderPlaceholder && (
   <div class:list={['google-ad', 'google-ad-placeholder', className]}>
     <span>Annonce</span>
+    {slotId && <code>{slotId}</code>}
   </div>
 )}
 
@@ -54,5 +55,13 @@ const shouldRenderPlaceholder = import.meta.env.DEV && !shouldRenderAd;
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+  }
+  .google-ad-placeholder code {
+    margin-top: 0.35rem;
+    color: var(--color-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
   }
 </style>

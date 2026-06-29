@@ -23,7 +23,7 @@ const {
 const pageTitle = titleWithBrand(title);
 const canonical = absoluteUrl(path);
 const imageUrl = absoluteUrl(image);
-const adsenseClient = ADSENSE_CLIENT;
+const adsenseClient = import.meta.env.PROD ? ADSENSE_CLIENT : undefined;
 ---
 
 <!doctype html>

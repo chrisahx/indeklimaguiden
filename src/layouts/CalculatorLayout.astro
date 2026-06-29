@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import GoogleAd from '../components/GoogleAd.astro';
+import { ADSENSE_SLOTS } from '../lib/adsense';
 
 interface BreadcrumbItem {
   name: string;
@@ -41,13 +42,13 @@ const {
   calculatorDescription,
 } = Astro.props;
 
-const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
-const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
-const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
-const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
-const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
-const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
-const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
+const sidebarAdSlot = ADSENSE_SLOTS.calculatorSidebar;
+const wideAdSlot = ADSENSE_SLOTS.calculatorWide;
+const articleAdSlot = ADSENSE_SLOTS.calculatorArticle;
+const mobileAdSlotOne = ADSENSE_SLOTS.calculatorMobile1;
+const mobileAdSlotTwo = ADSENSE_SLOTS.calculatorMobile2;
+const leftRailAdSlot = ADSENSE_SLOTS.calculatorLeftRail;
+const rightRailAdSlot = ADSENSE_SLOTS.calculatorRightRail;
 const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
 const showWideAd = import.meta.env.DEV || wideAdSlot;
 const showArticleAd = import.meta.env.DEV || articleAdSlot;

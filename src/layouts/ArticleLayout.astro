@@ -9,6 +9,7 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import FAQ from '../components/FAQ.astro';
 import GoogleAd from '../components/GoogleAd.astro';
 import JsonLd from '../components/JsonLd.astro';
+import { ADSENSE_SLOTS } from '../lib/adsense';
 
 interface Props {
   article: Article;
@@ -17,13 +18,13 @@ interface Props {
 
 const { article, allArticles } = Astro.props;
 const category = CATEGORIES[article.data.category];
-const topAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE_TOP;
-const inArticleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE_IN_CONTENT;
-const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE_MOBILE_1;
-const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE_MOBILE_2;
-const bottomAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE_BOTTOM;
-const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE_LEFT_RAIL;
-const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE_RIGHT_RAIL;
+const topAdSlot = ADSENSE_SLOTS.articleTop;
+const inArticleAdSlot = ADSENSE_SLOTS.articleInContent;
+const mobileAdSlotOne = ADSENSE_SLOTS.articleMobile1;
+const mobileAdSlotTwo = ADSENSE_SLOTS.articleMobile2;
+const bottomAdSlot = ADSENSE_SLOTS.articleBottom;
+const leftRailAdSlot = ADSENSE_SLOTS.articleLeftRail;
+const rightRailAdSlot = ADSENSE_SLOTS.articleRightRail;
 const showTopAd = import.meta.env.DEV || topAdSlot;
 const showInArticleAd = import.meta.env.DEV || inArticleAdSlot;
 const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
