@@ -46,6 +46,18 @@ Article files are located in:
 src/content/articles
 ```
 
+Calculator pages are located in:
+
+```text
+src/pages/beregnere
+```
+
+Also inspect shared calculator configuration when needed, especially:
+
+```text
+src/lib/cooling-demand-calculator.ts
+```
+
 Facebook post files are located in:
 
 ```text
@@ -145,9 +157,65 @@ Use the article `slug` when constructing URLs.
 
 If the route cannot be determined confidently, use the safest likely structure and add a review note in the generated markdown.
 
+## Calculator CTA post
+
+Exactly 1 of the 10 weekly posts must be a CTA for one relevant calculator in:
+
+```text
+src/pages/beregnere
+```
+
+This calculator CTA replaces one normal article post. The remaining 9 posts should still primarily promote article content.
+
+Use the calculator CTA when it naturally fits the weekly theme, season, or adjacent article cluster. Prefer a calculator that gives the reader an immediate, useful result rather than a generic sales prompt.
+
+Available calculator routes include:
+
+```text
+/beregnere/affugter-eller-aircondition/
+/beregnere/aircondition-varmepumpe-stoerrelse/
+/beregnere/btu-beregner-aircondition/
+/beregnere/hvad-koster-aircondition-i-stroem/
+/beregnere/kan-varmepumpe-betale-sig/
+/beregnere/koelebehov-beregner/
+/beregnere/koelebehov-beregner-butik/
+/beregnere/koelebehov-beregner-hjemmekontor/
+/beregnere/koelebehov-beregner-serverrum/
+/beregnere/koelebehov-beregner-sovevaerelse/
+/beregnere/koelebehov-beregner-udestue/
+/beregnere/luftfugtighed-beregner/
+/beregnere/mobil-aircondition-eller-split-aircondition/
+/beregnere/stoejniveau-beregner-db-sovevaerelse/
+/beregnere/varmepumpe-vs-elradiator/
+```
+
+Do not use `/beregnere/` as the calculator CTA unless no individual calculator fits the batch.
+
+Good calculator CTA use cases:
+
+* summer heat week: `/beregnere/koelebehov-beregner/`, `/beregnere/koelebehov-beregner-sovevaerelse/`, `/beregnere/btu-beregner-aircondition/`, `/beregnere/hvad-koster-aircondition-i-stroem/`
+* bedroom cooling angle: `/beregnere/koelebehov-beregner-sovevaerelse/` or `/beregnere/stoejniveau-beregner-db-sovevaerelse/`
+* humidity/condensation week: `/beregnere/luftfugtighed-beregner/` or `/beregnere/affugter-eller-aircondition/`
+* buying decision angle: `/beregnere/mobil-aircondition-eller-split-aircondition/` or `/beregnere/aircondition-varmepumpe-stoerrelse/`
+* heating/electricity angle: `/beregnere/kan-varmepumpe-betale-sig/` or `/beregnere/varmepumpe-vs-elradiator/`
+
+The calculator CTA post should:
+
+* clearly say what the reader can calculate or compare
+* ask the reader to try the calculator as the next step
+* avoid pretending the calculator gives a professional final answer
+* use cautious language such as "vejledende estimat", "første pejlemærke" or "hurtigt overblik"
+* still include a simple engagement mechanic
+
+The calculator CTA post may use any suitable weekly slot. Good default slots are:
+
+* Wednesday 17:00 Checklist/guide
+* Thursday 17:00 Price/comparison
+* Friday 17:00 Roundup/soft CTA
+
 ## UTM tracking
 
-Every article link must include:
+Every article or calculator link must include:
 
 ```text
 utm_source=facebook
@@ -173,6 +241,7 @@ Example:
 
 ```text
 https://indeklimaguiden.dk/aircondition-installation?utm_source=facebook&utm_content=monday_1700_price
+https://indeklimaguiden.dk/beregnere/hvad-koster-aircondition-i-stroem/?utm_source=facebook&utm_content=thursday_1700_calculator
 ```
 
 Do not add `utm_medium` or `utm_campaign` unless the user later asks for it.
@@ -191,6 +260,7 @@ Use these files to understand:
 
 * recently used article URLs
 * recently used article slugs
+* recently used calculator URLs
 * recently used hooks
 * recently used topics
 * recently used angles
@@ -209,6 +279,10 @@ Important:
 ## Batch content strategy
 
 Generate exactly 10 posts.
+
+Exactly 1 post must be a calculator CTA post that links to a relevant calculator under `/beregnere/`.
+
+Exactly 9 posts should link to articles, unless the user explicitly asks for more calculator posts.
 
 The batch should have coherence. It is okay for the 10 posts to focus on only 2-3 broader themes or article clusters, as long as the individual posts use different angles.
 
@@ -251,6 +325,8 @@ Friday 17:00     Roundup/soft CTA
 ## Pillars
 
 The core pillars are:
+
+Calculator CTA can be used as a post type under the most relevant pillar, usually `Checklist/guide`, `Price/comparison`, `Pain/saveable`, or `Roundup/soft CTA`. For UTM content, use `calculator` as the pillar segment unless another pillar is more precise and still clear.
 
 ### Pain
 
@@ -587,7 +663,7 @@ Jeg linker til guiden i kommentaren.
 
 2. `First comment`
 
-   * Contains the direct article link with UTM tracking.
+   * Contains the direct article or calculator link with UTM tracking.
    * This is the only place the link should appear for each post.
 
 Do not overuse the pointing-down emoji.
@@ -666,9 +742,9 @@ status: "draft"
 
 Short summary of the weekly theme, selected article clusters, and any news/seasonal angle used.
 
-## Source articles used
+## Source pages used
 
-List the article titles, slugs, and final URLs used.
+List the article titles, article slugs, calculator titles, source types, and final URLs used.
 
 ## News/source notes
 
@@ -682,8 +758,9 @@ List short source notes for human review.
 
 **Pillar:** Pain  
 **Post type:** Pain question  
-**Source article:** [Article title]  
-**Article URL:** [URL without UTM]  
+**Source page:** [Article title or calculator title]  
+**Source type:** [Article or Calculator]  
+**Page URL:** [URL without UTM]  
 **Tracked URL:** [URL with UTM]  
 **Engagement mechanic:** [A/B/C/D question, myth/fact, saveable checklist, etc.]
 
@@ -693,7 +770,7 @@ List short source notes for human review.
 
 ### First comment
 
-[Direct article link with UTM.]
+[Direct article or calculator link with UTM.]
 
 ### Image prompt
 
@@ -719,12 +796,15 @@ Check all of the following:
 * No duplicate hooks inside the 10-post batch.
 * No duplicate post text.
 * No overuse of the same article.
+* The calculator CTA does not repeat the same calculator from the latest batch unless it is the best seasonal fit.
 * No obvious repetition from the latest 10 existing Facebook post files.
 * No same 2-3 articles repeated from the previous 2-3 batches unless unavoidable.
 
 ### Schedule checks
 
 * Exactly 10 posts.
+* Exactly 1 post is a calculator CTA post.
+* Exactly 9 posts link to articles unless the user explicitly requested otherwise.
 * Monday-Friday only.
 * Times are 10:00 and 17:00.
 * Filename matches the posting week Monday.
@@ -740,7 +820,8 @@ Check all of the following:
 
 * Every tracked URL includes `utm_source=facebook`.
 * Every tracked URL includes `utm_content=<day>_<time>_<pillar>`.
-* URLs use the discovered Astro article URL structure.
+* Article URLs use the discovered Astro article URL structure.
+* The calculator CTA URL points to an individual route under `/beregnere/`, not the calculator index, unless no individual calculator fits.
 * Links are correct and point to Indeklima Guiden.
 
 ### Credibility checks
@@ -778,6 +859,7 @@ After creating the markdown file, respond with:
 * the file path
 * a short summary of the weekly theme
 * which article clusters were used
+* which calculator CTA was included
 * any warnings or review notes
 * confirmation that no existing file was overwritten
 
