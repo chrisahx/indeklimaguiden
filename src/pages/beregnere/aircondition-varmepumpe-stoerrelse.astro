@@ -1,28 +1,12 @@
 ---
 import AnswerBox from '../../components/AnswerBox.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import FAQ from '../../components/FAQ.astro';
-import GoogleAd from '../../components/GoogleAd.astro';
 import JsonLd from '../../components/JsonLd.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import { absoluteUrl } from '../../lib/seo';
 import { breadcrumbsJsonLd, faqJsonLd } from '../../lib/structured-data';
 
 const path = '/beregnere/aircondition-varmepumpe-stoerrelse/';
-const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
-const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
-const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
-const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
-const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
-const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
-const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
-const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
-const showWideAd = import.meta.env.DEV || wideAdSlot;
-const showArticleAd = import.meta.env.DEV || articleAdSlot;
-const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
-const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
-const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
-const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
 const breadcrumbs = [
   { name: 'Forside', url: '/' },
   { name: 'Beregnere', url: '/beregnere/' },
@@ -74,41 +58,33 @@ const calculatorJsonLd = {
 };
 ---
 
-<BaseLayout
+<CalculatorLayout
   title="Hvor stor aircondition eller varmepumpe skal jeg bruge? Beregner"
   description="Brug vores aircondition og varmepumpe kW beregner. Indtast m², loftshøjde, isolering, solindfald og vinduer, og få et estimat på anbefalet kapacitet."
   path={path}
+  breadcrumbs={breadcrumbs}
+  pill="Aircondition størrelse beregner"
+  h1="Hvor stor aircondition eller varmepumpe skal jeg bruge?"
+  primaryAction={{ label: 'Brug beregneren', href: '#beregner' }}
+  secondaryAction={{ label: 'Se beregningsmetode', href: '#forklaring' }}
+  calculatorPill="Varmepumpe kW beregner"
+  calculatorHeading="Beregn anbefalet kapacitet i kW"
+  calculatorDescription="Resultatet er et vejledende estimat. Det erstatter ikke en konkret dimensionering fra en autoriseret installatør."
 >
-  <section class="calculator-hero">
-    <div class="container hero-copy">
-        <Breadcrumbs items={breadcrumbs} />
-        <span class="pill">Aircondition størrelse beregner</span>
-        <h1>Hvor stor aircondition eller varmepumpe skal jeg bruge?</h1>
+  <Fragment slot="hero-intro">
         <p>
           Indtast rummets størrelse og forhold, og få et praktisk estimat på anbefalet kapacitet i kW. Beregneren kan bruges som første pejlemærke, når du undersøger aircondition eller luft til luft-varmepumpe.
         </p>
-        <div class="hero-actions">
-          <a class="button" href="#beregner">Brug beregneren</a>
-          <a class="button secondary" href="#forklaring">Se beregningsmetode</a>
-        </div>
-      <aside class="surface quick-answer" aria-label="Kort svar">
-        <span class="pill">Kort svar</span>
+  </Fragment>
+
+  <Fragment slot="quick-answer">
         <p>
           Mange almindelige rum kræver cirka <strong>2-5 kW</strong>, men behovet ændrer sig med m², loftshøjde, isolering, solindfald og vinduespartier.
         </p>
-      </aside>
-    </div>
-  </section>
+  </Fragment>
 
-  <section id="beregner" class="section container calculator-section" aria-labelledby="calculator-heading">
-    <div class="section-heading">
-      <span class="pill">Varmepumpe kW beregner</span>
-      <h2 id="calculator-heading">Beregn anbefalet kapacitet i kW</h2>
-      <p>Resultatet er et vejledende estimat. Det erstatter ikke en konkret dimensionering fra en autoriseret installatør.</p>
-    </div>
-
-    <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
-      <div class="surface calculator-panel">
+  <Fragment slot="calculator">
+    <div class="surface calculator-panel">
         <form class="calculator-form" data-calculator novalidate>
         <div class="field-grid">
           <label>
@@ -170,51 +146,30 @@ const calculatorJsonLd = {
           </div>
           <p class="installer-warning">Endelig dimensionering bør vurderes af installatør.</p>
         </aside>
-      </div>
-
-      {showSidebarAd && (
-        <aside class="ad-column" aria-label="Annonce">
-          <GoogleAd slotId={sidebarAdSlot} className="sidebar-ad" />
-        </aside>
-      )}
     </div>
-  </section>
+  </Fragment>
 
-  {showWideAd && (
-    <aside class="container" aria-label="Annonce">
-      <GoogleAd slotId={wideAdSlot} className="wide-ad" />
-    </aside>
-  )}
+  <Fragment slot="side-panel">
+    <div class="checklist">
+      <h2>Det påvirker kW-behovet</h2>
+      <ul>
+        <li>Rumstørrelse og loftshøjde</li>
+        <li>Isolering og varmetab</li>
+        <li>Solindfald og orientering</li>
+        <li>Store vinduespartier</li>
+        <li>Antal personer i rummet</li>
+        <li>Om anlægget skal køle, varme eller begge dele</li>
+      </ul>
+    </div>
+  </Fragment>
 
-  <article class:list={['article-shell', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
-    {showLeftRailAd && (
-      <aside class="rail-ad left-rail" aria-label="Annonce">
-        <GoogleAd slotId={leftRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-
-    <div class="article-main">
-      <aside class="reading side-panel">
-        <div class="checklist">
-          <h2>Det påvirker kW-behovet</h2>
-          <ul>
-            <li>Rumstørrelse og loftshøjde</li>
-            <li>Isolering og varmetab</li>
-            <li>Solindfald og orientering</li>
-            <li>Store vinduespartier</li>
-            <li>Antal personer i rummet</li>
-            <li>Om anlægget skal køle, varme eller begge dele</li>
-          </ul>
-        </div>
-      </aside>
-
-      <div class="reading article-body content-card">
+  <Fragment slot="article-start">
       <AnswerBox>
         En aircondition eller varmepumpe skal dimensioneres efter mere end m² alene. Brug m² som startpunkt, men juster for loftshøjde, isolering, solindfald, vinduer og om anlægget skal køle, varme eller begge dele.
       </AnswerBox>
+  </Fragment>
 
-      {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
-
+  <Fragment slot="article-main">
       <h2>Hvor stor aircondition skal jeg bruge?</h2>
       <p>
         Når du søger efter en aircondition størrelse beregner, er målet typisk at finde ud af, om et anlæg på for eksempel 2,5 kW, 3,5 kW eller 5 kW passer til rummet. Et lille soveværelse med god isolering kræver langt mindre end en stor stue med højt solindfald og brede vinduespartier.
@@ -269,11 +224,9 @@ const calculatorJsonLd = {
       <p>
         Hvis du vælger “begge dele”, viser beregneren den højeste relevante belastning. Derfor kan resultatet blive højere end ved kun køling eller kun opvarmning.
       </p>
+  </Fragment>
 
-      {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
-
-      {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
-
+  <Fragment slot="article-end">
       <h2>Hvornår bør en installatør dimensionere anlægget?</h2>
       <p>
         Du bør få en installatør til at vurdere dimensioneringen, hvis rummet har meget store vinduer, dårlig isolering, åben planløsning, flere sammenhængende rum, usædvanligt højt til loftet eller hvis varmepumpen skal være primær varmekilde.
@@ -283,20 +236,14 @@ const calculatorJsonLd = {
       </p>
 
       <FAQ items={faq} />
-      </div>
-    </div>
+  </Fragment>
 
-    {showRightRailAd && (
-      <aside class="rail-ad right-rail" aria-label="Annonce">
-        <GoogleAd slotId={rightRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-  </article>
-
-  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
-  <JsonLd data={faqJsonLd(faq)} />
-  <JsonLd data={calculatorJsonLd} />
-</BaseLayout>
+  <Fragment slot="structured-data">
+    <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+    <JsonLd data={faqJsonLd(faq)} />
+    <JsonLd data={calculatorJsonLd} />
+  </Fragment>
+</CalculatorLayout>
 
 <script>
   const form = document.querySelector('[data-calculator]');

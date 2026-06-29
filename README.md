@@ -49,6 +49,7 @@ Important routes:
 ## Google AdSense
 
 The site uses manual AdSense placements through `src/components/GoogleAd.astro`.
+Article ad placement is centralized in `src/layouts/ArticleLayout.astro`, and calculator ad placement is centralized in `src/layouts/CalculatorLayout.astro`.
 
 In development, ad positions render visible `Annonce` placeholders even without AdSense configuration. In production, ad positions render only when both the AdSense client and the relevant slot ID are configured.
 
@@ -68,7 +69,7 @@ https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXX
 
 ### Calculator Ad Slots
 
-These control ad placements on `/beregnere/aircondition-varmepumpe-stoerrelse/`.
+These control shared ad placements on calculator pages using `src/layouts/CalculatorLayout.astro`.
 
 | Env var | Placement |
 | :-- | :-- |

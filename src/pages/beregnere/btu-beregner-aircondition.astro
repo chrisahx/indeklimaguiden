@@ -1,28 +1,12 @@
 ---
 import AnswerBox from '../../components/AnswerBox.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import FAQ from '../../components/FAQ.astro';
-import GoogleAd from '../../components/GoogleAd.astro';
 import JsonLd from '../../components/JsonLd.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import { absoluteUrl } from '../../lib/seo';
 import { breadcrumbsJsonLd, faqJsonLd } from '../../lib/structured-data';
 
 const path = '/beregnere/btu-beregner-aircondition/';
-const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
-const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
-const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
-const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
-const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
-const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
-const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
-const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
-const showWideAd = import.meta.env.DEV || wideAdSlot;
-const showArticleAd = import.meta.env.DEV || articleAdSlot;
-const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
-const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
-const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
-const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
 const breadcrumbs = [
   { name: 'Forside', url: '/' },
   { name: 'Beregnere', url: '/beregnere/' },
@@ -74,297 +58,262 @@ const calculatorJsonLd = {
 };
 ---
 
-<BaseLayout
+<CalculatorLayout
   title="BTU beregner til aircondition: m2 til kW og BTU"
   description="Brug vores BTU beregner til aircondition. Indtast m2, loftshøjde, solindfald, isolering og personer, og få anbefalet BTU og kW."
   path={path}
+  breadcrumbs={breadcrumbs}
+  pill="BTU beregner"
+  h1="Hvor mange BTU / kW skal min aircondition være?"
+  primaryAction={{ label: 'Brug BTU beregneren', href: '#beregner' }}
+  secondaryAction={{ label: 'Se BTU og kW forklaret', href: '#forklaring' }}
+  calculatorPill="Aircondition BTU m2"
+  calculatorHeading="Beregn anbefalet BTU og kW"
+  calculatorDescription="Resultatet er et vejledende estimat til køling af ét rum. Ved store åbne rum, mange vinduer eller fast splitanlæg bør kapaciteten vurderes konkret."
 >
-  <section class="calculator-hero">
-    <div class="container hero-copy">
-      <Breadcrumbs items={breadcrumbs} />
-      <span class="pill">BTU beregner</span>
-      <h1>Hvor mange BTU / kW skal min aircondition være?</h1>
-      <p>
-        Indtast rummets m2, loftshøjde, solindfald, isolering og antal personer. Beregneren giver et praktisk estimat på anbefalet kølekapacitet i både BTU og kW.
-      </p>
-      <div class="hero-actions">
-        <a class="button" href="#beregner">Brug BTU beregneren</a>
-        <a class="button secondary" href="#forklaring">Se BTU og kW forklaret</a>
-      </div>
-      <aside class="surface quick-answer" aria-label="Kort svar">
-        <span class="pill">Kort svar</span>
-        <p>
-          12000 BTU svarer til cirka <strong>3,5 kW</strong> og passer ofte til omkring <strong>30-40 m2</strong> under normale forhold. Brug beregneren, hvis rummet har meget sol, høj loftshøjde eller dårlig isolering.
-        </p>
-      </aside>
-    </div>
-  </section>
+  <Fragment slot="hero-intro">
+    <p>
+      Indtast rummets m2, loftshøjde, solindfald, isolering og antal personer. Beregneren giver et praktisk estimat på anbefalet kølekapacitet i både BTU og kW.
+    </p>
+  </Fragment>
 
-  <section id="beregner" class="section container calculator-section" aria-labelledby="calculator-heading">
-    <div class="section-heading">
-      <span class="pill">Aircondition BTU m2</span>
-      <h2 id="calculator-heading">Beregn anbefalet BTU og kW</h2>
-      <p>Resultatet er et vejledende estimat til køling af ét rum. Ved store åbne rum, mange vinduer eller fast splitanlæg bør kapaciteten vurderes konkret.</p>
-    </div>
+  <Fragment slot="quick-answer">
+    <p>
+      12000 BTU svarer til cirka <strong>3,5 kW</strong> og passer ofte til omkring <strong>30-40 m2</strong> under normale forhold. Brug beregneren, hvis rummet har meget sol, høj loftshøjde eller dårlig isolering.
+    </p>
+  </Fragment>
 
-    <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
-      <div class="surface calculator-panel">
-        <form class="calculator-form" data-calculator novalidate>
-          <div class="field-grid">
-            <label>
-              <span class="label-with-help">
-                Rumstørrelse i m2
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="area-help">?</button>
-                  <span id="area-help" class="tooltip-content" role="tooltip">
-                    Brug det gulvareal, som airconditionen reelt skal køle. Ved åben planløsning bør du medregne sammenhængende rum, hvor dørene typisk står åbne.
-                  </span>
+  <Fragment slot="calculator">
+    <div class="surface calculator-panel">
+      <form class="calculator-form" data-calculator novalidate>
+        <div class="field-grid">
+          <label>
+            <span class="label-with-help">
+              Rumstørrelse i m2
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="area-help">?</button>
+                <span id="area-help" class="tooltip-content" role="tooltip">
+                  Brug det gulvareal, som airconditionen reelt skal køle. Ved åben planløsning bør du medregne sammenhængende rum, hvor dørene typisk står åbne.
                 </span>
               </span>
-              <input name="area" type="number" inputmode="decimal" min="5" max="180" step="1" value="35" required />
-            </label>
-            <label>
-              <span class="label-with-help">
-                Loftshøjde i meter
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="height-help">?</button>
-                  <span id="height-help" class="tooltip-content" role="tooltip">
-                    Mål fra gulv til loft. Standardloft i mange danske boliger er cirka 2,4-2,5 meter. Højere loft giver mere luftvolumen og kræver ofte mere kapacitet.
-                  </span>
+            </span>
+            <input name="area" type="number" inputmode="decimal" min="5" max="180" step="1" value="35" required />
+          </label>
+          <label>
+            <span class="label-with-help">
+              Loftshøjde i meter
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="height-help">?</button>
+                <span id="height-help" class="tooltip-content" role="tooltip">
+                  Mål fra gulv til loft. Standardloft i mange danske boliger er cirka 2,4-2,5 meter. Højere loft giver mere luftvolumen og kræver ofte mere kapacitet.
                 </span>
               </span>
-              <input name="height" type="number" inputmode="decimal" min="2" max="5" step="0.1" value="2.4" required />
-            </label>
-            <label>
-              <span class="label-with-help">
-                Solindfald
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="sun-help">?</button>
-                  <span id="sun-help" class="tooltip-content" role="tooltip">
-                    Vælg højt ved syd- eller vestvendte rum, store vinduer eller meget direkte sommersol. Vælg lavt ved nordvendte rum eller effektiv solafskærmning.
-                  </span>
+            </span>
+            <input name="height" type="number" inputmode="decimal" min="2" max="5" step="0.1" value="2.4" required />
+          </label>
+          <label>
+            <span class="label-with-help">
+              Solindfald
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="sun-help">?</button>
+                <span id="sun-help" class="tooltip-content" role="tooltip">
+                  Vælg højt ved syd- eller vestvendte rum, store vinduer eller meget direkte sommersol. Vælg lavt ved nordvendte rum eller effektiv solafskærmning.
                 </span>
               </span>
-              <select name="sun">
-                <option value="low">Lavt</option>
-                <option value="normal" selected>Normalt</option>
-                <option value="high">Højt</option>
-              </select>
-            </label>
-            <label>
-              <span class="label-with-help">
-                Isolering
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="insulation-help">?</button>
-                  <span id="insulation-help" class="tooltip-content" role="tooltip">
-                    Vælg god ved nyere eller efterisoleret bolig. Vælg dårlig ved ældre bolig, utætte vinduer, udestue eller rum der hurtigt bliver varmt om sommeren.
-                  </span>
+            </span>
+            <select name="sun">
+              <option value="low">Lavt</option>
+              <option value="normal" selected>Normalt</option>
+              <option value="high">Højt</option>
+            </select>
+          </label>
+          <label>
+            <span class="label-with-help">
+              Isolering
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="insulation-help">?</button>
+                <span id="insulation-help" class="tooltip-content" role="tooltip">
+                  Vælg god ved nyere eller efterisoleret bolig. Vælg dårlig ved ældre bolig, utætte vinduer, udestue eller rum der hurtigt bliver varmt om sommeren.
                 </span>
               </span>
-              <select name="insulation">
-                <option value="poor">Dårlig</option>
-                <option value="average" selected>Middel</option>
-                <option value="good">God</option>
-              </select>
-            </label>
-            <label class="wide">
-              <span class="label-with-help">
-                Antal personer i rummet
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="people-help">?</button>
-                  <span id="people-help" class="tooltip-content" role="tooltip">
-                    Angiv det typiske antal personer, der opholder sig i rummet samtidig. Flere personer afgiver varme og kan øge kølebehovet.
-                  </span>
+            </span>
+            <select name="insulation">
+              <option value="poor">Dårlig</option>
+              <option value="average" selected>Middel</option>
+              <option value="good">God</option>
+            </select>
+          </label>
+          <label class="wide">
+            <span class="label-with-help">
+              Antal personer i rummet
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="people-help">?</button>
+                <span id="people-help" class="tooltip-content" role="tooltip">
+                  Angiv det typiske antal personer, der opholder sig i rummet samtidig. Flere personer afgiver varme og kan øge kølebehovet.
                 </span>
               </span>
-              <input name="people" type="number" inputmode="numeric" min="0" max="20" step="1" value="2" required />
-            </label>
-          </div>
-          <p class="form-hint">BTU-tallet er BTU/h, som er den kapacitetsenhed mange mobile aircondition-enheder bruger. kW-tallet er samme køleydelse omregnet til kilowatt.</p>
-          <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for m2, loftshøjde og antal personer.</p>
-          <button class="button" type="submit">Beregn BTU og kW</button>
-        </form>
+            </span>
+            <input name="people" type="number" inputmode="numeric" min="0" max="20" step="1" value="2" required />
+          </label>
+        </div>
+        <p class="form-hint">BTU-tallet er BTU/h, som er den kapacitetsenhed mange mobile aircondition-enheder bruger. kW-tallet er samme køleydelse omregnet til kilowatt.</p>
+        <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for m2, loftshøjde og antal personer.</p>
+        <button class="button" type="submit">Beregn BTU og kW</button>
+      </form>
 
-        <aside class="result-card" aria-live="polite" data-result>
-          <div>
-            <span class="pill">Dit estimat</span>
-            <p class="result-kicker" data-room-label>35 m2 rum</p>
-          </div>
-          <div class="result-main">
-            <strong data-btu-result>Ca. 9.000 BTU</strong>
-            <p data-kw-result>Det svarer til cirka 2,6 kW kølekapacitet.</p>
-          </div>
-          <div class="result-details">
-            <p data-range-result>Kig efter ca. 8.000-10.500 BTU.</p>
-            <p data-type-result>Mobil aircondition kan være relevant.</p>
-          </div>
-        </aside>
-      </div>
-
-      {showSidebarAd && (
-        <aside class="ad-column" aria-label="Annonce">
-          <GoogleAd slotId={sidebarAdSlot} className="sidebar-ad" />
-        </aside>
-      )}
-    </div>
-  </section>
-
-  {showWideAd && (
-    <aside class="container" aria-label="Annonce">
-      <GoogleAd slotId={wideAdSlot} className="wide-ad" />
-    </aside>
-  )}
-
-  <article class:list={['article-shell', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
-    {showLeftRailAd && (
-      <aside class="rail-ad left-rail" aria-label="Annonce">
-        <GoogleAd slotId={leftRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-
-    <div class="article-main">
-      <aside class="reading side-panel">
-        <div class="checklist">
-          <h2>Det påvirker BTU-behovet</h2>
-          <ul>
-            <li>Rumstørrelse i m2 og loftshøjde</li>
-            <li>Solindfald gennem vinduer</li>
-            <li>Boligens isolering</li>
-            <li>Antal personer i rummet</li>
-            <li>Om du vælger mobil aircondition eller split aircondition</li>
-          </ul>
+      <aside class="result-card" aria-live="polite" data-result>
+        <div>
+          <span class="pill">Dit estimat</span>
+          <p class="result-kicker" data-room-label>35 m2 rum</p>
+        </div>
+        <div class="result-main">
+          <strong data-btu-result>Ca. 9.000 BTU</strong>
+          <p data-kw-result>Det svarer til cirka 2,6 kW kølekapacitet.</p>
+        </div>
+        <div class="result-details">
+          <p data-range-result>Kig efter ca. 8.000-10.500 BTU.</p>
+          <p data-type-result>Mobil aircondition kan være relevant.</p>
         </div>
       </aside>
-
-      <div class="reading article-body content-card">
-        <AnswerBox>
-          En BTU beregner hjælper dig med at omsætte rummets størrelse og varmebelastning til anbefalet kølekapacitet. Som tommelfingerregel svarer 12000 BTU til cirka 3,5 kW, men m2 alene er ikke nok, fordi sol, loftshøjde og isolering kan ændre behovet.
-        </AnswerBox>
-
-        {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
-
-        <h2>BTU beregner til aircondition</h2>
-        <p>
-          Når du søger efter en BTU beregner, er målet typisk at finde ud af, om en aircondition på for eksempel 9000, 12000 eller 14000 BTU passer til rummet. BTU bruges især på mobile aircondition-enheder, mens faste splitanlæg og luft til luft-varmepumper ofte markedsføres med kW.
-        </p>
-        <p>
-          Beregneren ovenfor bruger m2, loftshøjde, solindfald, isolering og antal personer til at give et praktisk estimat. Den er bedst som første pejlemærke, før du sammenligner konkrete modeller.
-        </p>
-
-        <h2 id="forklaring">kW til BTU aircondition</h2>
-        <p>
-          Omregningen mellem kW og BTU er enkel: 1 kW kølekapacitet svarer til cirka 3412 BTU/h. En aircondition på 3,5 kW svarer derfor til cirka 11942 BTU/h, som i praksis ofte omtales som 12000 BTU.
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>BTU/h</th>
-              <th>Ca. kW</th>
-              <th>Typisk brug</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>9000 BTU</td>
-              <td>2,6 kW</td>
-              <td>Mindre rum og soveværelser med moderat sol.</td>
-            </tr>
-            <tr>
-              <td>12000 BTU</td>
-              <td>3,5 kW</td>
-              <td>Mellemstore rum, ofte omkring 30-40 m2 under normale forhold.</td>
-            </tr>
-            <tr>
-              <td>14000 BTU</td>
-              <td>4,1 kW</td>
-              <td>Større eller varmere rum, især med meget sol.</td>
-            </tr>
-            <tr>
-              <td>18000 BTU</td>
-              <td>5,3 kW</td>
-              <td>Store rum, alrum eller behov hvor splitanlæg ofte bør vurderes.</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h2>Aircondition BTU m2: hvorfor m2 ikke er nok</h2>
-        <p>
-          Mange søger efter “aircondition BTU m2”, men to rum på samme antal m2 kan kræve forskellig kapacitet. Et nordvendt soveværelse med god isolering kan klare sig med mindre køling end en sydvendt stue med store vinduer og flere personer.
-        </p>
-        <p>
-          Loftshøjde er også vigtig, fordi airconditionen skal køle luftvolumen - ikke kun gulvarealet. Et rum på 35 m2 med 3 meter til loftet har markant mere luft end et rum på 35 m2 med 2,4 meter til loftet.
-        </p>
-
-        {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
-
-        <h2>12000 BTU hvor mange m2?</h2>
-        <p>
-          12000 BTU dækker ofte omkring 30-40 m2 i et almindeligt dansk rum med normal loftshøjde, middel isolering og normalt solindfald. I et varmt, sydvendt rum kan samme model være bedre egnet til et mindre areal, mens et skyggefuldt og godt isoleret rum kan klare et større areal.
-        </p>
-        <p>
-          Hvis beregneren lander tæt på grænsen mellem to størrelser, bør du ikke kun vælge den største model automatisk. Se også på støj, aftræk, placering, energieffektivitet og om anlægget kan regulere ned uden korte start-stop-cyklusser.
-        </p>
-
-        {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
-
-        <h2>Mobil aircondition vs split aircondition</h2>
-        <p>
-          Mobil aircondition er mest relevant, når du vil køle et enkelt rum midlertidigt og kan føre varm luft ud gennem vindue eller dør. Den er fleksibel, men støjer typisk mere, bruger ofte mere strøm for samme komfort og kræver god håndtering af aftræksslangen.
-        </p>
-        <p>
-          Split aircondition eller en luft til luft-varmepumpe er ofte bedre ved højere BTU-behov, fast brug, lavere støjkrav eller hvis du også vil kunne bruge anlægget til opvarmning. Til gengæld kræver den installation og en konkret vurdering af placering og kapacitet.
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>Løsning</th>
-              <th>Bedst til</th>
-              <th>Vigtig begrænsning</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Mobil aircondition</td>
-              <td>Lejlighed, soveværelse og midlertidig køling</td>
-              <td>Aftræk og støj kan begrænse komforten.</td>
-            </tr>
-            <tr>
-              <td>Split aircondition</td>
-              <td>Fast køling, større rum og lavere støj</td>
-              <td>Kræver installation og egnet placering.</td>
-            </tr>
-            <tr>
-              <td>Luft til luft-varmepumpe</td>
-              <td>Køling om sommeren og opvarmning i overgangsperioder</td>
-              <td>Kapacitet og placering bør vurderes af fagperson.</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h2>Sådan bruger du resultatet, når du vælger model</h2>
-        <p>
-          Brug BTU-resultatet som et interval, ikke som et absolut facit. Hvis beregneren foreslår cirka 12000 BTU, bør du sammenligne modeller omkring 10000-14000 BTU og se på støjniveau, aftræksløsning, energieffektivitet og rummets faktiske varmebelastning.
-        </p>
-        <p>
-          Hvis du også vil vurdere økonomien, kan du bruge vores <a href="/beregnere/hvad-koster-aircondition-i-stroem/">beregner til aircondition strømforbrug</a>. Hvis du overvejer fast installation, kan du også sammenligne med vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a> og læse mere om <a href="/aircondition/">aircondition</a>.
-        </p>
-
-        <FAQ items={faq} />
-      </div>
     </div>
+  </Fragment>
 
-    {showRightRailAd && (
-      <aside class="rail-ad right-rail" aria-label="Annonce">
-        <GoogleAd slotId={rightRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-  </article>
+  <Fragment slot="side-panel">
+    <div class="checklist">
+      <h2>Det påvirker BTU-behovet</h2>
+      <ul>
+        <li>Rumstørrelse i m2 og loftshøjde</li>
+        <li>Solindfald gennem vinduer</li>
+        <li>Boligens isolering</li>
+        <li>Antal personer i rummet</li>
+        <li>Om du vælger mobil aircondition eller split aircondition</li>
+      </ul>
+    </div>
+  </Fragment>
 
-  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
-  <JsonLd data={faqJsonLd(faq)} />
-  <JsonLd data={calculatorJsonLd} />
-</BaseLayout>
+  <Fragment slot="article-start">
+    <AnswerBox>
+      En BTU beregner hjælper dig med at omsætte rummets størrelse og varmebelastning til anbefalet kølekapacitet. Som tommelfingerregel svarer 12000 BTU til cirka 3,5 kW, men m2 alene er ikke nok, fordi sol, loftshøjde og isolering kan ændre behovet.
+    </AnswerBox>
+  </Fragment>
 
+  <Fragment slot="article-main">
+    <h2>BTU beregner til aircondition</h2>
+    <p>
+      Når du søger efter en BTU beregner, er målet typisk at finde ud af, om en aircondition på for eksempel 9000, 12000 eller 14000 BTU passer til rummet. BTU bruges især på mobile aircondition-enheder, mens faste splitanlæg og luft til luft-varmepumper ofte markedsføres med kW.
+    </p>
+    <p>
+      Beregneren ovenfor bruger m2, loftshøjde, solindfald, isolering og antal personer til at give et praktisk estimat. Den er bedst som første pejlemærke, før du sammenligner konkrete modeller.
+    </p>
+
+    <h2 id="forklaring">kW til BTU aircondition</h2>
+    <p>
+      Omregningen mellem kW og BTU er enkel: 1 kW kølekapacitet svarer til cirka 3412 BTU/h. En aircondition på 3,5 kW svarer derfor til cirka 11942 BTU/h, som i praksis ofte omtales som 12000 BTU.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>BTU/h</th>
+          <th>Ca. kW</th>
+          <th>Typisk brug</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>9000 BTU</td>
+          <td>2,6 kW</td>
+          <td>Mindre rum og soveværelser med moderat sol.</td>
+        </tr>
+        <tr>
+          <td>12000 BTU</td>
+          <td>3,5 kW</td>
+          <td>Mellemstore rum, ofte omkring 30-40 m2 under normale forhold.</td>
+        </tr>
+        <tr>
+          <td>14000 BTU</td>
+          <td>4,1 kW</td>
+          <td>Større eller varmere rum, især med meget sol.</td>
+        </tr>
+        <tr>
+          <td>18000 BTU</td>
+          <td>5,3 kW</td>
+          <td>Store rum, alrum eller behov hvor splitanlæg ofte bør vurderes.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Aircondition BTU m2: hvorfor m2 ikke er nok</h2>
+    <p>
+      Mange søger efter “aircondition BTU m2”, men to rum på samme antal m2 kan kræve forskellig kapacitet. Et nordvendt soveværelse med god isolering kan klare sig med mindre køling end en sydvendt stue med store vinduer og flere personer.
+    </p>
+    <p>
+      Loftshøjde er også vigtig, fordi airconditionen skal køle luftvolumen - ikke kun gulvarealet. Et rum på 35 m2 med 3 meter til loftet har markant mere luft end et rum på 35 m2 med 2,4 meter til loftet.
+    </p>
+  </Fragment>
+
+  <Fragment slot="article-late">
+    <h2>12000 BTU hvor mange m2?</h2>
+    <p>
+      12000 BTU dækker ofte omkring 30-40 m2 i et almindeligt dansk rum med normal loftshøjde, middel isolering og normalt solindfald. I et varmt, sydvendt rum kan samme model være bedre egnet til et mindre areal, mens et skyggefuldt og godt isoleret rum kan klare et større areal.
+    </p>
+    <p>
+      Hvis beregneren lander tæt på grænsen mellem to størrelser, bør du ikke kun vælge den største model automatisk. Se også på støj, aftræk, placering, energieffektivitet og om anlægget kan regulere ned uden korte start-stop-cyklusser.
+    </p>
+  </Fragment>
+
+  <Fragment slot="article-end">
+    <h2>Mobil aircondition vs split aircondition</h2>
+    <p>
+      Mobil aircondition er mest relevant, når du vil køle et enkelt rum midlertidigt og kan føre varm luft ud gennem vindue eller dør. Den er fleksibel, men støjer typisk mere, bruger ofte mere strøm for samme komfort og kræver god håndtering af aftræksslangen.
+    </p>
+    <p>
+      Split aircondition eller en luft til luft-varmepumpe er ofte bedre ved højere BTU-behov, fast brug, lavere støjkrav eller hvis du også vil kunne bruge anlægget til opvarmning. Til gengæld kræver den installation og en konkret vurdering af placering og kapacitet.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Løsning</th>
+          <th>Bedst til</th>
+          <th>Vigtig begrænsning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mobil aircondition</td>
+          <td>Lejlighed, soveværelse og midlertidig køling</td>
+          <td>Aftræk og støj kan begrænse komforten.</td>
+        </tr>
+        <tr>
+          <td>Split aircondition</td>
+          <td>Fast køling, større rum og lavere støj</td>
+          <td>Kræver installation og egnet placering.</td>
+        </tr>
+        <tr>
+          <td>Luft til luft-varmepumpe</td>
+          <td>Køling om sommeren og opvarmning i overgangsperioder</td>
+          <td>Kapacitet og placering bør vurderes af fagperson.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Sådan bruger du resultatet, når du vælger model</h2>
+    <p>
+      Brug BTU-resultatet som et interval, ikke som et absolut facit. Hvis beregneren foreslår cirka 12000 BTU, bør du sammenligne modeller omkring 10000-14000 BTU og se på støjniveau, aftræksløsning, energieffektivitet og rummets faktiske varmebelastning.
+    </p>
+    <p>
+      Hvis du også vil vurdere økonomien, kan du bruge vores <a href="/beregnere/hvad-koster-aircondition-i-stroem/">beregner til aircondition strømforbrug</a>. Hvis du overvejer fast installation, kan du også sammenligne med vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a> og læse mere om <a href="/aircondition/">aircondition</a>.
+    </p>
+
+    <FAQ items={faq} />
+  </Fragment>
+
+  <Fragment slot="structured-data">
+      <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+      <JsonLd data={faqJsonLd(faq)} />
+      <JsonLd data={calculatorJsonLd} />
+  </Fragment>
+
+</CalculatorLayout>
 <script>
   const form = document.querySelector('[data-calculator]');
   const result = document.querySelector('[data-result]');

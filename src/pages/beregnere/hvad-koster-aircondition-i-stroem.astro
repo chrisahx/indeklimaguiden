@@ -1,28 +1,12 @@
 ---
 import AnswerBox from '../../components/AnswerBox.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import FAQ from '../../components/FAQ.astro';
-import GoogleAd from '../../components/GoogleAd.astro';
 import JsonLd from '../../components/JsonLd.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import { absoluteUrl } from '../../lib/seo';
 import { breadcrumbsJsonLd, faqJsonLd } from '../../lib/structured-data';
 
 const path = '/beregnere/hvad-koster-aircondition-i-stroem/';
-const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
-const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
-const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
-const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
-const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
-const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
-const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
-const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
-const showWideAd = import.meta.env.DEV || wideAdSlot;
-const showArticleAd = import.meta.env.DEV || articleAdSlot;
-const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
-const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
-const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
-const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
 const breadcrumbs = [
   { name: 'Forside', url: '/' },
   { name: 'Beregnere', url: '/beregnere/' },
@@ -74,242 +58,207 @@ const calculatorJsonLd = {
 };
 ---
 
-<BaseLayout
+<CalculatorLayout
   title="Hvad koster aircondition i strøm? Beregner"
   description="Beregn hvad aircondition koster i strøm. Indtast watt eller kW, timer pr. dag, dage pr. måned og elpris, og få pris pr. dag, måned og sommer."
   path={path}
+  breadcrumbs={breadcrumbs}
+  pill="Aircondition strømforbrug beregner"
+  h1="Hvad koster aircondition i strøm?"
+  primaryAction={{ label: 'Brug beregneren', href: '#beregner' }}
+  secondaryAction={{ label: 'Se eksempel', href: '#eksempel' }}
+  calculatorPill="Strømforbrug beregner"
+  calculatorHeading="Beregn pris for aircondition"
+  calculatorDescription="Resultatet er et vejledende estimat. Den faktiske pris afhænger af elpris, temperatur, rumstørrelse, isolering og hvor hårdt anlægget arbejder."
 >
-  <section class="calculator-hero">
-    <div class="container hero-copy">
-      <Breadcrumbs items={breadcrumbs} />
-      <span class="pill">Aircondition strømforbrug beregner</span>
-      <h1>Hvad koster aircondition i strøm?</h1>
-      <p>
-        Indtast effektforbrug, brugstid og elpris, og få et hurtigt estimat på hvad din aircondition koster pr. dag, pr. måned og over en hel sommer.
-      </p>
-      <div class="hero-actions">
-        <a class="button" href="#beregner">Brug beregneren</a>
-        <a class="button secondary" href="#eksempel">Se eksempel</a>
-      </div>
-      <aside class="surface quick-answer" aria-label="Kort svar">
-        <span class="pill">Kort svar</span>
-        <p>
-          En aircondition på <strong>1 kW</strong> koster cirka det samme som din elpris pr. time. Ved 3 kr./kWh og 6 timers daglig brug er prisen cirka <strong>18 kr. pr. dag</strong> og <strong>540 kr. pr. måned</strong>.
-        </p>
-      </aside>
-    </div>
-  </section>
+  <Fragment slot="hero-intro">
+    <p>
+      Indtast effektforbrug, brugstid og elpris, og få et hurtigt estimat på hvad din aircondition koster pr. dag, pr. måned og over en hel sommer.
+    </p>
+  </Fragment>
 
-  <section id="beregner" class="section container calculator-section" aria-labelledby="calculator-heading">
-    <div class="section-heading">
-      <span class="pill">Strømforbrug beregner</span>
-      <h2 id="calculator-heading">Beregn pris for aircondition</h2>
-      <p>Resultatet er et vejledende estimat. Den faktiske pris afhænger af elpris, temperatur, rumstørrelse, isolering og hvor hårdt anlægget arbejder.</p>
-    </div>
+  <Fragment slot="quick-answer">
+    <p>
+      En aircondition på <strong>1 kW</strong> koster cirka det samme som din elpris pr. time. Ved 3 kr./kWh og 6 timers daglig brug er prisen cirka <strong>18 kr. pr. dag</strong> og <strong>540 kr. pr. måned</strong>.
+    </p>
+  </Fragment>
 
-    <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
-      <div class="surface calculator-panel">
-        <form class="calculator-form" data-calculator novalidate>
-          <div class="field-grid">
-            <label>
-              <span>Effektforbrug</span>
-              <input name="power" type="number" inputmode="decimal" min="0.1" max="10000" step="0.1" value="1" required />
-            </label>
-            <label>
-              <span>Enhed</span>
-              <select name="unit">
-                <option value="kw" selected>kW</option>
-                <option value="w">Watt</option>
-              </select>
-            </label>
-            <label>
-              <span>Timer pr. dag</span>
-              <input name="hours" type="number" inputmode="decimal" min="0.1" max="24" step="0.5" value="6" required />
-            </label>
-            <label>
-              <span>Dage pr. måned</span>
-              <input name="days" type="number" inputmode="numeric" min="1" max="31" step="1" value="30" required />
-            </label>
-            <label>
-              <span>Elpris pr. kWh</span>
-              <input name="price" type="number" inputmode="decimal" min="0.1" max="15" step="0.1" value="3" required />
-            </label>
-            <label>
-              <span>Sommerperiode i måneder</span>
-              <input name="summerMonths" type="number" inputmode="numeric" min="1" max="6" step="1" value="3" required />
-            </label>
-            <label class="wide">
-              <span class="label-with-help">
-                SEER/SCOP, hvis du kender tallet
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="seer-scop-help">?</button>
-                  <span id="seer-scop-help" class="tooltip-content" role="tooltip">
-                    SEER bruges til køling og SCOP til opvarmning. Du finder typisk tallet i produktets datablad, energimærke eller tilbud fra installatøren. Lad feltet stå tomt, hvis du indtaster apparatets faktiske strømforbrug.
-                  </span>
+  <Fragment slot="calculator">
+    <div class="surface calculator-panel">
+      <form class="calculator-form" data-calculator novalidate>
+        <div class="field-grid">
+          <label>
+            <span>Effektforbrug</span>
+            <input name="power" type="number" inputmode="decimal" min="0.1" max="10000" step="0.1" value="1" required />
+          </label>
+          <label>
+            <span>Enhed</span>
+            <select name="unit">
+              <option value="kw" selected>kW</option>
+              <option value="w">Watt</option>
+            </select>
+          </label>
+          <label>
+            <span>Timer pr. dag</span>
+            <input name="hours" type="number" inputmode="decimal" min="0.1" max="24" step="0.5" value="6" required />
+          </label>
+          <label>
+            <span>Dage pr. måned</span>
+            <input name="days" type="number" inputmode="numeric" min="1" max="31" step="1" value="30" required />
+          </label>
+          <label>
+            <span>Elpris pr. kWh</span>
+            <input name="price" type="number" inputmode="decimal" min="0.1" max="15" step="0.1" value="3" required />
+          </label>
+          <label>
+            <span>Sommerperiode i måneder</span>
+            <input name="summerMonths" type="number" inputmode="numeric" min="1" max="6" step="1" value="3" required />
+          </label>
+          <label class="wide">
+            <span class="label-with-help">
+              SEER/SCOP, hvis du kender tallet
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="seer-scop-help">?</button>
+                <span id="seer-scop-help" class="tooltip-content" role="tooltip">
+                  SEER bruges til køling og SCOP til opvarmning. Du finder typisk tallet i produktets datablad, energimærke eller tilbud fra installatøren. Lad feltet stå tomt, hvis du indtaster apparatets faktiske strømforbrug.
                 </span>
               </span>
-              <input name="seer" type="number" inputmode="decimal" min="1" max="12" step="0.1" placeholder="Valgfrit" />
-            </label>
-          </div>
-          <p class="form-hint">Lad SEER/SCOP stå tomt, hvis du indtaster apparatets faktiske strømforbrug fra mærkaten eller databladet.</p>
-          <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for effektforbrug, timer, dage og elpris.</p>
-          <button class="button" type="submit">Beregn strømpris</button>
-        </form>
+            </span>
+            <input name="seer" type="number" inputmode="decimal" min="1" max="12" step="0.1" placeholder="Valgfrit" />
+          </label>
+        </div>
+        <p class="form-hint">Lad SEER/SCOP stå tomt, hvis du indtaster apparatets faktiske strømforbrug fra mærkaten eller databladet.</p>
+        <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for effektforbrug, timer, dage og elpris.</p>
+        <button class="button" type="submit">Beregn strømpris</button>
+      </form>
 
-        <aside class="result-card" aria-live="polite" data-result>
-          <div>
-            <span class="pill">Dit estimat</span>
-            <p class="result-kicker" data-usage-label>6 timer dagligt</p>
-          </div>
-          <div class="result-main">
-            <strong data-month-result>Ca. 540 kr./md.</strong>
-            <p data-day-result>Det svarer til cirka 18 kr. pr. dag.</p>
-          </div>
-          <div class="result-details">
-            <p data-summer-result>Ca. 1.620 kr. pr. sommer</p>
-            <p data-kwh-result>180 kWh pr. måned</p>
-          </div>
-        </aside>
-      </div>
-
-      {showSidebarAd && (
-        <aside class="ad-column" aria-label="Annonce">
-          <GoogleAd slotId={sidebarAdSlot} className="sidebar-ad" />
-        </aside>
-      )}
-    </div>
-  </section>
-
-  {showWideAd && (
-    <aside class="container" aria-label="Annonce">
-      <GoogleAd slotId={wideAdSlot} className="wide-ad" />
-    </aside>
-  )}
-
-  <article class:list={['article-shell', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
-    {showLeftRailAd && (
-      <aside class="rail-ad left-rail" aria-label="Annonce">
-        <GoogleAd slotId={leftRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-
-    <div class="article-main">
-      <aside class="reading side-panel">
-        <div class="checklist">
-          <h2>Det påvirker prisen</h2>
-          <ul>
-            <li>Effektforbrug i watt eller kW</li>
-            <li>Antal timer pr. dag</li>
-            <li>Antal dage pr. måned</li>
-            <li>Din faktiske elpris pr. kWh</li>
-            <li>Rummets varmebelastning og solindfald</li>
-            <li>Anlæggets effektivitet, for eksempel SEER</li>
-          </ul>
+      <aside class="result-card" aria-live="polite" data-result>
+        <div>
+          <span class="pill">Dit estimat</span>
+          <p class="result-kicker" data-usage-label>6 timer dagligt</p>
+        </div>
+        <div class="result-main">
+          <strong data-month-result>Ca. 540 kr./md.</strong>
+          <p data-day-result>Det svarer til cirka 18 kr. pr. dag.</p>
+        </div>
+        <div class="result-details">
+          <p data-summer-result>Ca. 1.620 kr. pr. sommer</p>
+          <p data-kwh-result>180 kWh pr. måned</p>
         </div>
       </aside>
-
-      <div class="reading article-body content-card">
-        <AnswerBox>
-          Hvad aircondition koster i strøm afhænger især af effektforbrug, antal timer og elpris. Som hurtig tommelfingerregel kan du gange kW med timer og elpris: 1 kW x 6 timer x 3 kr. = 18 kr. pr. dag.
-        </AnswerBox>
-
-        {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
-
-        <h2>Hvad koster aircondition i strøm?</h2>
-        <p>
-          Når du søger efter “hvad koster aircondition i strøm”, er det vigtigste tal anlæggets effektforbrug. Et anlæg, der bruger 1 kW, bruger 1 kWh på en time. Hvis elprisen er 3 kr. pr. kWh, koster den time cirka 3 kr.
-        </p>
-        <p>
-          Derfor bliver prisen hurtigt personlig. To husstande kan have samme aircondition, men få forskellige udgifter, fordi den ene bruger den 2 timer om aftenen, mens den anden køler et varmt rum hele dagen.
-        </p>
-
-        <h2>Sådan beregner du aircondition strømforbrug</h2>
-        <p>
-          Den simple beregning er: effektforbrug i kW x timer pr. dag x elpris pr. kWh. For at finde prisen pr. måned ganger du derefter med antal dage, hvor anlægget er i brug.
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>Eksempel</th>
-              <th>Beregning</th>
-              <th>Pris ved 3 kr./kWh</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>0,8 kW i 4 timer</td>
-              <td>0,8 x 4 = 3,2 kWh</td>
-              <td>Ca. 9,60 kr. pr. dag</td>
-            </tr>
-            <tr>
-              <td>1 kW i 6 timer</td>
-              <td>1 x 6 = 6 kWh</td>
-              <td>Ca. 18 kr. pr. dag</td>
-            </tr>
-            <tr>
-              <td>1,5 kW i 8 timer</td>
-              <td>1,5 x 8 = 12 kWh</td>
-              <td>Ca. 36 kr. pr. dag</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h2 id="eksempel">Hvis du bruger aircondition 6 timer dagligt i 30 dage</h2>
-        <p>
-          Hvis du bruger en aircondition med et strømforbrug på 1 kW i 6 timer dagligt i 30 dage, bruger den cirka 180 kWh på en måned. Ved en elpris på 3 kr. pr. kWh svarer det til cirka 540 kr. pr. måned.
-        </p>
-        <p>
-          Det er netop derfor en beregner er nyttig: en lille ændring i timer, elpris eller effektforbrug kan flytte månedens pris markant.
-        </p>
-
-        {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
-
-        <h2>Varmepumpe strømforbrug beregner</h2>
-        <p>
-          En luft til luft-varmepumpe kan også bruges til køling, og her kan strømforbruget være lavere end ved mange mobile airconditionanlæg. Hvis du kender anlæggets faktiske inputeffekt i kW, kan du bruge beregneren direkte.
-        </p>
-        <p>
-          Hvis du kun kender køleydelse og SEER, kan SEER give et mere effektivt estimat. Jo højere SEER, desto mindre strøm skal anlægget typisk bruge for at levere samme køling over en sæson.
-        </p>
-
-        {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
-
-        <h2>Hvad koster det at køle et rum?</h2>
-        <p>
-          Prisen for at køle et rum afhænger ikke kun af selve airconditionanlægget. Rummets størrelse, solindfald, isolering, vinduer og ønsket temperatur har stor betydning. Et sydvendt rum med store vinduer kræver typisk mere energi end et mindre soveværelse på nordsiden.
-        </p>
-        <p>
-          Vil du reducere strømforbruget, kan du skærme for solen, lukke døre til varme rum, rense filtre og undgå at sætte temperaturen unødigt lavt. Ofte er 24-26 grader nok til at gøre et varmt rum behageligt.
-        </p>
-
-        <h2>Sådan sænker du prisen på aircondition</h2>
-        <ul>
-          <li>Brug solafskærmning før rummet bliver varmt.</li>
-          <li>Vælg en moderat temperatur i stedet for maksimal køling.</li>
-          <li>Rens filtre, så luftgennemstrømningen ikke bliver dårlig.</li>
-          <li>Køl kun de rum, du faktisk opholder dig i.</li>
-          <li>Vælg et effektivt anlæg, hvis du bruger køling mange timer hver sommer.</li>
-        </ul>
-        <p>
-          Hvis du stadig er i købsfasen, kan du også bruge vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a>, så du ikke vælger en unødigt stor eller for lille model.
-        </p>
-
-        <FAQ items={faq} />
-      </div>
     </div>
+  </Fragment>
 
-    {showRightRailAd && (
-      <aside class="rail-ad right-rail" aria-label="Annonce">
-        <GoogleAd slotId={rightRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-  </article>
+  <Fragment slot="side-panel">
+    <div class="checklist">
+      <h2>Det påvirker prisen</h2>
+      <ul>
+        <li>Effektforbrug i watt eller kW</li>
+        <li>Antal timer pr. dag</li>
+        <li>Antal dage pr. måned</li>
+        <li>Din faktiske elpris pr. kWh</li>
+        <li>Rummets varmebelastning og solindfald</li>
+        <li>Anlæggets effektivitet, for eksempel SEER</li>
+      </ul>
+    </div>
+  </Fragment>
 
-  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
-  <JsonLd data={faqJsonLd(faq)} />
-  <JsonLd data={calculatorJsonLd} />
-</BaseLayout>
+  <Fragment slot="article-start">
+    <AnswerBox>
+      Hvad aircondition koster i strøm afhænger især af effektforbrug, antal timer og elpris. Som hurtig tommelfingerregel kan du gange kW med timer og elpris: 1 kW x 6 timer x 3 kr. = 18 kr. pr. dag.
+    </AnswerBox>
+  </Fragment>
 
+  <Fragment slot="article-main">
+    <h2>Hvad koster aircondition i strøm?</h2>
+    <p>
+      Når du søger efter “hvad koster aircondition i strøm”, er det vigtigste tal anlæggets effektforbrug. Et anlæg, der bruger 1 kW, bruger 1 kWh på en time. Hvis elprisen er 3 kr. pr. kWh, koster den time cirka 3 kr.
+    </p>
+    <p>
+      Derfor bliver prisen hurtigt personlig. To husstande kan have samme aircondition, men få forskellige udgifter, fordi den ene bruger den 2 timer om aftenen, mens den anden køler et varmt rum hele dagen.
+    </p>
+
+    <h2>Sådan beregner du aircondition strømforbrug</h2>
+    <p>
+      Den simple beregning er: effektforbrug i kW x timer pr. dag x elpris pr. kWh. For at finde prisen pr. måned ganger du derefter med antal dage, hvor anlægget er i brug.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Eksempel</th>
+          <th>Beregning</th>
+          <th>Pris ved 3 kr./kWh</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>0,8 kW i 4 timer</td>
+          <td>0,8 x 4 = 3,2 kWh</td>
+          <td>Ca. 9,60 kr. pr. dag</td>
+        </tr>
+        <tr>
+          <td>1 kW i 6 timer</td>
+          <td>1 x 6 = 6 kWh</td>
+          <td>Ca. 18 kr. pr. dag</td>
+        </tr>
+        <tr>
+          <td>1,5 kW i 8 timer</td>
+          <td>1,5 x 8 = 12 kWh</td>
+          <td>Ca. 36 kr. pr. dag</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="eksempel">Hvis du bruger aircondition 6 timer dagligt i 30 dage</h2>
+    <p>
+      Hvis du bruger en aircondition med et strømforbrug på 1 kW i 6 timer dagligt i 30 dage, bruger den cirka 180 kWh på en måned. Ved en elpris på 3 kr. pr. kWh svarer det til cirka 540 kr. pr. måned.
+    </p>
+    <p>
+      Det er netop derfor en beregner er nyttig: en lille ændring i timer, elpris eller effektforbrug kan flytte månedens pris markant.
+    </p>
+  </Fragment>
+
+  <Fragment slot="article-late">
+    <h2>Varmepumpe strømforbrug beregner</h2>
+    <p>
+      En luft til luft-varmepumpe kan også bruges til køling, og her kan strømforbruget være lavere end ved mange mobile airconditionanlæg. Hvis du kender anlæggets faktiske inputeffekt i kW, kan du bruge beregneren direkte.
+    </p>
+    <p>
+      Hvis du kun kender køleydelse og SEER, kan SEER give et mere effektivt estimat. Jo højere SEER, desto mindre strøm skal anlægget typisk bruge for at levere samme køling over en sæson.
+    </p>
+  </Fragment>
+
+  <Fragment slot="article-end">
+    <h2>Hvad koster det at køle et rum?</h2>
+    <p>
+      Prisen for at køle et rum afhænger ikke kun af selve airconditionanlægget. Rummets størrelse, solindfald, isolering, vinduer og ønsket temperatur har stor betydning. Et sydvendt rum med store vinduer kræver typisk mere energi end et mindre soveværelse på nordsiden.
+    </p>
+    <p>
+      Vil du reducere strømforbruget, kan du skærme for solen, lukke døre til varme rum, rense filtre og undgå at sætte temperaturen unødigt lavt. Ofte er 24-26 grader nok til at gøre et varmt rum behageligt.
+    </p>
+
+    <h2>Sådan sænker du prisen på aircondition</h2>
+    <ul>
+      <li>Brug solafskærmning før rummet bliver varmt.</li>
+      <li>Vælg en moderat temperatur i stedet for maksimal køling.</li>
+      <li>Rens filtre, så luftgennemstrømningen ikke bliver dårlig.</li>
+      <li>Køl kun de rum, du faktisk opholder dig i.</li>
+      <li>Vælg et effektivt anlæg, hvis du bruger køling mange timer hver sommer.</li>
+    </ul>
+    <p>
+      Hvis du stadig er i købsfasen, kan du også bruge vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a>, så du ikke vælger en unødigt stor eller for lille model.
+    </p>
+
+    <FAQ items={faq} />
+  </Fragment>
+
+  <Fragment slot="structured-data">
+      <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+      <JsonLd data={faqJsonLd(faq)} />
+      <JsonLd data={calculatorJsonLd} />
+  </Fragment>
+
+</CalculatorLayout>
 <script>
   const form = document.querySelector('[data-calculator]');
   const result = document.querySelector('[data-result]');

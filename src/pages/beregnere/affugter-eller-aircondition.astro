@@ -1,28 +1,12 @@
 ---
 import AnswerBox from '../../components/AnswerBox.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import FAQ from '../../components/FAQ.astro';
-import GoogleAd from '../../components/GoogleAd.astro';
 import JsonLd from '../../components/JsonLd.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import { absoluteUrl } from '../../lib/seo';
 import { breadcrumbsJsonLd, faqJsonLd } from '../../lib/structured-data';
 
 const path = '/beregnere/affugter-eller-aircondition/';
-const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
-const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
-const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
-const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
-const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
-const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
-const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
-const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
-const showWideAd = import.meta.env.DEV || wideAdSlot;
-const showArticleAd = import.meta.env.DEV || articleAdSlot;
-const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
-const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
-const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
-const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
 const breadcrumbs = [
   { name: 'Forside', url: '/' },
   { name: 'Beregnere', url: '/beregnere/' },
@@ -79,270 +63,236 @@ const calculatorJsonLd = {
 };
 ---
 
-<BaseLayout
+<CalculatorLayout
   title="Affugter eller aircondition? Beregner og valg-guide"
   description="Brug vores beregner til at vælge mellem affugter, aircondition, dry mode eller bedre ventilation ud fra fugt, varme, rumtype, sæson og luftfugtighed."
   path={path}
+  breadcrumbs={breadcrumbs}
+  pill="Affugter eller aircondition beregner"
+  h1="Affugter eller aircondition?"
+  primaryAction={{ label: 'Brug beregneren', href: '#beregner' }}
+  secondaryAction={{ label: 'Læs om dry mode', href: '#dry-mode' }}
+  calculatorPill="Valg-beregner"
+  calculatorHeading="Beregn om du bør vælge affugter eller aircondition"
+  calculatorDescription="Resultatet er vejledende og bygger på typiske grænser for komfort, relativ luftfugtighed, rumtype og de symptomer du oplever."
 >
-  <section class="calculator-hero">
-    <div class="container hero-copy">
-      <Breadcrumbs items={breadcrumbs} />
-      <span class="pill">Affugter eller aircondition beregner</span>
-      <h1>Affugter eller aircondition?</h1>
-      <p>
-        Indtast dit problem, temperatur, luftfugtighed, rumtype og sæson, og få en praktisk vurdering af om du bør kigge efter affugter, aircondition, dry mode eller bedre ventilation.
-      </p>
-      <div class="hero-actions">
-        <a class="button" href="#beregner">Brug beregneren</a>
-        <a class="button secondary" href="#dry-mode">Læs om dry mode</a>
-      </div>
-      <aside class="surface quick-answer" aria-label="Kort svar">
-        <span class="pill">Kort svar</span>
-        <p>
-          En <strong>affugter</strong> er ofte bedst ved fugt, kondens og kælderlugt. <strong>Aircondition</strong> er bedst ved varme. Ved varm og fugtig sommerluft kan en aircondition med <strong>dry mode</strong> være en god mellemvej.
-        </p>
-      </aside>
-    </div>
-  </section>
+  <Fragment slot="hero-intro">
+    <p>
+      Indtast dit problem, temperatur, luftfugtighed, rumtype og sæson, og få en praktisk vurdering af om du bør kigge efter affugter, aircondition, dry mode eller bedre ventilation.
+    </p>
+  </Fragment>
 
-  <section id="beregner" class="section container calculator-section" aria-labelledby="calculator-heading">
-    <div class="section-heading">
-      <span class="pill">Valg-beregner</span>
-      <h2 id="calculator-heading">Beregn om du bør vælge affugter eller aircondition</h2>
-      <p>Resultatet er vejledende og bygger på typiske grænser for komfort, relativ luftfugtighed, rumtype og de symptomer du oplever.</p>
-    </div>
+  <Fragment slot="quick-answer">
+    <p>
+      En <strong>affugter</strong> er ofte bedst ved fugt, kondens og kælderlugt. <strong>Aircondition</strong> er bedst ved varme. Ved varm og fugtig sommerluft kan en aircondition med <strong>dry mode</strong> være en god mellemvej.
+    </p>
+  </Fragment>
 
-    <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
-      <div class="surface calculator-panel">
-        <form class="calculator-form" data-calculator novalidate>
-          <div class="field-grid">
-            <label>
-              <span>Primært problem</span>
-              <select name="problem">
-                <option value="heat" selected>Varme</option>
-                <option value="humidity">Fugt</option>
-                <option value="odor">Dårlig lugt</option>
-                <option value="condensation">Kondens</option>
-                <option value="mold">Skimmel</option>
-                <option value="sleep">Søvnproblemer</option>
-              </select>
-            </label>
-            <label>
-              <span>Temperatur i rummet</span>
-              <input name="temperature" type="number" inputmode="decimal" min="10" max="35" step="0.5" value="24" required />
-            </label>
-            <label>
-              <span class="label-with-help">
-                Relativ luftfugtighed i %
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="humidity-help">?</button>
-                  <span id="humidity-help" class="tooltip-content" role="tooltip">
-                    Brug et hygrometer, en vejrstation eller en smart indeklimamåler. Mål helst midt i rummet og ikke lige ved vindue, radiator, bruser eller åbent vindue.
-                  </span>
+  <Fragment slot="calculator">
+    <div class="surface calculator-panel">
+      <form class="calculator-form" data-calculator novalidate>
+        <div class="field-grid">
+          <label>
+            <span>Primært problem</span>
+            <select name="problem">
+              <option value="heat" selected>Varme</option>
+              <option value="humidity">Fugt</option>
+              <option value="odor">Dårlig lugt</option>
+              <option value="condensation">Kondens</option>
+              <option value="mold">Skimmel</option>
+              <option value="sleep">Søvnproblemer</option>
+            </select>
+          </label>
+          <label>
+            <span>Temperatur i rummet</span>
+            <input name="temperature" type="number" inputmode="decimal" min="10" max="35" step="0.5" value="24" required />
+          </label>
+          <label>
+            <span class="label-with-help">
+              Relativ luftfugtighed i %
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="humidity-help">?</button>
+                <span id="humidity-help" class="tooltip-content" role="tooltip">
+                  Brug et hygrometer, en vejrstation eller en smart indeklimamåler. Mål helst midt i rummet og ikke lige ved vindue, radiator, bruser eller åbent vindue.
                 </span>
               </span>
-              <input name="humidity" type="number" inputmode="decimal" min="20" max="95" step="1" value="62" required />
-            </label>
-            <label>
-              <span>Rumtype</span>
-              <select name="room">
-                <option value="bedroom" selected>Soveværelse</option>
-                <option value="living">Stue</option>
-                <option value="basement">Kælder</option>
-                <option value="bathroom">Badeværelse</option>
-                <option value="utility">Bryggers</option>
-                <option value="summerhouse">Sommerhus</option>
-                <option value="other">Andet rum</option>
-              </select>
-            </label>
-            <label>
-              <span>Sæson</span>
-              <select name="season">
-                <option value="summer" selected>Sommer</option>
-                <option value="winter">Vinter</option>
-              </select>
-            </label>
-            <label>
-              <span>Ventilation</span>
-              <select name="ventilation">
-                <option value="good">God</option>
-                <option value="average" selected>Middel</option>
-                <option value="poor">Dårlig</option>
-              </select>
-            </label>
-          </div>
-
-          <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for temperatur og relativ luftfugtighed.</p>
-          <button class="button" type="submit">Beregn anbefaling</button>
-        </form>
-
-        <aside class="result-card" aria-live="polite" data-result>
-          <div>
-            <span class="pill">Dit resultat</span>
-            <p class="result-kicker" data-status-label>Fugt og varme</p>
-          </div>
-          <div class="result-main">
-            <strong data-main-result>Aircondition med dry mode</strong>
-            <p data-range-result>Du har både varme og forhøjet luftfugtighed. En aircondition med affugtningsfunktion kan være relevant.</p>
-          </div>
-          <p class="risk-summary" data-risk-result>Kontroller ventilation og fugtkilder, især hvis fugten bliver over 60 % i længere tid.</p>
-        </aside>
-
-        <div class="recommendation-card" data-recommendations>
-          <h3>Næste skridt</h3>
-          <ul>
-            <li>Vælg en løsning, der matcher hovedproblemet: fugt, varme eller ventilation.</li>
-            <li>Mål luftfugtigheden over flere dage, hvis du er i tvivl.</li>
-          </ul>
+            </span>
+            <input name="humidity" type="number" inputmode="decimal" min="20" max="95" step="1" value="62" required />
+          </label>
+          <label>
+            <span>Rumtype</span>
+            <select name="room">
+              <option value="bedroom" selected>Soveværelse</option>
+              <option value="living">Stue</option>
+              <option value="basement">Kælder</option>
+              <option value="bathroom">Badeværelse</option>
+              <option value="utility">Bryggers</option>
+              <option value="summerhouse">Sommerhus</option>
+              <option value="other">Andet rum</option>
+            </select>
+          </label>
+          <label>
+            <span>Sæson</span>
+            <select name="season">
+              <option value="summer" selected>Sommer</option>
+              <option value="winter">Vinter</option>
+            </select>
+          </label>
+          <label>
+            <span>Ventilation</span>
+            <select name="ventilation">
+              <option value="good">God</option>
+              <option value="average" selected>Middel</option>
+              <option value="poor">Dårlig</option>
+            </select>
+          </label>
         </div>
-      </div>
 
-      {showSidebarAd && (
-        <aside class="ad-column" aria-label="Annonce">
-          <GoogleAd slotId={sidebarAdSlot} className="sidebar-ad" />
-        </aside>
-      )}
-    </div>
-  </section>
+        <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for temperatur og relativ luftfugtighed.</p>
+        <button class="button" type="submit">Beregn anbefaling</button>
+      </form>
 
-  {showWideAd && (
-    <aside class="container" aria-label="Annonce">
-      <GoogleAd slotId={wideAdSlot} className="wide-ad" />
-    </aside>
-  )}
-
-  <article class:list={['article-shell', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
-    {showLeftRailAd && (
-      <aside class="rail-ad left-rail" aria-label="Annonce">
-        <GoogleAd slotId={leftRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-
-    <div class="article-main">
-      <aside class="reading side-panel">
-        <div class="checklist">
-          <h2>Hurtig tommelfingerregel</h2>
-          <ul>
-            <li>Over 60 % fugt i længere tid peger mod fugtproblem.</li>
-            <li>Over 25-26 °C om sommeren peger mod varmeproblem.</li>
-            <li>Kondens, skimmel og lugt kræver kontrol af ventilation.</li>
-            <li>Dry mode er mest relevant ved varm og fugtig sommerluft.</li>
-          </ul>
+      <aside class="result-card" aria-live="polite" data-result>
+        <div>
+          <span class="pill">Dit resultat</span>
+          <p class="result-kicker" data-status-label>Fugt og varme</p>
         </div>
+        <div class="result-main">
+          <strong data-main-result>Aircondition med dry mode</strong>
+          <p data-range-result>Du har både varme og forhøjet luftfugtighed. En aircondition med affugtningsfunktion kan være relevant.</p>
+        </div>
+        <p class="risk-summary" data-risk-result>Kontroller ventilation og fugtkilder, især hvis fugten bliver over 60 % i længere tid.</p>
       </aside>
 
-      <div class="reading article-body content-card">
-        <AnswerBox>
-          Hvis du er i tvivl om affugter eller aircondition, skal du først finde hovedproblemet. Fugt, kondens og kælderlugt peger typisk mod affugter eller bedre ventilation. Varme og dårlig søvn om sommeren peger typisk mod aircondition. Ved både varme og fugt kan aircondition med dry mode være relevant.
-        </AnswerBox>
-
-        {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
-
-        <h2>Affugter eller aircondition: hvad er forskellen?</h2>
-        <p>
-          En affugter er lavet til at fjerne fugt fra luften. Den er især relevant ved høj luftfugtighed, kondens på vinduer, fugtig kælder, tung lugt eller risiko for skimmel. Den køler ikke rummet mærkbart og kan i nogle tilfælde afgive lidt varme.
-        </p>
-        <p>
-          Aircondition er lavet til at sænke temperaturen. Når anlægget køler, kan det også fjerne noget fugt fra luften, men det er ikke altid den rigtige løsning, hvis problemet skyldes dårlig ventilation, kuldebroer eller fugt fra konstruktionen.
-        </p>
-
-        <h2>Hvornår er en affugter bedst?</h2>
-        <p>
-          En affugter er ofte det mest direkte valg, hvis temperaturen er normal, men luftfugtigheden ligger højt. Det gælder især i kælder, bryggers, badeværelse, sommerhus eller soveværelse med dug på ruder om morgenen.
-        </p>
-        <p>
-          Hvis luftfugtigheden ofte ligger over 60 %, bør du også undersøge årsagen. En affugter kan sænke fugtniveauet, men den erstatter ikke tætning, udsugning, opvarmning eller bedre udluftning, hvis det er der problemet ligger.
-        </p>
-
-        <h2>Hvornår er aircondition bedst?</h2>
-        <p>
-          Aircondition er bedst, når varme er hovedproblemet. Det kan være en varm stue, et hjemmekontor med solindfald eller et soveværelse, hvor temperaturen gør det svært at sove. Her er temperatur og kølekapacitet vigtigere end ren affugtning.
-        </p>
-        <p>
-          Hvis du overvejer fast aircondition eller luft til luft-varmepumpe, kan du også bruge vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a> til at estimere kapacitet.
-        </p>
-
-        <h2 id="dry-mode">Hvad betyder dry mode på aircondition?</h2>
-        <p>
-          Dry mode på aircondition er en funktion, hvor anlægget prioriterer at trække fugt ud af luften frem for at køle så kraftigt som muligt. Det kan være nyttigt på varme, fugtige sommerdage, hvor rummet føles klamt, selvom temperaturen ikke er ekstrem.
-        </p>
-        <p>
-          Dry mode aircondition er dog ikke en fuld erstatning for en affugter i alle situationer. Hvis du har fugt i kælder, kondens om vinteren eller skimmel, bør ventilation og fugtkilder vurderes først.
-        </p>
-
-        {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
-
-        <h2>Fugtigt soveværelse: løsning afhænger af årsagen</h2>
-        <p>
-          Et fugtigt soveværelse skyldes ofte udånding gennem natten, lav temperatur, lukkede døre, utilstrækkelig udluftning eller kolde vinduesflader. Hvis problemet især er dug på ruder om morgenen, er første skridt typisk bedre udluftning, jævn varme og kontrol af luftfugtigheden.
-        </p>
-        <p>
-          Hvis soveværelset både er varmt og fugtigt om sommeren, kan aircondition med affugtningsfunktion give bedre komfort. Hvis det derimod er fugtigt og køligt om vinteren, peger løsningen oftere mod ventilation, opvarmning og eventuelt affugter.
-        </p>
-
-        {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
-
-        <h2>Hvornår bør ventilationen forbedres først?</h2>
-        <p>
-          Du bør starte med ventilationen, hvis problemet er dårlig lugt, kondens eller skimmel uden et klart varmeproblem. Det gælder især rum med fugtproduktion som badeværelse, bryggers og soveværelse, men også kældre og sommerhuse, der står lukkede i perioder.
-        </p>
-        <p>
-          Se også vores <a href="/beregnere/luftfugtighed-beregner/">luftfugtighed beregner</a>, hvis du vil vurdere fugtniveau og kondensrisiko mere specifikt.
-        </p>
-
-        <h2>Sammenligning: affugter, aircondition, dry mode og ventilation</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Løsning</th>
-              <th>Bedst til</th>
-              <th>Vigtigt forbehold</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Affugter</td>
-              <td>Høj luftfugtighed, kælder, kondens og fugtig luft</td>
-              <td>Løser ikke nødvendigvis årsagen til fugten.</td>
-            </tr>
-            <tr>
-              <td>Aircondition</td>
-              <td>Varme rum, søvnproblemer om sommeren og solbelastning</td>
-              <td>Kræver korrekt kapacitet og placering.</td>
-            </tr>
-            <tr>
-              <td>Aircondition med dry mode</td>
-              <td>Varm og fugtig sommerluft</td>
-              <td>Er ikke altid nok ved bygningsfugt eller skimmel.</td>
-            </tr>
-            <tr>
-              <td>Bedre ventilation</td>
-              <td>Dårlig lugt, kondens, fugtproduktion og indelukket luft</td>
-              <td>Bør ofte løses før køb af udstyr.</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <p>
-          Hvis du vælger aircondition, kan strømforbruget variere meget efter brugstid, elpris og effektivitet. Brug eventuelt vores <a href="/beregnere/hvad-koster-aircondition-i-stroem/">beregner til aircondition strømforbrug</a>, før du beslutter dig.
-        </p>
-
-        <FAQ items={faq} />
+      <div class="recommendation-card" data-recommendations>
+        <h3>Næste skridt</h3>
+        <ul>
+          <li>Vælg en løsning, der matcher hovedproblemet: fugt, varme eller ventilation.</li>
+          <li>Mål luftfugtigheden over flere dage, hvis du er i tvivl.</li>
+        </ul>
       </div>
     </div>
+  </Fragment>
 
-    {showRightRailAd && (
-      <aside class="rail-ad right-rail" aria-label="Annonce">
-        <GoogleAd slotId={rightRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-  </article>
+  <Fragment slot="side-panel">
+    <div class="checklist">
+      <h2>Hurtig tommelfingerregel</h2>
+      <ul>
+        <li>Over 60 % fugt i længere tid peger mod fugtproblem.</li>
+        <li>Over 25-26 °C om sommeren peger mod varmeproblem.</li>
+        <li>Kondens, skimmel og lugt kræver kontrol af ventilation.</li>
+        <li>Dry mode er mest relevant ved varm og fugtig sommerluft.</li>
+      </ul>
+    </div>
+  </Fragment>
 
-  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
-  <JsonLd data={faqJsonLd(faq)} />
-  <JsonLd data={calculatorJsonLd} />
-</BaseLayout>
+  <Fragment slot="article-start">
+    <AnswerBox>
+      Hvis du er i tvivl om affugter eller aircondition, skal du først finde hovedproblemet. Fugt, kondens og kælderlugt peger typisk mod affugter eller bedre ventilation. Varme og dårlig søvn om sommeren peger typisk mod aircondition. Ved både varme og fugt kan aircondition med dry mode være relevant.
+    </AnswerBox>
+  </Fragment>
 
+  <Fragment slot="article-main">
+    <h2>Affugter eller aircondition: hvad er forskellen?</h2>
+    <p>
+      En affugter er lavet til at fjerne fugt fra luften. Den er især relevant ved høj luftfugtighed, kondens på vinduer, fugtig kælder, tung lugt eller risiko for skimmel. Den køler ikke rummet mærkbart og kan i nogle tilfælde afgive lidt varme.
+    </p>
+    <p>
+      Aircondition er lavet til at sænke temperaturen. Når anlægget køler, kan det også fjerne noget fugt fra luften, men det er ikke altid den rigtige løsning, hvis problemet skyldes dårlig ventilation, kuldebroer eller fugt fra konstruktionen.
+    </p>
+
+    <h2>Hvornår er en affugter bedst?</h2>
+    <p>
+      En affugter er ofte det mest direkte valg, hvis temperaturen er normal, men luftfugtigheden ligger højt. Det gælder især i kælder, bryggers, badeværelse, sommerhus eller soveværelse med dug på ruder om morgenen.
+    </p>
+    <p>
+      Hvis luftfugtigheden ofte ligger over 60 %, bør du også undersøge årsagen. En affugter kan sænke fugtniveauet, men den erstatter ikke tætning, udsugning, opvarmning eller bedre udluftning, hvis det er der problemet ligger.
+    </p>
+
+    <h2>Hvornår er aircondition bedst?</h2>
+    <p>
+      Aircondition er bedst, når varme er hovedproblemet. Det kan være en varm stue, et hjemmekontor med solindfald eller et soveværelse, hvor temperaturen gør det svært at sove. Her er temperatur og kølekapacitet vigtigere end ren affugtning.
+    </p>
+    <p>
+      Hvis du overvejer fast aircondition eller luft til luft-varmepumpe, kan du også bruge vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a> til at estimere kapacitet.
+    </p>
+
+    <h2 id="dry-mode">Hvad betyder dry mode på aircondition?</h2>
+    <p>
+      Dry mode på aircondition er en funktion, hvor anlægget prioriterer at trække fugt ud af luften frem for at køle så kraftigt som muligt. Det kan være nyttigt på varme, fugtige sommerdage, hvor rummet føles klamt, selvom temperaturen ikke er ekstrem.
+    </p>
+    <p>
+      Dry mode aircondition er dog ikke en fuld erstatning for en affugter i alle situationer. Hvis du har fugt i kælder, kondens om vinteren eller skimmel, bør ventilation og fugtkilder vurderes først.
+    </p>
+
+  </Fragment>
+
+  <Fragment slot="article-late">
+    <h2>Fugtigt soveværelse: løsning afhænger af årsagen</h2>
+    <p>
+      Et fugtigt soveværelse skyldes ofte udånding gennem natten, lav temperatur, lukkede døre, utilstrækkelig udluftning eller kolde vinduesflader. Hvis problemet især er dug på ruder om morgenen, er første skridt typisk bedre udluftning, jævn varme og kontrol af luftfugtigheden.
+    </p>
+    <p>
+      Hvis soveværelset både er varmt og fugtigt om sommeren, kan aircondition med affugtningsfunktion give bedre komfort. Hvis det derimod er fugtigt og køligt om vinteren, peger løsningen oftere mod ventilation, opvarmning og eventuelt affugter.
+    </p>
+  </Fragment>
+
+  <Fragment slot="article-end">
+    <h2>Hvornår bør ventilationen forbedres først?</h2>
+    <p>
+      Du bør starte med ventilationen, hvis problemet er dårlig lugt, kondens eller skimmel uden et klart varmeproblem. Det gælder især rum med fugtproduktion som badeværelse, bryggers og soveværelse, men også kældre og sommerhuse, der står lukkede i perioder.
+    </p>
+    <p>
+      Se også vores <a href="/beregnere/luftfugtighed-beregner/">luftfugtighed beregner</a>, hvis du vil vurdere fugtniveau og kondensrisiko mere specifikt.
+    </p>
+
+    <h2>Sammenligning: affugter, aircondition, dry mode og ventilation</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Løsning</th>
+          <th>Bedst til</th>
+          <th>Vigtigt forbehold</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Affugter</td>
+          <td>Høj luftfugtighed, kælder, kondens og fugtig luft</td>
+          <td>Løser ikke nødvendigvis årsagen til fugten.</td>
+        </tr>
+        <tr>
+          <td>Aircondition</td>
+          <td>Varme rum, søvnproblemer om sommeren og solbelastning</td>
+          <td>Kræver korrekt kapacitet og placering.</td>
+        </tr>
+        <tr>
+          <td>Aircondition med dry mode</td>
+          <td>Varm og fugtig sommerluft</td>
+          <td>Er ikke altid nok ved bygningsfugt eller skimmel.</td>
+        </tr>
+        <tr>
+          <td>Bedre ventilation</td>
+          <td>Dårlig lugt, kondens, fugtproduktion og indelukket luft</td>
+          <td>Bør ofte løses før køb af udstyr.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      Hvis du vælger aircondition, kan strømforbruget variere meget efter brugstid, elpris og effektivitet. Brug eventuelt vores <a href="/beregnere/hvad-koster-aircondition-i-stroem/">beregner til aircondition strømforbrug</a>, før du beslutter dig.
+    </p>
+
+    <FAQ items={faq} />
+  </Fragment>
+
+  <Fragment slot="structured-data">
+      <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+      <JsonLd data={faqJsonLd(faq)} />
+      <JsonLd data={calculatorJsonLd} />
+  </Fragment>
+
+</CalculatorLayout>
 <script>
   const form = document.querySelector('[data-calculator]');
   const result = document.querySelector('[data-result]');

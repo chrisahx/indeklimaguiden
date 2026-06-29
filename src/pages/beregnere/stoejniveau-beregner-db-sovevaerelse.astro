@@ -1,28 +1,12 @@
 ---
 import AnswerBox from '../../components/AnswerBox.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import FAQ from '../../components/FAQ.astro';
-import GoogleAd from '../../components/GoogleAd.astro';
 import JsonLd from '../../components/JsonLd.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import { absoluteUrl } from '../../lib/seo';
 import { breadcrumbsJsonLd, faqJsonLd } from '../../lib/structured-data';
 
 const path = '/beregnere/stoejniveau-beregner-db-sovevaerelse/';
-const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
-const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
-const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
-const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
-const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
-const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
-const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
-const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
-const showWideAd = import.meta.env.DEV || wideAdSlot;
-const showArticleAd = import.meta.env.DEV || articleAdSlot;
-const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
-const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
-const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
-const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
 const breadcrumbs = [
   { name: 'Forside', url: '/' },
   { name: 'Beregnere', url: '/beregnere/' },
@@ -74,255 +58,220 @@ const calculatorJsonLd = {
 };
 ---
 
-<BaseLayout
+<CalculatorLayout
   title="Støjniveau beregner: dB i soveværelse"
   description="Beregn om aircondition eller varmepumpe larmer for meget til soveværelse. Sammenlign dB med hvisken, køleskab og normal samtale."
   path={path}
+  breadcrumbs={breadcrumbs}
+  pill="Støjniveau beregner"
+  h1="Støjniveau beregner: er dB-niveauet egnet til soveværelse?"
+  primaryAction={{ label: 'Brug beregneren', href: '#beregner' }}
+  secondaryAction={{ label: 'Se anbefalede dB-grænser', href: '#forklaring' }}
+  calculatorPill="dB soveværelse"
+  calculatorHeading="Beregn oplevet støjniveau ved din placering"
+  calculatorDescription="Resultatet er vejledende. Lyd opleves forskelligt, og rumakustik, vibrationer og driftsmønster kan gøre enheden mere eller mindre generende."
 >
-  <section class="calculator-hero">
-    <div class="container hero-copy">
-      <Breadcrumbs items={breadcrumbs} />
-      <span class="pill">Støjniveau beregner</span>
-      <h1>Støjniveau beregner: er dB-niveauet egnet til soveværelse?</h1>
-      <p>
-        Indtast produktets dB-niveau, afstand til enheden, rumtype og brug. Beregneren vurderer, om støjen passer til søvn, kontor eller stue, og sammenligner med kendte lydniveauer.
-      </p>
-      <div class="hero-actions">
-        <a class="button" href="#beregner">Brug beregneren</a>
-        <a class="button secondary" href="#forklaring">Se anbefalede dB-grænser</a>
-      </div>
-      <aside class="surface quick-answer" aria-label="Kort svar">
-        <span class="pill">Kort svar</span>
-        <p>
-          Til soveværelse bør aircondition eller varmepumpe helst ligge omkring <strong>30-35 dB ved sengen</strong>. Over cirka 40 dB bliver støjen ofte tydelig om natten.
-        </p>
-      </aside>
-    </div>
-  </section>
+  <Fragment slot="hero-intro">
+    <p>
+      Indtast produktets dB-niveau, afstand til enheden, rumtype og brug. Beregneren vurderer, om støjen passer til søvn, kontor eller stue, og sammenligner med kendte lydniveauer.
+    </p>
+  </Fragment>
 
-  <section id="beregner" class="section container calculator-section" aria-labelledby="calculator-heading">
-    <div class="section-heading">
-      <span class="pill">dB soveværelse</span>
-      <h2 id="calculator-heading">Beregn oplevet støjniveau ved din placering</h2>
-      <p>Resultatet er vejledende. Lyd opleves forskelligt, og rumakustik, vibrationer og driftsmønster kan gøre enheden mere eller mindre generende.</p>
-    </div>
+  <Fragment slot="quick-answer">
+    <p>
+      Til soveværelse bør aircondition eller varmepumpe helst ligge omkring <strong>30-35 dB ved sengen</strong>. Over cirka 40 dB bliver støjen ofte tydelig om natten.
+    </p>
+  </Fragment>
 
-    <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
-      <div class="surface calculator-panel">
-        <form class="calculator-form" data-calculator novalidate>
-          <div class="field-grid">
-            <label>
-              <span class="label-with-help">
-                dB-niveau fra produkt
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="db-help">?</button>
-                  <span id="db-help" class="tooltip-content" role="tooltip">
-                    Brug lydtryksniveauet for indedelen i dB(A), helst laveste nattilstand. Du finder typisk tallet i produktets datablad, energimærke, webshop eller installatørens tilbud.
-                  </span>
+  <Fragment slot="calculator">
+    <div class="surface calculator-panel">
+      <form class="calculator-form" data-calculator novalidate>
+        <div class="field-grid">
+          <label>
+            <span class="label-with-help">
+              dB-niveau fra produkt
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="db-help">?</button>
+                <span id="db-help" class="tooltip-content" role="tooltip">
+                  Brug lydtryksniveauet for indedelen i dB(A), helst laveste nattilstand. Du finder typisk tallet i produktets datablad, energimærke, webshop eller installatørens tilbud.
                 </span>
               </span>
-              <input name="db" type="number" inputmode="decimal" min="15" max="75" step="1" value="38" required />
-            </label>
-            <label>
-              <span class="label-with-help">
-                Afstand til enhed i meter
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="distance-help">?</button>
-                  <span id="distance-help" class="tooltip-content" role="tooltip">
-                    Mål cirka fra indedelen til din seng, arbejdsplads eller sofa. Beregneren antager, at produktets dB-tal er oplyst ved 1 meter, medmindre andet står i databladet.
-                  </span>
+            </span>
+            <input name="db" type="number" inputmode="decimal" min="15" max="75" step="1" value="38" required />
+          </label>
+          <label>
+            <span class="label-with-help">
+              Afstand til enhed i meter
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="distance-help">?</button>
+                <span id="distance-help" class="tooltip-content" role="tooltip">
+                  Mål cirka fra indedelen til din seng, arbejdsplads eller sofa. Beregneren antager, at produktets dB-tal er oplyst ved 1 meter, medmindre andet står i databladet.
                 </span>
               </span>
-              <input name="distance" type="number" inputmode="decimal" min="0.5" max="10" step="0.1" value="2.5" required />
-            </label>
-            <label>
-              <span>Rumtype</span>
-              <select name="room">
-                <option value="bedroom" selected>Soveværelse</option>
-                <option value="office">Kontor</option>
-                <option value="living">Stue</option>
-                <option value="childroom">Børneværelse</option>
-              </select>
-            </label>
-            <label>
-              <span>Brug</span>
-              <select name="use">
-                <option value="sleep" selected>Søvn</option>
-                <option value="office">Kontor</option>
-                <option value="living">Stue</option>
-              </select>
-            </label>
-          </div>
-          <p class="form-hint">Hvis produktet oplyser flere dB-tal, så brug laveste nattilstand til soveværelse og normal drift til kontor eller stue.</p>
-          <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for dB-niveau og afstand.</p>
-          <button class="button" type="submit">Beregn støjniveau</button>
-        </form>
+            </span>
+            <input name="distance" type="number" inputmode="decimal" min="0.5" max="10" step="0.1" value="2.5" required />
+          </label>
+          <label>
+            <span>Rumtype</span>
+            <select name="room">
+              <option value="bedroom" selected>Soveværelse</option>
+              <option value="office">Kontor</option>
+              <option value="living">Stue</option>
+              <option value="childroom">Børneværelse</option>
+            </select>
+          </label>
+          <label>
+            <span>Brug</span>
+            <select name="use">
+              <option value="sleep" selected>Søvn</option>
+              <option value="office">Kontor</option>
+              <option value="living">Stue</option>
+            </select>
+          </label>
+        </div>
+        <p class="form-hint">Hvis produktet oplyser flere dB-tal, så brug laveste nattilstand til soveværelse og normal drift til kontor eller stue.</p>
+        <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for dB-niveau og afstand.</p>
+        <button class="button" type="submit">Beregn støjniveau</button>
+      </form>
 
-        <aside class="result-card" aria-live="polite" data-result>
-          <div>
-            <span class="pill">Din vurdering</span>
-            <p class="result-kicker" data-use-label>Søvn</p>
-          </div>
-          <div class="result-main">
-            <strong data-main-result>Egnet</strong>
-            <p data-level-result>Ca. 30 dB ved din placering.</p>
-          </div>
-          <div class="result-details">
-            <p data-comparison-result>Omtrent som hvisken.</p>
-            <p data-limit-result>Anbefalet maks.: 35 dB</p>
-          </div>
-        </aside>
-      </div>
-
-      {showSidebarAd && (
-        <aside class="ad-column" aria-label="Annonce">
-          <GoogleAd slotId={sidebarAdSlot} className="sidebar-ad" />
-        </aside>
-      )}
-    </div>
-  </section>
-
-  {showWideAd && (
-    <aside class="container" aria-label="Annonce">
-      <GoogleAd slotId={wideAdSlot} className="wide-ad" />
-    </aside>
-  )}
-
-  <article class:list={['article-shell', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
-    {showLeftRailAd && (
-      <aside class="rail-ad left-rail" aria-label="Annonce">
-        <GoogleAd slotId={leftRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-
-    <div class="article-main">
-      <aside class="reading side-panel">
-        <div class="checklist">
-          <h2>Det påvirker oplevet støj</h2>
-          <ul>
-            <li>dB(A)-niveau i laveste og normal drift</li>
-            <li>Afstand fra indedel til seng, skrivebord eller sofa</li>
-            <li>Om rummet bruges til søvn, arbejde eller ophold</li>
-            <li>Placering på væg, vibrationer og resonans</li>
-            <li>Om lyden er jævn, pulserende eller starter og stopper</li>
-            <li>Små rum og hårde flader, der kan reflektere lyd</li>
-          </ul>
+      <aside class="result-card" aria-live="polite" data-result>
+        <div>
+          <span class="pill">Din vurdering</span>
+          <p class="result-kicker" data-use-label>Søvn</p>
+        </div>
+        <div class="result-main">
+          <strong data-main-result>Egnet</strong>
+          <p data-level-result>Ca. 30 dB ved din placering.</p>
+        </div>
+        <div class="result-details">
+          <p data-comparison-result>Omtrent som hvisken.</p>
+          <p data-limit-result>Anbefalet maks.: 35 dB</p>
         </div>
       </aside>
-
-      <div class="reading article-body content-card">
-        <AnswerBox>
-          En støjsvag aircondition eller varmepumpe til soveværelse bør normalt ligge omkring 30-35 dB ved sengen. Til kontor kan lidt højere støj ofte accepteres, mens stuebrug afhænger af TV, samtale og hvor længe anlægget kører.
-        </AnswerBox>
-
-        {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
-
-        <h2>Aircondition støjniveau: hvad betyder dB i praksis?</h2>
-        <p>
-          Når du sammenligner aircondition støjniveau, er det ikke nok at se på kapacitet og pris. dB-skalaen er logaritmisk, så en forskel på få dB kan opleves tydeligt, især i et stille soveværelse om natten.
-        </p>
-        <p>
-          En model på 38 dB kan være acceptabel i en stue, men føles for tydelig tæt på hovedpuden. Derfor vurderer beregneren støjen ved den afstand, hvor du faktisk opholder dig.
-        </p>
-
-        <h2 id="forklaring">Anbefalet maksimal dB til soveværelse</h2>
-        <p>
-          Som praktisk tommelfingerregel bør støj ved sengen holdes under cirka 35 dB, hvis anlægget skal køre mens du sover. Under 30 dB opleves ofte som meget støjsvagt, mens 40 dB og derover kan være generende for lette sovende.
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>Brug</th>
-              <th>Anbefalet maksimum</th>
-              <th>Praktisk vurdering</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Søvn i soveværelse</td>
-              <td>Ca. 30-35 dB</td>
-              <td>Vælg lav nattilstand og god afstand fra sengen.</td>
-            </tr>
-            <tr>
-              <td>Kontor og hjemmearbejde</td>
-              <td>Ca. 40 dB</td>
-              <td>Jævn susen kan være acceptabel; klik og vibrationer er mere forstyrrende.</td>
-            </tr>
-            <tr>
-              <td>Stue og ophold</td>
-              <td>Ca. 45 dB</td>
-              <td>Kan fungere, men bør ikke overdøve TV eller samtale.</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h2>Varmepumpe larmer: hvorfor kan tallet snyde?</h2>
-        <p>
-          Hvis en varmepumpe larmer mere end forventet, skyldes det ofte placering, vibrationer, høj belastning eller at databladets dB-tal gælder en lavere driftstilstand. Lyd fra indedelen kan også reflekteres af hårde vægge, skabe og hjørner.
-        </p>
-        <p>
-          Se derfor både på laveste dB-niveau, normal drift og om produktet har nattilstand. Til soveværelse er en jævn, lav susen typisk mindre generende end skiftende blæsertrin eller hyppige start-stop.
-        </p>
-
-        {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
-
-        <h2>Sammenligning: hvisken, køleskab og normal samtale</h2>
-        <p>
-          Beregneren sammenligner resultatet med tre kendte lydniveauer, så dB-tallet bliver lettere at forstå: hvisken omkring 30 dB, et køleskab omkring 40 dB og normal samtale omkring 60 dB. Det er grove pejlemærker, men de hjælper i købsbeslutningen.
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>Lyd</th>
-              <th>Typisk niveau</th>
-              <th>Relevans ved køb</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Hvisken</td>
-              <td>Ca. 30 dB</td>
-              <td>Godt mål for støjsvag aircondition til soveværelse.</td>
-            </tr>
-            <tr>
-              <td>Køleskab</td>
-              <td>Ca. 40 dB</td>
-              <td>Kan være acceptabelt i stue eller kontor, men ofte tydeligt om natten.</td>
-            </tr>
-            <tr>
-              <td>Normal samtale</td>
-              <td>Ca. 60 dB</td>
-              <td>For højt til søvn og normalt ikke ønskeligt som konstant baggrundsstøj.</td>
-            </tr>
-          </tbody>
-        </table>
-
-        {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
-
-        <h2>Sådan bruger du støjniveauet i en købsbeslutning</h2>
-        <p>
-          Hvis du leder efter støjsvag aircondition, bør du sammenligne dB-tal ved samme driftstilstand. Et produkt kan markedsføres med lav nattilstand, men larme væsentligt mere, når det køler hårdt på en varm sommerdag.
-        </p>
-        <p>
-          Brug beregneren sammen med kapacitets- og strømforbrugsberegninger. En for lille model kan larme mere, fordi den arbejder hårdere, mens en korrekt dimensioneret model ofte kan køre roligere. Se også vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a>, <a href="/beregnere/hvad-koster-aircondition-i-stroem/">strømforbrugsberegner</a> og guides om <a href="/aircondition/">aircondition</a> og <a href="/varmepumper/">varmepumper</a>.
-        </p>
-
-        <FAQ items={faq} />
-      </div>
     </div>
+  </Fragment>
 
-    {showRightRailAd && (
-      <aside class="rail-ad right-rail" aria-label="Annonce">
-        <GoogleAd slotId={rightRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-  </article>
+  <Fragment slot="side-panel">
+    <div class="checklist">
+      <h2>Det påvirker oplevet støj</h2>
+      <ul>
+        <li>dB(A)-niveau i laveste og normal drift</li>
+        <li>Afstand fra indedel til seng, skrivebord eller sofa</li>
+        <li>Om rummet bruges til søvn, arbejde eller ophold</li>
+        <li>Placering på væg, vibrationer og resonans</li>
+        <li>Om lyden er jævn, pulserende eller starter og stopper</li>
+        <li>Små rum og hårde flader, der kan reflektere lyd</li>
+      </ul>
+    </div>
+  </Fragment>
 
-  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
-  <JsonLd data={faqJsonLd(faq)} />
-  <JsonLd data={calculatorJsonLd} />
-</BaseLayout>
+  <Fragment slot="article-start">
+    <AnswerBox>
+      En støjsvag aircondition eller varmepumpe til soveværelse bør normalt ligge omkring 30-35 dB ved sengen. Til kontor kan lidt højere støj ofte accepteres, mens stuebrug afhænger af TV, samtale og hvor længe anlægget kører.
+    </AnswerBox>
+  </Fragment>
 
+  <Fragment slot="article-main">
+    <h2>Aircondition støjniveau: hvad betyder dB i praksis?</h2>
+    <p>
+      Når du sammenligner aircondition støjniveau, er det ikke nok at se på kapacitet og pris. dB-skalaen er logaritmisk, så en forskel på få dB kan opleves tydeligt, især i et stille soveværelse om natten.
+    </p>
+    <p>
+      En model på 38 dB kan være acceptabel i en stue, men føles for tydelig tæt på hovedpuden. Derfor vurderer beregneren støjen ved den afstand, hvor du faktisk opholder dig.
+    </p>
+
+    <h2 id="forklaring">Anbefalet maksimal dB til soveværelse</h2>
+    <p>
+      Som praktisk tommelfingerregel bør støj ved sengen holdes under cirka 35 dB, hvis anlægget skal køre mens du sover. Under 30 dB opleves ofte som meget støjsvagt, mens 40 dB og derover kan være generende for lette sovende.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Brug</th>
+          <th>Anbefalet maksimum</th>
+          <th>Praktisk vurdering</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Søvn i soveværelse</td>
+          <td>Ca. 30-35 dB</td>
+          <td>Vælg lav nattilstand og god afstand fra sengen.</td>
+        </tr>
+        <tr>
+          <td>Kontor og hjemmearbejde</td>
+          <td>Ca. 40 dB</td>
+          <td>Jævn susen kan være acceptabel; klik og vibrationer er mere forstyrrende.</td>
+        </tr>
+        <tr>
+          <td>Stue og ophold</td>
+          <td>Ca. 45 dB</td>
+          <td>Kan fungere, men bør ikke overdøve TV eller samtale.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Varmepumpe larmer: hvorfor kan tallet snyde?</h2>
+    <p>
+      Hvis en varmepumpe larmer mere end forventet, skyldes det ofte placering, vibrationer, høj belastning eller at databladets dB-tal gælder en lavere driftstilstand. Lyd fra indedelen kan også reflekteres af hårde vægge, skabe og hjørner.
+    </p>
+    <p>
+      Se derfor både på laveste dB-niveau, normal drift og om produktet har nattilstand. Til soveværelse er en jævn, lav susen typisk mindre generende end skiftende blæsertrin eller hyppige start-stop.
+    </p>
+  </Fragment>
+
+  <Fragment slot="article-late">
+    <h2>Sammenligning: hvisken, køleskab og normal samtale</h2>
+    <p>
+      Beregneren sammenligner resultatet med tre kendte lydniveauer, så dB-tallet bliver lettere at forstå: hvisken omkring 30 dB, et køleskab omkring 40 dB og normal samtale omkring 60 dB. Det er grove pejlemærker, men de hjælper i købsbeslutningen.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Lyd</th>
+          <th>Typisk niveau</th>
+          <th>Relevans ved køb</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Hvisken</td>
+          <td>Ca. 30 dB</td>
+          <td>Godt mål for støjsvag aircondition til soveværelse.</td>
+        </tr>
+        <tr>
+          <td>Køleskab</td>
+          <td>Ca. 40 dB</td>
+          <td>Kan være acceptabelt i stue eller kontor, men ofte tydeligt om natten.</td>
+        </tr>
+        <tr>
+          <td>Normal samtale</td>
+          <td>Ca. 60 dB</td>
+          <td>For højt til søvn og normalt ikke ønskeligt som konstant baggrundsstøj.</td>
+        </tr>
+      </tbody>
+    </table>
+  </Fragment>
+
+  <Fragment slot="article-end">
+    <h2>Sådan bruger du støjniveauet i en købsbeslutning</h2>
+    <p>
+      Hvis du leder efter støjsvag aircondition, bør du sammenligne dB-tal ved samme driftstilstand. Et produkt kan markedsføres med lav nattilstand, men larme væsentligt mere, når det køler hårdt på en varm sommerdag.
+    </p>
+    <p>
+      Brug beregneren sammen med kapacitets- og strømforbrugsberegninger. En for lille model kan larme mere, fordi den arbejder hårdere, mens en korrekt dimensioneret model ofte kan køre roligere. Se også vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a>, <a href="/beregnere/hvad-koster-aircondition-i-stroem/">strømforbrugsberegner</a> og guides om <a href="/aircondition/">aircondition</a> og <a href="/varmepumper/">varmepumper</a>.
+    </p>
+
+    <FAQ items={faq} />
+  </Fragment>
+
+  <Fragment slot="structured-data">
+      <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+      <JsonLd data={faqJsonLd(faq)} />
+      <JsonLd data={calculatorJsonLd} />
+  </Fragment>
+
+</CalculatorLayout>
 <script>
   const form = document.querySelector('[data-calculator]');
   const result = document.querySelector('[data-result]');

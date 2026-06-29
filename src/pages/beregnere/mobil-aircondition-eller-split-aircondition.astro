@@ -1,28 +1,12 @@
 ---
 import AnswerBox from '../../components/AnswerBox.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import FAQ from '../../components/FAQ.astro';
-import GoogleAd from '../../components/GoogleAd.astro';
 import JsonLd from '../../components/JsonLd.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import { absoluteUrl } from '../../lib/seo';
 import { breadcrumbsJsonLd, faqJsonLd } from '../../lib/structured-data';
 
 const path = '/beregnere/mobil-aircondition-eller-split-aircondition/';
-const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
-const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
-const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
-const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
-const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
-const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
-const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
-const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
-const showWideAd = import.meta.env.DEV || wideAdSlot;
-const showArticleAd = import.meta.env.DEV || articleAdSlot;
-const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
-const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
-const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
-const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
 
 const breadcrumbs = [
   { name: 'Forside', url: '/' },
@@ -81,302 +65,267 @@ const calculatorJsonLd = {
 };
 ---
 
-<BaseLayout
+<CalculatorLayout
   title="Mobil aircondition eller split aircondition? Vælg den rigtige løsning"
   description="Brug vælgeren til at finde ud af om du bør vælge mobil aircondition, mobil split aircondition, fast split aircondition, luft-til-luft varmepumpe eller et billigere alternativ."
   path={path}
+  breadcrumbs={breadcrumbs}
+  pill="Aircondition vælger"
+  h1="Mobil aircondition eller split aircondition?"
+  primaryAction={{ label: 'Brug vælgeren', href: '#beregner' }}
+  secondaryAction={{ label: 'Se sammenligning', href: '#sammenligning' }}
+  calculatorPill="Vælgertype"
+  calculatorHeading="Find den bedste løsning til dit rum"
+  calculatorDescription="Resultatet er vejledende. Tjek altid regler for udlejer, ejerforening, facade, vinduesplacering, støjkrav og installation, før du køber et anlæg."
 >
-  <section class="calculator-hero">
-    <div class="container hero-copy">
-      <Breadcrumbs items={breadcrumbs} />
-      <span class="pill">Aircondition vælger</span>
-      <h1>Mobil aircondition eller split aircondition?</h1>
-      <p>
-        Svar på syv spørgsmål, og få en praktisk anbefaling til om du bør vælge mobil aircondition, mobil split aircondition, fast split aircondition, luft til luft-varmepumpe eller et enklere alternativ.
-      </p>
-      <div class="hero-actions">
-        <a class="button" href="#beregner">Brug vælgeren</a>
-        <a class="button secondary" href="#sammenligning">Se sammenligning</a>
-      </div>
-      <aside class="surface quick-answer" aria-label="Kort svar">
-        <span class="pill">Kort svar</span>
-        <p>
-          <strong>Mobil aircondition</strong> passer ofte bedst til lejere og lavere budget. <strong>Mobil split aircondition</strong> kan være et godt mellemvalg, hvis en udedel kan stå sikkert udenfor vinduet. <strong>Fast split</strong> eller <strong>luft til luft-varmepumpe</strong> er bedst ved permanent installation.
-        </p>
-      </aside>
-    </div>
-  </section>
+  <Fragment slot="hero-intro">
+    <p>
+      Svar på syv spørgsmål, og få en praktisk anbefaling til om du bør vælge mobil aircondition, mobil split aircondition, fast split aircondition, luft til luft-varmepumpe eller et enklere alternativ.
+    </p>
+  </Fragment>
 
-  <section id="beregner" class="section container calculator-section" aria-labelledby="calculator-heading">
-    <div class="section-heading">
-      <span class="pill">Vælgertype</span>
-      <h2 id="calculator-heading">Find den bedste løsning til dit rum</h2>
-      <p>Resultatet er vejledende. Tjek altid regler for udlejer, ejerforening, facade, vinduesplacering, støjkrav og installation, før du køber et anlæg.</p>
-    </div>
+  <Fragment slot="quick-answer">
+    <p>
+      <strong>Mobil aircondition</strong> passer ofte bedst til lejere og lavere budget. <strong>Mobil split aircondition</strong> kan være et godt mellemvalg, hvis en udedel kan stå sikkert udenfor vinduet. <strong>Fast split</strong> eller <strong>luft til luft-varmepumpe</strong> er bedst ved permanent installation.
+    </p>
+  </Fragment>
 
-    <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
-      <div class="surface calculator-panel">
-        <form class="calculator-form" data-calculator novalidate>
-          <div class="field-grid">
-            <label>
-              <span>Ejer eller lejer?</span>
-              <select name="housing">
-                <option value="tenant" selected>Lejer</option>
-                <option value="owner">Ejer</option>
-              </select>
-            </label>
-            <label>
-              <span>Budget</span>
-              <select name="budget">
-                <option value="low">Under 3.000 kr.</option>
-                <option value="medium" selected>3.000-10.000 kr.</option>
-                <option value="high">Over 10.000 kr.</option>
-              </select>
-            </label>
-            <label>
-              <span class="label-with-help">
-                Rumstørrelse
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="area-help">?</button>
-                  <span id="area-help" class="tooltip-content" role="tooltip">
-                    Du kan estimere m2 ved at gange rummets længde med bredde. Store rum, højt solindfald og åben planløsning trækker ofte mod fast anlæg.
-                  </span>
+  <Fragment slot="calculator">
+    <div class="surface calculator-panel">
+      <form class="calculator-form" data-calculator novalidate>
+        <div class="field-grid">
+          <label>
+            <span>Ejer eller lejer?</span>
+            <select name="housing">
+              <option value="tenant" selected>Lejer</option>
+              <option value="owner">Ejer</option>
+            </select>
+          </label>
+          <label>
+            <span>Budget</span>
+            <select name="budget">
+              <option value="low">Under 3.000 kr.</option>
+              <option value="medium" selected>3.000-10.000 kr.</option>
+              <option value="high">Over 10.000 kr.</option>
+            </select>
+          </label>
+          <label>
+            <span class="label-with-help">
+              Rumstørrelse
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="area-help">?</button>
+                <span id="area-help" class="tooltip-content" role="tooltip">
+                  Du kan estimere m2 ved at gange rummets længde med bredde. Store rum, højt solindfald og åben planløsning trækker ofte mod fast anlæg.
                 </span>
               </span>
-              <select name="area">
-                <option value="small">Lille rum, under 20 m2</option>
-                <option value="medium" selected>Mellemstort rum, 20-40 m2</option>
-                <option value="large">Stort rum, over 40 m2</option>
-              </select>
-            </label>
-            <label>
-              <span class="label-with-help">
-                Støjtolerance
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="noise-help">?</button>
-                  <span id="noise-help" class="tooltip-content" role="tooltip">
-                    Til soveværelse og hjemmekontor bør du være ekstra opmærksom på dB-tal. Mobile airconditionanlæg er ofte mere hørbare, fordi kompressoren står i rummet.
-                  </span>
+            </span>
+            <select name="area">
+              <option value="small">Lille rum, under 20 m2</option>
+              <option value="medium" selected>Mellemstort rum, 20-40 m2</option>
+              <option value="large">Stort rum, over 40 m2</option>
+            </select>
+          </label>
+          <label>
+            <span class="label-with-help">
+              Støjtolerance
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="noise-help">?</button>
+                <span id="noise-help" class="tooltip-content" role="tooltip">
+                  Til soveværelse og hjemmekontor bør du være ekstra opmærksom på dB-tal. Mobile airconditionanlæg er ofte mere hørbare, fordi kompressoren står i rummet.
                 </span>
               </span>
-              <select name="noise">
-                <option value="low">Lav, det skal være meget stille</option>
-                <option value="medium" selected>Middel, lidt støj er ok</option>
-                <option value="high">Høj, støj betyder mindre</option>
-              </select>
-            </label>
-            <label>
-              <span>Hvor ofte skal den bruges?</span>
-              <select name="usage">
-                <option value="occasional">Få varme dage om året</option>
-                <option value="seasonal" selected>Flere uger hver sommer</option>
-                <option value="frequent">Ofte, også til varme eller daglig komfort</option>
-              </select>
-            </label>
-            <label>
-              <span class="label-with-help">
-                Må der bores hul i væggen?
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="drilling-help">?</button>
-                  <span id="drilling-help" class="tooltip-content" role="tooltip">
-                    Split aircondition og luft til luft-varmepumpe kræver normalt fast installation med rørføring gennem ydervæg. I lejlighed kræver det ofte skriftlig tilladelse.
-                  </span>
+            </span>
+            <select name="noise">
+              <option value="low">Lav, det skal være meget stille</option>
+              <option value="medium" selected>Middel, lidt støj er ok</option>
+              <option value="high">Høj, støj betyder mindre</option>
+            </select>
+          </label>
+          <label>
+            <span>Hvor ofte skal den bruges?</span>
+            <select name="usage">
+              <option value="occasional">Få varme dage om året</option>
+              <option value="seasonal" selected>Flere uger hver sommer</option>
+              <option value="frequent">Ofte, også til varme eller daglig komfort</option>
+            </select>
+          </label>
+          <label>
+            <span class="label-with-help">
+              Må der bores hul i væggen?
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="drilling-help">?</button>
+                <span id="drilling-help" class="tooltip-content" role="tooltip">
+                  Split aircondition og luft til luft-varmepumpe kræver normalt fast installation med rørføring gennem ydervæg. I lejlighed kræver det ofte skriftlig tilladelse.
                 </span>
               </span>
-              <select name="drilling">
-                <option value="no" selected>Nej</option>
-                <option value="maybe">Måske, hvis jeg får tilladelse</option>
-                <option value="yes">Ja</option>
-              </select>
-            </label>
-            <label class="wide">
-              <span class="label-with-help">
-                Kan du placere en udedel udenfor vindue eller altan?
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="window-split-help">?</button>
-                  <span id="window-split-help" class="tooltip-content" role="tooltip">
-                    Mobile splitanlæg kan have en indedel i rummet og en mindre udedel udenfor vinduet eller på altanen. Vurder om vinduet kan stå på klem, om udedelen står sikkert, og om regler/støj tillader det.
-                  </span>
+            </span>
+            <select name="drilling">
+              <option value="no" selected>Nej</option>
+              <option value="maybe">Måske, hvis jeg får tilladelse</option>
+              <option value="yes">Ja</option>
+            </select>
+          </label>
+          <label class="wide">
+            <span class="label-with-help">
+              Kan du placere en udedel udenfor vindue eller altan?
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="window-split-help">?</button>
+                <span id="window-split-help" class="tooltip-content" role="tooltip">
+                  Mobile splitanlæg kan have en indedel i rummet og en mindre udedel udenfor vinduet eller på altanen. Vurder om vinduet kan stå på klem, om udedelen står sikkert, og om regler/støj tillader det.
                 </span>
               </span>
-              <select name="windowPlacement">
-                <option value="no">Nej</option>
-                <option value="maybe" selected>Måske, hvis placeringen kan gøres sikker</option>
-                <option value="yes">Ja, ved vindue eller altan</option>
-              </select>
-            </label>
-          </div>
-          <p class="form-hint">Vælgeren prioriterer praktiske begrænsninger først: boligform, installation, støj og hvor ofte løsningen skal bruges.</p>
-          <button class="button" type="submit">Vis anbefaling</button>
-        </form>
+            </span>
+            <select name="windowPlacement">
+              <option value="no">Nej</option>
+              <option value="maybe" selected>Måske, hvis placeringen kan gøres sikker</option>
+              <option value="yes">Ja, ved vindue eller altan</option>
+            </select>
+          </label>
+        </div>
+        <p class="form-hint">Vælgeren prioriterer praktiske begrænsninger først: boligform, installation, støj og hvor ofte løsningen skal bruges.</p>
+        <button class="button" type="submit">Vis anbefaling</button>
+      </form>
 
-        <aside class="result-card" aria-live="polite" data-result>
-          <div>
-            <span class="pill">Anbefaling</span>
-            <p class="result-kicker" data-fit-label>Bedste match</p>
-          </div>
-          <div class="result-main">
-            <strong data-main-result>Mobil aircondition</strong>
-            <p data-reason-result>Godt valg, når du lejer, har moderat budget og ikke må bore hul i væggen.</p>
-          </div>
-          <div class="result-details">
-            <p data-second-result>Alternativ: Affugter / ventilator</p>
-            <p data-warning-result>Husk aftræksslange ved mobil aircondition.</p>
-          </div>
-        </aside>
-      </div>
-
-      {showSidebarAd && (
-        <aside class="ad-column" aria-label="Annonce">
-          <GoogleAd slotId={sidebarAdSlot} className="sidebar-ad" />
-        </aside>
-      )}
-    </div>
-  </section>
-
-  {showWideAd && (
-    <aside class="container" aria-label="Annonce">
-      <GoogleAd slotId={wideAdSlot} className="wide-ad" />
-    </aside>
-  )}
-
-  <article class:list={['article-shell', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
-    {showLeftRailAd && (
-      <aside class="rail-ad left-rail" aria-label="Annonce">
-        <GoogleAd slotId={leftRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-
-    <div class="article-main">
-      <aside class="reading side-panel">
-        <div class="checklist">
-          <h2>Det afgør valget</h2>
-          <ul>
-            <li>Om du ejer eller lejer boligen</li>
-            <li>Om fast installation er tilladt</li>
-            <li>Om en midlertidig udedel kan stå ved vindue eller altan</li>
-            <li>Budget til køb og montering</li>
-            <li>Rumstørrelse og solindfald</li>
-            <li>Støjkrav i soveværelse eller kontor</li>
-            <li>Om løsningen også skal bruges til varme</li>
-          </ul>
+      <aside class="result-card" aria-live="polite" data-result>
+        <div>
+          <span class="pill">Anbefaling</span>
+          <p class="result-kicker" data-fit-label>Bedste match</p>
+        </div>
+        <div class="result-main">
+          <strong data-main-result>Mobil aircondition</strong>
+          <p data-reason-result>Godt valg, når du lejer, har moderat budget og ikke må bore hul i væggen.</p>
+        </div>
+        <div class="result-details">
+          <p data-second-result>Alternativ: Affugter / ventilator</p>
+          <p data-warning-result>Husk aftræksslange ved mobil aircondition.</p>
         </div>
       </aside>
-
-      <div class="reading article-body content-card">
-        <AnswerBox>
-          Hvis du ikke må bore eller ændre facaden, er mobil aircondition ofte det mest realistiske valg. Hvis du kan placere en midlertidig udedel udenfor vindue eller altan, kan mobil split aircondition være et bedre kompromis. Hvis du må installere fast anlæg, er fast split aircondition eller luft til luft-varmepumpe normalt mest støjsvag og effektiv.
-        </AnswerBox>
-
-        {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
-
-        <h2>Mobil aircondition eller split: hvad skal du vælge?</h2>
-        <p>
-          Valget mellem mobil aircondition eller split aircondition handler ikke kun om pris. Det handler især om installation, støj, effektivitet og om du bor til leje eller ejer boligen. En almindelig mobil aircondition kan flyttes og kræver typisk ikke fast montering, men den skal næsten altid have en slange ud gennem et vindue.
-        </p>
-        <p>
-          Der findes også mobile splitanlæg, hvor indedelen står i rummet, mens en mindre udedel placeres udenfor vinduet, på altanen eller et tilsvarende sikkert sted. Det kan reducere støjen i rummet sammenlignet med almindelig mobil aircondition, uden at du nødvendigvis skal bore hul i væggen.
-        </p>
-        <p>
-          Fast split aircondition er mere permanent. Kompressoren placeres udenfor, mens indedelen sidder i rummet. Derfor er løsningen ofte mere behagelig til soveværelse, stue og hjemmekontor, men den kræver tilladelse, korrekt montering og et højere budget.
-        </p>
-
-        <h2>Bedste aircondition til lejlighed</h2>
-        <p>
-          Den bedste aircondition til lejlighed er ofte den løsning, du faktisk må installere. Mange lejere kan ikke montere fast udedel på facade eller bore gennem ydervæg. Her er almindelig mobil aircondition typisk nemmest, især hvis du kun har brug for køling få uger om året.
-        </p>
-        <p>
-          En mobil split aircondition kan være relevant i en lejlighed, hvis du har vindue eller altan, hvor udedelen kan stå sikkert og uden at genere naboer. Du bør stadig tjekke husorden, udlejer, ejerforening og eventuelle støjkrav, fordi udedelen kan være synlig eller hørbar udenfor.
-        </p>
-        <p>
-          Hvis du ejer lejligheden, bør du stadig tjekke vedtægter, ejerforening og kommunale regler. Et fast splitanlæg eller en luft til luft-varmepumpe kan være bedre i drift, men kun hvis installationen er tilladt.
-        </p>
-
-        <h2>Aircondition uden slange</h2>
-        <p>
-          Mange søger efter aircondition uden slange, men en rigtig aircondition skal flytte varme ud af rummet. En almindelig mobil model bruger derfor normalt aftræksslange. Hvis et produkt ikke har slange, rørføring eller udedel, er det ofte en luftkøler eller ventilator, som kan føles rar, men ikke køler rummet på samme måde.
-        </p>
-        <p>
-          Mobile splitanlæg kan føles tættere på “aircondition uden slange”, fordi kompressordelen står udenfor, og der ikke nødvendigvis er en stor varm aftræksslange fra selve rummet. Men der er stadig en forbindelse mellem inde- og udedel, og vinduet skal typisk stå på klem.
-        </p>
-        <p>
-          Et fast splitanlæg har ikke en synlig aftræksslange gennem vinduet, men det er ikke slangeløst i teknisk forstand. Det har rørføring mellem inde- og udedel og skal installeres fast.
-        </p>
-
-        <h2 id="sammenligning">Sammenligning af løsninger</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Løsning</th>
-              <th>Passer bedst til</th>
-              <th>Vær opmærksom på</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Mobil aircondition</td>
-              <td>Lejere, lavere budget og kortere varmeperioder</td>
-              <td>Kræver aftræksslange og støjer ofte mere i rummet.</td>
-            </tr>
-            <tr>
-              <td>Mobil split aircondition</td>
-              <td>Lejere eller ejere uden boring, men med sikkert vindue eller altan til udedel</td>
-              <td>Vindue skal typisk stå på klem, udedel skal stå sikkert, og støj/regler bør tjekkes.</td>
-            </tr>
-            <tr>
-              <td>Fast split aircondition</td>
-              <td>Fast køling, lavere støj og bedre komfort</td>
-              <td>Kræver installation, udedel og tilladelse.</td>
-            </tr>
-            <tr>
-              <td>Luft til luft-varmepumpe</td>
-              <td>Køling om sommeren og opvarmning i overgangsperioder</td>
-              <td>Højere startpris, men ofte stærk driftøkonomi ved hyppig brug.</td>
-            </tr>
-            <tr>
-              <td>Affugter eller ventilator</td>
-              <td>Fugtig luft, lavt budget eller meget begrænset varmeproblem</td>
-              <td>Sænker ikke temperaturen som rigtig aircondition.</td>
-            </tr>
-          </tbody>
-        </table>
-
-        {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
-
-        <h2>Aircondition til soveværelse</h2>
-        <p>
-          Til soveværelse bør støj vægte højt. En almindelig mobil aircondition kan være effektiv, men mange modeller er tydeligt hørbare, fordi kompressoren står i rummet. Mobil split aircondition kan være et bedre kompromis, hvis udedelen kan placeres sikkert udenfor vinduet. Hvis du er lydfølsom og må installere fast anlæg, er fast split aircondition eller luft til luft-varmepumpe ofte et bedre valg.
-        </p>
-        <p>
-          Hvis du er usikker på størrelsen, kan du bruge vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a> eller vores <a href="/beregnere/btu-beregner-aircondition/">BTU beregner til aircondition</a>.
-        </p>
-
-        {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
-
-        <h2>Hvornår er luft til luft-varmepumpe bedre end split aircondition?</h2>
-        <p>
-          En luft til luft-varmepumpe minder i praksis om et splitanlæg, men er særligt relevant, hvis du også vil bruge den til opvarmning. Ved hyppig brug kan den være mere interessant end en ren køleløsning, fordi den kan give komfort både sommer og vinter.
-        </p>
-        <p>
-          Sammenlign også økonomien med vores <a href="/beregnere/hvad-koster-aircondition-i-stroem/">beregner til aircondition strømforbrug</a>, og se alternativer i vores <a href="/beregnere/affugter-eller-aircondition/">affugter eller aircondition-vælger</a>. Du kan også læse mere om <a href="/aircondition/">aircondition</a> og <a href="/varmepumper/">varmepumper</a>.
-        </p>
-
-        <FAQ items={faq} />
-      </div>
     </div>
+  </Fragment>
 
-    {showRightRailAd && (
-      <aside class="rail-ad right-rail" aria-label="Annonce">
-        <GoogleAd slotId={rightRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-  </article>
+  <Fragment slot="side-panel">
+    <div class="checklist">
+      <h2>Det afgør valget</h2>
+      <ul>
+        <li>Om du ejer eller lejer boligen</li>
+        <li>Om fast installation er tilladt</li>
+        <li>Om en midlertidig udedel kan stå ved vindue eller altan</li>
+        <li>Budget til køb og montering</li>
+        <li>Rumstørrelse og solindfald</li>
+        <li>Støjkrav i soveværelse eller kontor</li>
+        <li>Om løsningen også skal bruges til varme</li>
+      </ul>
+    </div>
+  </Fragment>
 
-  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
-  <JsonLd data={faqJsonLd(faq)} />
-  <JsonLd data={calculatorJsonLd} />
-</BaseLayout>
+  <Fragment slot="article-start">
+    <AnswerBox>
+      Hvis du ikke må bore eller ændre facaden, er mobil aircondition ofte det mest realistiske valg. Hvis du kan placere en midlertidig udedel udenfor vindue eller altan, kan mobil split aircondition være et bedre kompromis. Hvis du må installere fast anlæg, er fast split aircondition eller luft til luft-varmepumpe normalt mest støjsvag og effektiv.
+    </AnswerBox>
+  </Fragment>
 
+  <Fragment slot="article-main">
+    <h2>Mobil aircondition eller split: hvad skal du vælge?</h2>
+    <p>
+      Valget mellem mobil aircondition eller split aircondition handler ikke kun om pris. Det handler især om installation, støj, effektivitet og om du bor til leje eller ejer boligen. En almindelig mobil aircondition kan flyttes og kræver typisk ikke fast montering, men den skal næsten altid have en slange ud gennem et vindue.
+    </p>
+    <p>
+      Der findes også mobile splitanlæg, hvor indedelen står i rummet, mens en mindre udedel placeres udenfor vinduet, på altanen eller et tilsvarende sikkert sted. Det kan reducere støjen i rummet sammenlignet med almindelig mobil aircondition, uden at du nødvendigvis skal bore hul i væggen.
+    </p>
+    <p>
+      Fast split aircondition er mere permanent. Kompressoren placeres udenfor, mens indedelen sidder i rummet. Derfor er løsningen ofte mere behagelig til soveværelse, stue og hjemmekontor, men den kræver tilladelse, korrekt montering og et højere budget.
+    </p>
+
+    <h2>Bedste aircondition til lejlighed</h2>
+    <p>
+      Den bedste aircondition til lejlighed er ofte den løsning, du faktisk må installere. Mange lejere kan ikke montere fast udedel på facade eller bore gennem ydervæg. Her er almindelig mobil aircondition typisk nemmest, især hvis du kun har brug for køling få uger om året.
+    </p>
+    <p>
+      En mobil split aircondition kan være relevant i en lejlighed, hvis du har vindue eller altan, hvor udedelen kan stå sikkert og uden at genere naboer. Du bør stadig tjekke husorden, udlejer, ejerforening og eventuelle støjkrav, fordi udedelen kan være synlig eller hørbar udenfor.
+    </p>
+    <p>
+      Hvis du ejer lejligheden, bør du stadig tjekke vedtægter, ejerforening og kommunale regler. Et fast splitanlæg eller en luft til luft-varmepumpe kan være bedre i drift, men kun hvis installationen er tilladt.
+    </p>
+
+    <h2>Aircondition uden slange</h2>
+    <p>
+      Mange søger efter aircondition uden slange, men en rigtig aircondition skal flytte varme ud af rummet. En almindelig mobil model bruger derfor normalt aftræksslange. Hvis et produkt ikke har slange, rørføring eller udedel, er det ofte en luftkøler eller ventilator, som kan føles rar, men ikke køler rummet på samme måde.
+    </p>
+    <p>
+      Mobile splitanlæg kan føles tættere på “aircondition uden slange”, fordi kompressordelen står udenfor, og der ikke nødvendigvis er en stor varm aftræksslange fra selve rummet. Men der er stadig en forbindelse mellem inde- og udedel, og vinduet skal typisk stå på klem.
+    </p>
+    <p>
+      Et fast splitanlæg har ikke en synlig aftræksslange gennem vinduet, men det er ikke slangeløst i teknisk forstand. Det har rørføring mellem inde- og udedel og skal installeres fast.
+    </p>
+
+    <h2 id="sammenligning">Sammenligning af løsninger</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Løsning</th>
+          <th>Passer bedst til</th>
+          <th>Vær opmærksom på</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mobil aircondition</td>
+          <td>Lejere, lavere budget og kortere varmeperioder</td>
+          <td>Kræver aftræksslange og støjer ofte mere i rummet.</td>
+        </tr>
+        <tr>
+          <td>Mobil split aircondition</td>
+          <td>Lejere eller ejere uden boring, men med sikkert vindue eller altan til udedel</td>
+          <td>Vindue skal typisk stå på klem, udedel skal stå sikkert, og støj/regler bør tjekkes.</td>
+        </tr>
+        <tr>
+          <td>Fast split aircondition</td>
+          <td>Fast køling, lavere støj og bedre komfort</td>
+          <td>Kræver installation, udedel og tilladelse.</td>
+        </tr>
+        <tr>
+          <td>Luft til luft-varmepumpe</td>
+          <td>Køling om sommeren og opvarmning i overgangsperioder</td>
+          <td>Højere startpris, men ofte stærk driftøkonomi ved hyppig brug.</td>
+        </tr>
+        <tr>
+          <td>Affugter eller ventilator</td>
+          <td>Fugtig luft, lavt budget eller meget begrænset varmeproblem</td>
+          <td>Sænker ikke temperaturen som rigtig aircondition.</td>
+        </tr>
+      </tbody>
+    </table>
+  </Fragment>
+
+  <Fragment slot="article-late">
+    <h2>Aircondition til soveværelse</h2>
+    <p>
+      Til soveværelse bør støj vægte højt. En almindelig mobil aircondition kan være effektiv, men mange modeller er tydeligt hørbare, fordi kompressoren står i rummet. Mobil split aircondition kan være et bedre kompromis, hvis udedelen kan placeres sikkert udenfor vinduet. Hvis du er lydfølsom og må installere fast anlæg, er fast split aircondition eller luft til luft-varmepumpe ofte et bedre valg.
+    </p>
+    <p>
+      Hvis du er usikker på størrelsen, kan du bruge vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a> eller vores <a href="/beregnere/btu-beregner-aircondition/">BTU beregner til aircondition</a>.
+    </p>
+  </Fragment>
+
+  <Fragment slot="article-end">
+    <h2>Hvornår er luft til luft-varmepumpe bedre end split aircondition?</h2>
+    <p>
+      En luft til luft-varmepumpe minder i praksis om et splitanlæg, men er særligt relevant, hvis du også vil bruge den til opvarmning. Ved hyppig brug kan den være mere interessant end en ren køleløsning, fordi den kan give komfort både sommer og vinter.
+    </p>
+    <p>
+      Sammenlign også økonomien med vores <a href="/beregnere/hvad-koster-aircondition-i-stroem/">beregner til aircondition strømforbrug</a>, og se alternativer i vores <a href="/beregnere/affugter-eller-aircondition/">affugter eller aircondition-vælger</a>. Du kan også læse mere om <a href="/aircondition/">aircondition</a> og <a href="/varmepumper/">varmepumper</a>.
+    </p>
+
+    <FAQ items={faq} />
+  </Fragment>
+
+  <Fragment slot="structured-data">
+      <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+      <JsonLd data={faqJsonLd(faq)} />
+      <JsonLd data={calculatorJsonLd} />
+  </Fragment>
+
+</CalculatorLayout>
 <script>
   const form = document.querySelector('[data-calculator]');
   const result = document.querySelector('[data-result]');

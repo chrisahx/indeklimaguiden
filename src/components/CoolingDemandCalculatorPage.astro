@@ -1,10 +1,8 @@
 ---
 import AnswerBox from './AnswerBox.astro';
-import Breadcrumbs from './Breadcrumbs.astro';
 import FAQ from './FAQ.astro';
-import GoogleAd from './GoogleAd.astro';
 import JsonLd from './JsonLd.astro';
-import BaseLayout from '../layouts/BaseLayout.astro';
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
 import { absoluteUrl } from '../lib/seo';
 import { breadcrumbsJsonLd, faqJsonLd } from '../lib/structured-data';
 import type { CoolingDemandPage } from '../lib/cooling-demand-calculator';
@@ -14,20 +12,6 @@ interface Props {
 }
 
 const { page } = Astro.props;
-const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
-const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
-const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
-const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
-const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
-const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
-const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
-const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
-const showWideAd = import.meta.env.DEV || wideAdSlot;
-const showArticleAd = import.meta.env.DEV || articleAdSlot;
-const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
-const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
-const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
-const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
 const breadcrumbs = [
   { name: 'Forside', url: '/' },
   { name: 'Beregnere', url: '/beregnere/' },
@@ -52,33 +36,29 @@ const calculatorJsonLd = {
 };
 ---
 
-<BaseLayout title={page.title} description={page.description} path={page.path}>
-  <section class="calculator-hero">
-    <div class="container hero-copy">
-      <Breadcrumbs items={breadcrumbs} />
-      <span class="pill">{page.pill}</span>
-      <h1>{page.h1}</h1>
-      <p>{page.intro}</p>
-      <div class="hero-actions">
-        <a class="button" href="#beregner">Brug beregneren</a>
-        <a class="button secondary" href="#forklaring">Se beregningsmetode</a>
-      </div>
-      <aside class="surface quick-answer" aria-label="Kort svar">
-        <span class="pill">Kort svar</span>
-        <p>{page.quickAnswer}</p>
-      </aside>
-    </div>
-  </section>
+<CalculatorLayout
+  title={page.title}
+  description={page.description}
+  path={page.path}
+  breadcrumbs={breadcrumbs}
+  pill={page.pill}
+  h1={page.h1}
+  primaryAction={{ label: 'Brug beregneren', href: '#beregner' }}
+  secondaryAction={{ label: 'Se beregningsmetode', href: '#forklaring' }}
+  calculatorPill="Aircondition kW beregner"
+  calculatorHeading="Beregn kølebehov i kW og BTU/h"
+  calculatorDescription="Resultatet er et vejledende estimat. Den faktiske dimensionering afhænger også af placering, luftfordeling, installation og lokale forhold."
+>
+  <Fragment slot="hero-intro">
+    <p>{page.intro}</p>
+  </Fragment>
 
-  <section id="beregner" class="section container calculator-section" aria-labelledby="calculator-heading">
-    <div class="section-heading">
-      <span class="pill">Aircondition kW beregner</span>
-      <h2 id="calculator-heading">Beregn kølebehov i kW og BTU/h</h2>
-      <p>Resultatet er et vejledende estimat. Den faktiske dimensionering afhænger også af placering, luftfordeling, installation og lokale forhold.</p>
-    </div>
+  <Fragment slot="quick-answer">
+    <p>{page.quickAnswer}</p>
+  </Fragment>
 
-    <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
-      <div class="surface calculator-panel">
+  <Fragment slot="calculator">
+    <div class="surface calculator-panel">
         <form class="calculator-form" data-calculator novalidate>
           <div class="field-grid">
             <label>
@@ -184,44 +164,23 @@ const calculatorJsonLd = {
             <p data-driver-result>Største driver: rum og sol</p>
           </div>
         </aside>
-      </div>
-
-      {showSidebarAd && (
-        <aside class="ad-column" aria-label="Annonce">
-          <GoogleAd slotId={sidebarAdSlot} className="sidebar-ad" />
-        </aside>
-      )}
     </div>
-  </section>
+  </Fragment>
 
-  {showWideAd && (
-    <aside class="container" aria-label="Annonce">
-      <GoogleAd slotId={wideAdSlot} className="wide-ad" />
-    </aside>
-  )}
+  <Fragment slot="side-panel">
+    <div class="checklist">
+      <h2>Det påvirker kølebehovet</h2>
+      <ul>
+        {page.checklist.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </Fragment>
 
-  <article class:list={['article-shell', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
-    {showLeftRailAd && (
-      <aside class="rail-ad left-rail" aria-label="Annonce">
-        <GoogleAd slotId={leftRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-
-    <div class="article-main">
-      <aside class="reading side-panel">
-        <div class="checklist">
-          <h2>Det påvirker kølebehovet</h2>
-          <ul>
-            {page.checklist.map((item) => <li>{item}</li>)}
-          </ul>
-        </div>
-      </aside>
-
-      <div class="reading article-body content-card">
+  <Fragment slot="article-start">
         <AnswerBox>{page.answer}</AnswerBox>
+  </Fragment>
 
-        {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
-
+  <Fragment slot="article-main">
         <h2>{page.primaryHeading}</h2>
         {page.primaryCopy.map((paragraph) => <p>{paragraph}</p>)}
 
@@ -235,9 +194,9 @@ const calculatorJsonLd = {
 
         <h2>{page.exampleHeading}</h2>
         <p>{page.exampleCopy}</p>
+  </Fragment>
 
-        {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
-
+  <Fragment slot="article-late">
         <h2>{page.adviceHeading}</h2>
         {page.adviceCopy.map((paragraph) => <p>{paragraph}</p>)}
 
@@ -248,9 +207,9 @@ const calculatorJsonLd = {
             {currentRelatedRooms.map((room) => <a href={room.href}>{room.label}</a>)}
           </div>
         </div>
+  </Fragment>
 
-        {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
-
+  <Fragment slot="article-end">
         <h2>Hvornår bør du få hjælp til dimensionering?</h2>
         <p>
           Få en installatør eller fagperson til at vurdere løsningen, hvis rummet har meget store glaspartier, dårlig isolering, flere sammenhængende rum, kritisk drift, usædvanligt mange personer eller meget udstyr.
@@ -260,20 +219,14 @@ const calculatorJsonLd = {
         </p>
 
         <FAQ items={page.faq} />
-      </div>
-    </div>
+  </Fragment>
 
-    {showRightRailAd && (
-      <aside class="rail-ad right-rail" aria-label="Annonce">
-        <GoogleAd slotId={rightRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-  </article>
-
-  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
-  <JsonLd data={faqJsonLd(page.faq)} />
-  <JsonLd data={calculatorJsonLd} />
-</BaseLayout>
+  <Fragment slot="structured-data">
+    <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+    <JsonLd data={faqJsonLd(page.faq)} />
+    <JsonLd data={calculatorJsonLd} />
+  </Fragment>
+</CalculatorLayout>
 
 <script>
   const form = document.querySelector('[data-calculator]');

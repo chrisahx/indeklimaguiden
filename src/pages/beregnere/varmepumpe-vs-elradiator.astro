@@ -1,28 +1,12 @@
 ---
 import AnswerBox from '../../components/AnswerBox.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import FAQ from '../../components/FAQ.astro';
-import GoogleAd from '../../components/GoogleAd.astro';
 import JsonLd from '../../components/JsonLd.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import { absoluteUrl } from '../../lib/seo';
 import { breadcrumbsJsonLd, faqJsonLd } from '../../lib/structured-data';
 
 const path = '/beregnere/varmepumpe-vs-elradiator/';
-const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
-const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
-const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
-const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
-const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
-const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
-const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
-const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
-const showWideAd = import.meta.env.DEV || wideAdSlot;
-const showArticleAd = import.meta.env.DEV || articleAdSlot;
-const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
-const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
-const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
-const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
 const breadcrumbs = [
   { name: 'Forside', url: '/' },
   { name: 'Beregnere', url: '/beregnere/' },
@@ -74,248 +58,211 @@ const calculatorJsonLd = {
 };
 ---
 
-<BaseLayout
+<CalculatorLayout
   title="Varmepumpe vs elradiator beregner | Beregn besparelse"
   description="Beregn hvor meget billigere en luft til luft-varmepumpe kan være end elradiatorer. Se besparelse, strømreduktion og tilbagebetalingstid."
   path={path}
+  breadcrumbs={breadcrumbs}
+  pill="Varmepumpe vs elradiator beregner"
+  h1="Varmepumpe vs elradiator: beregn din besparelse"
+  primaryAction={{ label: 'Brug beregneren', href: '#beregner' }}
+  secondaryAction={{ label: 'Se beregningsmetode', href: '#forklaring' }}
+  calculatorPill="Elvarme til varmepumpe besparelse"
+  calculatorHeading="Beregn om varmepumpe er billigere end elradiator"
+  calculatorDescription="Resultatet er vejledende og forudsætter, at varmepumpen kan levere samme varmemængde som det angivne elforbrug. Få altid en installatør til at vurdere placering og dækning."
 >
-  <section class="calculator-hero">
-    <div class="container hero-copy">
-      <Breadcrumbs items={breadcrumbs} />
-      <span class="pill">Varmepumpe vs elradiator beregner</span>
-      <h1>Varmepumpe vs elradiator: beregn din besparelse</h1>
-      <p>
-        Indtast antal elradiatorer, årligt elforbrug til varme, elpris, forventet SCOP og pris på varmepumpe inkl. installation. Beregneren viser estimeret besparelse, tilbagebetalingstid og hvor meget strøm du kan reducere.
-      </p>
-      <div class="hero-actions">
-        <a class="button" href="#beregner">Brug beregneren</a>
-        <a class="button secondary" href="#forklaring">Se beregningsmetode</a>
-      </div>
-      <aside class="surface quick-answer" aria-label="Kort svar">
-        <span class="pill">Kort svar</span>
-        <p>
-          En luft til luft-varmepumpe er ofte markant billigere i drift end elradiatorer. Ved <strong>SCOP 4</strong> kan strømforbruget til samme varmebehov groft falde med omkring <strong>75%</strong>.
-        </p>
-      </aside>
-    </div>
-  </section>
+  <Fragment slot="hero-intro">
+    <p>
+      Indtast antal elradiatorer, årligt elforbrug til varme, elpris, forventet SCOP og pris på varmepumpe inkl. installation. Beregneren viser estimeret besparelse, tilbagebetalingstid og hvor meget strøm du kan reducere.
+    </p>
+  </Fragment>
 
-  <section id="beregner" class="section container calculator-section" aria-labelledby="calculator-heading">
-    <div class="section-heading">
-      <span class="pill">Elvarme til varmepumpe besparelse</span>
-      <h2 id="calculator-heading">Beregn om varmepumpe er billigere end elradiator</h2>
-      <p>Resultatet er vejledende og forudsætter, at varmepumpen kan levere samme varmemængde som det angivne elforbrug. Få altid en installatør til at vurdere placering og dækning.</p>
-    </div>
+  <Fragment slot="quick-answer">
+    <p>
+      En luft til luft-varmepumpe er ofte markant billigere i drift end elradiatorer. Ved <strong>SCOP 4</strong> kan strømforbruget til samme varmebehov groft falde med omkring <strong>75%</strong>.
+    </p>
+  </Fragment>
 
-    <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
-      <div class="surface calculator-panel">
-        <form class="calculator-form" data-calculator novalidate>
-          <div class="field-grid">
-            <label>
-              <span>Antal elradiatorer</span>
-              <input name="radiators" type="number" inputmode="numeric" min="1" max="40" step="1" value="6" required />
-            </label>
-            <label>
-              <span class="label-with-help">
-                Årligt elforbrug til varme i kWh
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="heat-usage-help">?</button>
-                  <span id="heat-usage-help" class="tooltip-content" role="tooltip">
-                    Find årsforbruget hos dit elselskab eller på eloverblik.dk. Hvis du kun kender samlet elforbrug, så fratræk typisk husholdningsforbrug før du indtaster varmeforbruget.
-                  </span>
+  <Fragment slot="calculator">
+    <div class="surface calculator-panel">
+      <form class="calculator-form" data-calculator novalidate>
+        <div class="field-grid">
+          <label>
+            <span>Antal elradiatorer</span>
+            <input name="radiators" type="number" inputmode="numeric" min="1" max="40" step="1" value="6" required />
+          </label>
+          <label>
+            <span class="label-with-help">
+              Årligt elforbrug til varme i kWh
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="heat-usage-help">?</button>
+                <span id="heat-usage-help" class="tooltip-content" role="tooltip">
+                  Find årsforbruget hos dit elselskab eller på eloverblik.dk. Hvis du kun kender samlet elforbrug, så fratræk typisk husholdningsforbrug før du indtaster varmeforbruget.
                 </span>
               </span>
-              <input name="annualHeatKwh" type="number" inputmode="decimal" min="500" max="80000" step="100" value="12000" required />
-            </label>
-            <label>
-              <span class="label-with-help">
-                Elpris pr. kWh
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="electricity-price-help">?</button>
-                  <span id="electricity-price-help" class="tooltip-content" role="tooltip">
-                    Brug din gennemsnitlige pris inkl. afgifter, transport og moms. Du kan ofte se gennemsnitspris på elregningen eller hos dit elselskab.
-                  </span>
+            </span>
+            <input name="annualHeatKwh" type="number" inputmode="decimal" min="500" max="80000" step="100" value="12000" required />
+          </label>
+          <label>
+            <span class="label-with-help">
+              Elpris pr. kWh
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="electricity-price-help">?</button>
+                <span id="electricity-price-help" class="tooltip-content" role="tooltip">
+                  Brug din gennemsnitlige pris inkl. afgifter, transport og moms. Du kan ofte se gennemsnitspris på elregningen eller hos dit elselskab.
                 </span>
               </span>
-              <input name="electricityPrice" type="number" inputmode="decimal" min="0.5" max="15" step="0.1" value="2.8" required />
-            </label>
-            <label>
-              <span class="label-with-help">
-                Forventet SCOP
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="scop-help">?</button>
-                  <span id="scop-help" class="tooltip-content" role="tooltip">
-                    SCOP står typisk i produktets datablad, energimærke eller tilbud fra installatøren. Kender du ikke tallet, kan 3,5-4,5 bruges som groft udgangspunkt for mange luft til luft-varmepumper.
-                  </span>
+            </span>
+            <input name="electricityPrice" type="number" inputmode="decimal" min="0.5" max="15" step="0.1" value="2.8" required />
+          </label>
+          <label>
+            <span class="label-with-help">
+              Forventet SCOP
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="scop-help">?</button>
+                <span id="scop-help" class="tooltip-content" role="tooltip">
+                  SCOP står typisk i produktets datablad, energimærke eller tilbud fra installatøren. Kender du ikke tallet, kan 3,5-4,5 bruges som groft udgangspunkt for mange luft til luft-varmepumper.
                 </span>
               </span>
-              <input name="scop" type="number" inputmode="decimal" min="1.5" max="7" step="0.1" value="4.0" required />
-            </label>
-            <label class="wide">
-              <span class="label-with-help">
-                Pris på varmepumpe inkl. installation
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="pump-price-help">?</button>
-                  <span id="pump-price-help" class="tooltip-content" role="tooltip">
-                    Brug den samlede pris fra tilbuddet inkl. indedel, udedel, standardmontering, materialer og moms. Ekstra elarbejde eller lang rørføring kan ændre prisen.
-                  </span>
+            </span>
+            <input name="scop" type="number" inputmode="decimal" min="1.5" max="7" step="0.1" value="4.0" required />
+          </label>
+          <label class="wide">
+            <span class="label-with-help">
+              Pris på varmepumpe inkl. installation
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="pump-price-help">?</button>
+                <span id="pump-price-help" class="tooltip-content" role="tooltip">
+                  Brug den samlede pris fra tilbuddet inkl. indedel, udedel, standardmontering, materialer og moms. Ekstra elarbejde eller lang rørføring kan ændre prisen.
                 </span>
               </span>
-              <input name="pumpPrice" type="number" inputmode="decimal" min="5000" max="150000" step="500" value="25000" required />
-            </label>
-          </div>
-          <p class="form-hint">Beregneren sammenligner direkte elvarme med varmepumpe. Elradiatorer regnes som 1 kWh strøm til cirka 1 kWh varme.</p>
-          <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for elradiatorer, varmeforbrug, elpris, SCOP og installationspris.</p>
-          <button class="button" type="submit">Beregn besparelse</button>
-        </form>
+            </span>
+            <input name="pumpPrice" type="number" inputmode="decimal" min="5000" max="150000" step="500" value="25000" required />
+          </label>
+        </div>
+        <p class="form-hint">Beregneren sammenligner direkte elvarme med varmepumpe. Elradiatorer regnes som 1 kWh strøm til cirka 1 kWh varme.</p>
+        <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for elradiatorer, varmeforbrug, elpris, SCOP og installationspris.</p>
+        <button class="button" type="submit">Beregn besparelse</button>
+      </form>
 
-        <aside class="result-card" aria-live="polite" data-result>
-          <div>
-            <span class="pill">Dit estimat</span>
-            <p class="result-kicker" data-radiator-result>6 elradiatorer</p>
-          </div>
-          <div class="result-main">
-            <strong data-saving-result>Ca. 25.200 kr./år</strong>
-            <p data-payback-result>Tilbagebetalingstid: ca. 1,0 år.</p>
-          </div>
-          <div class="result-details">
-            <p data-reduction-result>Årlig strømreduktion: ca. 9.000 kWh</p>
-            <p data-cheaper-result>Varmepumpe er ca. 75% billigere i drift.</p>
-          </div>
-        </aside>
-      </div>
-
-      {showSidebarAd && (
-        <aside class="ad-column" aria-label="Annonce">
-          <GoogleAd slotId={sidebarAdSlot} className="sidebar-ad" />
-        </aside>
-      )}
-    </div>
-  </section>
-
-  {showWideAd && (
-    <aside class="container" aria-label="Annonce">
-      <GoogleAd slotId={wideAdSlot} className="wide-ad" />
-    </aside>
-  )}
-
-  <article class:list={['article-shell', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
-    {showLeftRailAd && (
-      <aside class="rail-ad left-rail" aria-label="Annonce">
-        <GoogleAd slotId={leftRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-
-    <div class="article-main">
-      <aside class="reading side-panel">
-        <div class="checklist">
-          <h2>Det styrer besparelsen</h2>
-          <ul>
-            <li>Årligt elforbrug til varme</li>
-            <li>Din reelle elpris pr. kWh</li>
-            <li>Varmepumpens SCOP i praksis</li>
-            <li>Pris inkl. installation</li>
-            <li>Om varmepumpen kan dække alle rum</li>
-            <li>Placering af indedel og luftcirkulation</li>
-          </ul>
+      <aside class="result-card" aria-live="polite" data-result>
+        <div>
+          <span class="pill">Dit estimat</span>
+          <p class="result-kicker" data-radiator-result>6 elradiatorer</p>
+        </div>
+        <div class="result-main">
+          <strong data-saving-result>Ca. 25.200 kr./år</strong>
+          <p data-payback-result>Tilbagebetalingstid: ca. 1,0 år.</p>
+        </div>
+        <div class="result-details">
+          <p data-reduction-result>Årlig strømreduktion: ca. 9.000 kWh</p>
+          <p data-cheaper-result>Varmepumpe er ca. 75% billigere i drift.</p>
         </div>
       </aside>
-
-      <div class="reading article-body content-card">
-        <AnswerBox>
-          Varmepumpe er normalt billigere end elradiator, fordi direkte elvarme bruger cirka 1 kWh strøm pr. kWh varme, mens en luft til luft-varmepumpe ofte leverer flere kWh varme pr. kWh strøm. Den konkrete besparelse afhænger især af elforbrug, elpris, SCOP og installationspris.
-        </AnswerBox>
-
-        {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
-
-        <h2>Varmepumpe vs elradiator: hvad er billigst?</h2>
-        <p>
-          Når man sammenligner varmepumpe vs elradiator, er forskellen først og fremmest effektiviteten. En elradiator er direkte elvarme: 1 kWh strøm bliver omtrent til 1 kWh varme. En luft til luft-varmepumpe flytter varme ind i boligen og kan derfor levere flere kWh varme for hver kWh strøm.
-        </p>
-        <p>
-          Derfor kan søgninger som “spare penge varmepumpe elvarme”, “elvarme til varmepumpe besparelse” og “luft til luft varmepumpe besparelse” ofte handle om samme regnestykke: hvor meget af dit nuværende varmeforbrug kan en varmepumpe dække, og hvor effektivt gør den det over en hel fyringssæson?
-        </p>
-
-        <h2>Så meget billigere er varmepumpe end elradiator</h2>
-        <p>
-          Hvis dit varmebehov er 12.000 kWh om året, bruger elradiatorer cirka 12.000 kWh strøm. En varmepumpe med SCOP 4 bruger i samme simple regnestykke cirka 3.000 kWh strøm. Det giver en strømreduktion på 9.000 kWh, før man medregner installationspris og eventuelle rum, som stadig kræver supplerende elvarme.
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>SCOP</th>
-              <th>Strømforbrug ved 12.000 kWh varme</th>
-              <th>Reduktion mod elradiator</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>3,0</td>
-              <td>Ca. 4.000 kWh</td>
-              <td>Ca. 67%</td>
-            </tr>
-            <tr>
-              <td>4,0</td>
-              <td>Ca. 3.000 kWh</td>
-              <td>Ca. 75%</td>
-            </tr>
-            <tr>
-              <td>5,0</td>
-              <td>Ca. 2.400 kWh</td>
-              <td>Ca. 80%</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h2 id="forklaring">Sådan beregner vi besparelse og tilbagebetalingstid</h2>
-        <p>
-          Beregneren bruger dit årlige elforbrug til varme som varmebehov. Elradiatorer antages at levere cirka samme antal kWh varme som de bruger i strøm. Varmepumpens forventede strømforbrug beregnes ved at dividere varmebehovet med SCOP.
-        </p>
-        <p>
-          Årlig besparelse beregnes som forskellen mellem nuværende eludgift til elradiatorer og den estimerede eludgift til varmepumpen. Tilbagebetalingstid beregnes ved at dividere prisen på varmepumpen inkl. installation med den årlige besparelse.
-        </p>
-
-        {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
-
-        {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
-
-        <h2>Hvornår er besparelsen størst?</h2>
-        <p>
-          Besparelsen er typisk størst i boliger, sommerhuse og tilbygninger med højt elforbrug til opvarmning. Jo flere kWh du i dag bruger på elvarme, desto større bliver værdien af at reducere strømforbruget med en varmepumpe. Elprisen betyder også meget: en højere elpris gør hver sparet kWh mere værd.
-        </p>
-
-        <h2>Kan en luft til luft-varmepumpe erstatte elradiatorer?</h2>
-        <p>
-          En luft til luft-varmepumpe kan ofte dække en stor del af opvarmningen i åbne opholdsrum, men den erstatter ikke nødvendigvis alle elradiatorer i praksis. Lukkede værelser, badeværelser, lange gangforløb og dårlig luftcirkulation kan betyde, at nogle elradiatorer stadig bruges som supplement.
-        </p>
-        <p>
-          Derfor bør beregnerens resultat ses som et potentiale for “elvarme til varmepumpe besparelse”. Et konkret tilbud bør samtidig vurdere placering af indedel, støj, kapacitet, elinstallation og hvor stor del af boligen varmepumpen realistisk kan opvarme.
-        </p>
-
-        <h2>Energistyrelsens perspektiv på varmepumper</h2>
-        <p>
-          Luft til luft-varmepumper har et dokumenteret energisparepotentiale, og Energistyrelsens materiale peger på, at korrekt installation, placering og brug har stor betydning for den faktiske besparelse. Det er især relevant, når alternativet er direkte elvarme fra elradiatorer.
-        </p>
-        <p>
-          Læs også vores guides om <a href="/varmepumper/">varmepumper</a>, <a href="/varmepumper/luft-til-luft-varmepumpe-pris/">pris på luft til luft-varmepumpe</a>, <a href="/beregnere/kan-varmepumpe-betale-sig/">om en varmepumpe kan betale sig</a> og <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">hvor stor varmepumpe du skal bruge</a>.
-        </p>
-
-        <FAQ items={faq} />
-      </div>
     </div>
+  </Fragment>
 
-    {showRightRailAd && (
-      <aside class="rail-ad right-rail" aria-label="Annonce">
-        <GoogleAd slotId={rightRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-  </article>
+  <Fragment slot="side-panel">
+    <div class="checklist">
+      <h2>Det styrer besparelsen</h2>
+      <ul>
+        <li>Årligt elforbrug til varme</li>
+        <li>Din reelle elpris pr. kWh</li>
+        <li>Varmepumpens SCOP i praksis</li>
+        <li>Pris inkl. installation</li>
+        <li>Om varmepumpen kan dække alle rum</li>
+        <li>Placering af indedel og luftcirkulation</li>
+      </ul>
+    </div>
+  </Fragment>
 
-  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
-  <JsonLd data={faqJsonLd(faq)} />
-  <JsonLd data={calculatorJsonLd} />
-</BaseLayout>
+  <Fragment slot="article-start">
+    <AnswerBox>
+      Varmepumpe er normalt billigere end elradiator, fordi direkte elvarme bruger cirka 1 kWh strøm pr. kWh varme, mens en luft til luft-varmepumpe ofte leverer flere kWh varme pr. kWh strøm. Den konkrete besparelse afhænger især af elforbrug, elpris, SCOP og installationspris.
+    </AnswerBox>
+  </Fragment>
 
+  <Fragment slot="article-main">
+    <h2>Varmepumpe vs elradiator: hvad er billigst?</h2>
+    <p>
+      Når man sammenligner varmepumpe vs elradiator, er forskellen først og fremmest effektiviteten. En elradiator er direkte elvarme: 1 kWh strøm bliver omtrent til 1 kWh varme. En luft til luft-varmepumpe flytter varme ind i boligen og kan derfor levere flere kWh varme for hver kWh strøm.
+    </p>
+    <p>
+      Derfor kan søgninger som “spare penge varmepumpe elvarme”, “elvarme til varmepumpe besparelse” og “luft til luft varmepumpe besparelse” ofte handle om samme regnestykke: hvor meget af dit nuværende varmeforbrug kan en varmepumpe dække, og hvor effektivt gør den det over en hel fyringssæson?
+    </p>
+
+    <h2>Så meget billigere er varmepumpe end elradiator</h2>
+    <p>
+      Hvis dit varmebehov er 12.000 kWh om året, bruger elradiatorer cirka 12.000 kWh strøm. En varmepumpe med SCOP 4 bruger i samme simple regnestykke cirka 3.000 kWh strøm. Det giver en strømreduktion på 9.000 kWh, før man medregner installationspris og eventuelle rum, som stadig kræver supplerende elvarme.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>SCOP</th>
+          <th>Strømforbrug ved 12.000 kWh varme</th>
+          <th>Reduktion mod elradiator</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>3,0</td>
+          <td>Ca. 4.000 kWh</td>
+          <td>Ca. 67%</td>
+        </tr>
+        <tr>
+          <td>4,0</td>
+          <td>Ca. 3.000 kWh</td>
+          <td>Ca. 75%</td>
+        </tr>
+        <tr>
+          <td>5,0</td>
+          <td>Ca. 2.400 kWh</td>
+          <td>Ca. 80%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="forklaring">Sådan beregner vi besparelse og tilbagebetalingstid</h2>
+    <p>
+      Beregneren bruger dit årlige elforbrug til varme som varmebehov. Elradiatorer antages at levere cirka samme antal kWh varme som de bruger i strøm. Varmepumpens forventede strømforbrug beregnes ved at dividere varmebehovet med SCOP.
+    </p>
+    <p>
+      Årlig besparelse beregnes som forskellen mellem nuværende eludgift til elradiatorer og den estimerede eludgift til varmepumpen. Tilbagebetalingstid beregnes ved at dividere prisen på varmepumpen inkl. installation med den årlige besparelse.
+    </p>
+  </Fragment>
+
+  <Fragment slot="article-end">
+    <h2>Hvornår er besparelsen størst?</h2>
+    <p>
+      Besparelsen er typisk størst i boliger, sommerhuse og tilbygninger med højt elforbrug til opvarmning. Jo flere kWh du i dag bruger på elvarme, desto større bliver værdien af at reducere strømforbruget med en varmepumpe. Elprisen betyder også meget: en højere elpris gør hver sparet kWh mere værd.
+    </p>
+
+    <h2>Kan en luft til luft-varmepumpe erstatte elradiatorer?</h2>
+    <p>
+      En luft til luft-varmepumpe kan ofte dække en stor del af opvarmningen i åbne opholdsrum, men den erstatter ikke nødvendigvis alle elradiatorer i praksis. Lukkede værelser, badeværelser, lange gangforløb og dårlig luftcirkulation kan betyde, at nogle elradiatorer stadig bruges som supplement.
+    </p>
+    <p>
+      Derfor bør beregnerens resultat ses som et potentiale for “elvarme til varmepumpe besparelse”. Et konkret tilbud bør samtidig vurdere placering af indedel, støj, kapacitet, elinstallation og hvor stor del af boligen varmepumpen realistisk kan opvarme.
+    </p>
+
+    <h2>Energistyrelsens perspektiv på varmepumper</h2>
+    <p>
+      Luft til luft-varmepumper har et dokumenteret energisparepotentiale, og Energistyrelsens materiale peger på, at korrekt installation, placering og brug har stor betydning for den faktiske besparelse. Det er især relevant, når alternativet er direkte elvarme fra elradiatorer.
+    </p>
+    <p>
+      Læs også vores guides om <a href="/varmepumper/">varmepumper</a>, <a href="/varmepumper/luft-til-luft-varmepumpe-pris/">pris på luft til luft-varmepumpe</a>, <a href="/beregnere/kan-varmepumpe-betale-sig/">om en varmepumpe kan betale sig</a> og <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">hvor stor varmepumpe du skal bruge</a>.
+    </p>
+
+    <FAQ items={faq} />
+  </Fragment>
+
+  <Fragment slot="structured-data">
+      <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+      <JsonLd data={faqJsonLd(faq)} />
+      <JsonLd data={calculatorJsonLd} />
+  </Fragment>
+
+</CalculatorLayout>
 <script>
   const form = document.querySelector('[data-calculator]');
   const result = document.querySelector('[data-result]');

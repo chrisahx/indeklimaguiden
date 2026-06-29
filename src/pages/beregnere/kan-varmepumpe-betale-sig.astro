@@ -1,28 +1,12 @@
 ---
 import AnswerBox from '../../components/AnswerBox.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import FAQ from '../../components/FAQ.astro';
-import GoogleAd from '../../components/GoogleAd.astro';
 import JsonLd from '../../components/JsonLd.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import { absoluteUrl } from '../../lib/seo';
 import { breadcrumbsJsonLd, faqJsonLd } from '../../lib/structured-data';
 
 const path = '/beregnere/kan-varmepumpe-betale-sig/';
-const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
-const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
-const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
-const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
-const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
-const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
-const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
-const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
-const showWideAd = import.meta.env.DEV || wideAdSlot;
-const showArticleAd = import.meta.env.DEV || articleAdSlot;
-const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
-const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
-const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
-const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
 const breadcrumbs = [
   { name: 'Forside', url: '/' },
   { name: 'Beregnere', url: '/beregnere/' },
@@ -79,263 +63,226 @@ const calculatorJsonLd = {
 };
 ---
 
-<BaseLayout
+<CalculatorLayout
   title="Kan en varmepumpe betale sig? Beregn besparelse og tilbagebetalingstid"
   description="Beregn om en varmepumpe kan betale sig for dig. Indtast varmekilde, varmeregning, elpris, SCOP og pris inkl. montering, og se besparelse, CO2 og tilbagebetalingstid."
   path={path}
+  breadcrumbs={breadcrumbs}
+  pill="Varmepumpe besparelse beregner"
+  h1="Kan en varmepumpe betale sig?"
+  primaryAction={{ label: 'Brug beregneren', href: '#beregner' }}
+  secondaryAction={{ label: 'Se beregningsmetode', href: '#forklaring' }}
+  calculatorPill="Tilbagebetalingstid varmepumpe"
+  calculatorHeading="Beregn om en varmepumpe kan betale sig"
+  calculatorDescription="Resultatet er vejledende. Det erstatter ikke en konkret energiberegning, tilbud fra installatør eller vurdering af din boligs varmetab."
 >
-  <section class="calculator-hero">
-    <div class="container hero-copy">
-      <Breadcrumbs items={breadcrumbs} />
-      <span class="pill">Varmepumpe besparelse beregner</span>
-      <h1>Kan en varmepumpe betale sig?</h1>
-      <p>
-        Indtast din nuværende varmekilde, varmeregning, elpris, SCOP og pris inkl. montering, og få et praktisk estimat på årlig besparelse, tilbagebetalingstid og CO2-besparelse.
-      </p>
-      <div class="hero-actions">
-        <a class="button" href="#beregner">Brug beregneren</a>
-        <a class="button secondary" href="#forklaring">Se beregningsmetode</a>
-      </div>
-      <aside class="surface quick-answer" aria-label="Kort svar">
-        <span class="pill">Kort svar</span>
-        <p>
-          Ja, en varmepumpe kan ofte betale sig bedst, hvis du i dag bruger <strong>elvarme, olie eller gas</strong>. Besparelsen afhænger især af varmeregning, elpris, SCOP og installationspris.
-        </p>
-      </aside>
-    </div>
-  </section>
+  <Fragment slot="hero-intro">
+    <p>
+      Indtast din nuværende varmekilde, varmeregning, elpris, SCOP og pris inkl. montering, og få et praktisk estimat på årlig besparelse, tilbagebetalingstid og CO2-besparelse.
+    </p>
+  </Fragment>
 
-  <section id="beregner" class="section container calculator-section" aria-labelledby="calculator-heading">
-    <div class="section-heading">
-      <span class="pill">Tilbagebetalingstid varmepumpe</span>
-      <h2 id="calculator-heading">Beregn om en varmepumpe kan betale sig</h2>
-      <p>Resultatet er vejledende. Det erstatter ikke en konkret energiberegning, tilbud fra installatør eller vurdering af din boligs varmetab.</p>
-    </div>
+  <Fragment slot="quick-answer">
+    <p>
+      Ja, en varmepumpe kan ofte betale sig bedst, hvis du i dag bruger <strong>elvarme, olie eller gas</strong>. Besparelsen afhænger især af varmeregning, elpris, SCOP og installationspris.
+    </p>
+  </Fragment>
 
-    <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
-      <div class="surface calculator-panel">
-        <form class="calculator-form" data-calculator novalidate>
-          <div class="field-grid">
-            <label>
-              <span>Nuværende varmekilde</span>
-              <select name="source">
-                <option value="electric" selected>Elradiator / elvarme</option>
-                <option value="oil">Olie</option>
-                <option value="gas">Gas</option>
-                <option value="district">Fjernvarme</option>
-                <option value="wood">Brændeovn</option>
-              </select>
-            </label>
-            <label>
-              <span>Jeg kender min</span>
-              <select name="inputType">
-                <option value="bill" selected>Årlige varmeregning</option>
-                <option value="usage">Årlige varmeforbrug i kWh</option>
-              </select>
-            </label>
-            <label>
-              <span data-current-value-label>Årlig varmeregning i kr.</span>
-              <input name="currentValue" type="number" inputmode="decimal" min="1000" max="150000" step="100" value="22000" required />
-            </label>
-            <label>
-              <span>Boligstørrelse i m²</span>
-              <input name="area" type="number" inputmode="numeric" min="20" max="500" step="1" value="130" required />
-            </label>
-            <label>
-              <span>Varmepumpepris inkl. montering</span>
-              <input name="pumpPrice" type="number" inputmode="decimal" min="5000" max="250000" step="500" value="25000" required />
-            </label>
-            <label>
-              <span>Elpris pr. kWh</span>
-              <input name="electricityPrice" type="number" inputmode="decimal" min="0.5" max="15" step="0.1" value="2.8" required />
-            </label>
-            <label class="wide">
-              <span class="label-with-help">
-                SCOP
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="scop-help">?</button>
-                  <span id="scop-help" class="tooltip-content" role="tooltip">
-                    SCOP står typisk i produktets datablad, energimærke eller tilbud fra installatøren. Kender du ikke tallet, kan 3,5-4,5 bruges som groft udgangspunkt for mange luft til luft-varmepumper.
-                  </span>
+  <Fragment slot="calculator">
+    <div class="surface calculator-panel">
+      <form class="calculator-form" data-calculator novalidate>
+        <div class="field-grid">
+          <label>
+            <span>Nuværende varmekilde</span>
+            <select name="source">
+              <option value="electric" selected>Elradiator / elvarme</option>
+              <option value="oil">Olie</option>
+              <option value="gas">Gas</option>
+              <option value="district">Fjernvarme</option>
+              <option value="wood">Brændeovn</option>
+            </select>
+          </label>
+          <label>
+            <span>Jeg kender min</span>
+            <select name="inputType">
+              <option value="bill" selected>Årlige varmeregning</option>
+              <option value="usage">Årlige varmeforbrug i kWh</option>
+            </select>
+          </label>
+          <label>
+            <span data-current-value-label>Årlig varmeregning i kr.</span>
+            <input name="currentValue" type="number" inputmode="decimal" min="1000" max="150000" step="100" value="22000" required />
+          </label>
+          <label>
+            <span>Boligstørrelse i m²</span>
+            <input name="area" type="number" inputmode="numeric" min="20" max="500" step="1" value="130" required />
+          </label>
+          <label>
+            <span>Varmepumpepris inkl. montering</span>
+            <input name="pumpPrice" type="number" inputmode="decimal" min="5000" max="250000" step="500" value="25000" required />
+          </label>
+          <label>
+            <span>Elpris pr. kWh</span>
+            <input name="electricityPrice" type="number" inputmode="decimal" min="0.5" max="15" step="0.1" value="2.8" required />
+          </label>
+          <label class="wide">
+            <span class="label-with-help">
+              SCOP
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="scop-help">?</button>
+                <span id="scop-help" class="tooltip-content" role="tooltip">
+                  SCOP står typisk i produktets datablad, energimærke eller tilbud fra installatøren. Kender du ikke tallet, kan 3,5-4,5 bruges som groft udgangspunkt for mange luft til luft-varmepumper.
                 </span>
               </span>
-              <input name="scop" type="number" inputmode="decimal" min="1.5" max="7" step="0.1" value="4.0" required />
-            </label>
-          </div>
-          <p class="form-hint">SCOP er varmepumpens sæsoneffektivitet. En højere SCOP betyder normalt lavere strømforbrug til samme varmebehov.</p>
-          <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for varmeregning eller varmeforbrug, boligstørrelse, pris, elpris og SCOP.</p>
-          <button class="button" type="submit">Beregn besparelse</button>
-        </form>
+            </span>
+            <input name="scop" type="number" inputmode="decimal" min="1.5" max="7" step="0.1" value="4.0" required />
+          </label>
+        </div>
+        <p class="form-hint">SCOP er varmepumpens sæsoneffektivitet. En højere SCOP betyder normalt lavere strømforbrug til samme varmebehov.</p>
+        <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for varmeregning eller varmeforbrug, boligstørrelse, pris, elpris og SCOP.</p>
+        <button class="button" type="submit">Beregn besparelse</button>
+      </form>
 
-        <aside class="result-card" aria-live="polite" data-result>
-          <div>
-            <span class="pill">Dit estimat</span>
-            <p class="result-kicker" data-source-label>Elradiator / elvarme</p>
-          </div>
-          <div class="result-main">
-            <strong data-saving-result>Ca. 15.000 kr./år</strong>
-            <p data-payback-result>Tilbagebetalingstid: ca. 1,7 år.</p>
-          </div>
-          <div class="result-details">
-            <p data-co2-result>CO2-besparelse: ca. 460 kg/år</p>
-            <p data-verdict-result>Meget relevant ved el, olie og gas.</p>
-          </div>
-        </aside>
-      </div>
-
-      {showSidebarAd && (
-        <aside class="ad-column" aria-label="Annonce">
-          <GoogleAd slotId={sidebarAdSlot} className="sidebar-ad" />
-        </aside>
-      )}
-    </div>
-  </section>
-
-  {showWideAd && (
-    <aside class="container" aria-label="Annonce">
-      <GoogleAd slotId={wideAdSlot} className="wide-ad" />
-    </aside>
-  )}
-
-  <article class:list={['article-shell', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
-    {showLeftRailAd && (
-      <aside class="rail-ad left-rail" aria-label="Annonce">
-        <GoogleAd slotId={leftRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-
-    <div class="article-main">
-      <aside class="reading side-panel">
-        <div class="checklist">
-          <h2>Det påvirker økonomien</h2>
-          <ul>
-            <li>Nuværende varmekilde og varmeregning</li>
-            <li>Boligens varmebehov og isolering</li>
-            <li>Varmepumpens SCOP</li>
-            <li>Elpris og fremtidige energiafgifter</li>
-            <li>Pris inkl. montering</li>
-            <li>Om varmepumpen dækker hele eller dele af varmebehovet</li>
-          </ul>
+      <aside class="result-card" aria-live="polite" data-result>
+        <div>
+          <span class="pill">Dit estimat</span>
+          <p class="result-kicker" data-source-label>Elradiator / elvarme</p>
+        </div>
+        <div class="result-main">
+          <strong data-saving-result>Ca. 15.000 kr./år</strong>
+          <p data-payback-result>Tilbagebetalingstid: ca. 1,7 år.</p>
+        </div>
+        <div class="result-details">
+          <p data-co2-result>CO2-besparelse: ca. 460 kg/år</p>
+          <p data-verdict-result>Meget relevant ved el, olie og gas.</p>
         </div>
       </aside>
-
-      <div class="reading article-body content-card">
-        <AnswerBox>
-          En varmepumpe kan især betale sig, hvis du i dag bruger elradiatorer, olie eller gas. Den bedste økonomi opstår, når den årlige varmeregning er høj, varmepumpen har god SCOP, og installationsprisen står mål med den årlige besparelse.
-        </AnswerBox>
-
-        {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
-
-        <h2>Kan en varmepumpe betale sig?</h2>
-        <p>
-          Spørgsmålet “kan varmepumpe betale sig” afhænger først og fremmest af, hvad du varmer op med i dag. Direkte elvarme er ofte dyr i drift, og her kan en luft til luft-varmepumpe eller anden varmepumpeløsning give en tydelig besparelse. Olie og gas kan også give en stærk case, mens fjernvarme ofte kræver en mere konkret sammenligning.
-        </p>
-        <p>
-          Beregneren ovenfor bruger din nuværende varmeregning eller dit varmeforbrug til at estimere, hvor meget strøm en varmepumpe vil bruge med den SCOP, du angiver. Derefter sammenlignes den nye årlige strømudgift med din nuværende varmeudgift.
-        </p>
-
-        <h2>Hvornår er besparelsen størst?</h2>
-        <p>
-          Besparelsen er typisk størst i boliger med højt varmeforbrug og en dyr nuværende varmekilde. Derfor er varmepumper ofte mest interessante i huse, sommerhuse og tilbygninger med elvarme, olie eller gas. Boligstørrelse, isolering og brugsmønster betyder dog meget for det endelige resultat.
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>Nuværende varmekilde</th>
-              <th>Typisk potentiale</th>
-              <th>Kommentar</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Elradiator</td>
-              <td>Meget højt</td>
-              <td>Ofte den bedste økonomiske case, fordi direkte elvarme bruger 1 kWh strøm pr. kWh varme.</td>
-            </tr>
-            <tr>
-              <td>Olie</td>
-              <td>Højt</td>
-              <td>Afhænger af oliepris, varmebehov og om varmepumpen kan dække nok af forbruget.</td>
-            </tr>
-            <tr>
-              <td>Gas</td>
-              <td>Middel/højt</td>
-              <td>Kan være relevant ved høj gaspris eller ønske om lavere CO2-udledning.</td>
-            </tr>
-            <tr>
-              <td>Fjernvarme</td>
-              <td>Lavere</td>
-              <td>Kræver sammenligning med lokale tariffer, faste afgifter og fjernvarmepris.</td>
-            </tr>
-            <tr>
-              <td>Brændeovn</td>
-              <td>Varierer</td>
-              <td>Økonomien afhænger meget af brændepris, egen arbejdskraft og hvor meget brændeovnen dækker.</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h2>Skift fra elvarme til varmepumpe</h2>
-        <p>
-          Skift fra elvarme til varmepumpe giver ofte den letteste besparelse at forstå: Hvis boligen tidligere brugte direkte el til opvarmning, kan en varmepumpe med SCOP 4 i princippet levere omtrent fire gange så meget varme pr. kWh strøm. Derfor er “skift fra elvarme til varmepumpe besparelse” et af de vigtigste scenarier for denne beregner.
-        </p>
-
-        <h2>Skift fra olie eller gas til varmepumpe</h2>
-        <p>
-          Ved olie og gas afhænger regnestykket af brændselspris, kedlens effektivitet og varmebehov. Beregneren bruger generelle virkningsgrader til at anslå varmebehovet, men et konkret tilbud og en vurdering af huset er vigtig, især hvis varmepumpen skal være primær varmekilde.
-        </p>
-
-        <h2>Er varmepumpe en god idé ved fjernvarme?</h2>
-        <p>
-          Ved fjernvarme er svaret mere nuanceret. Nogle fjernvarmeområder har konkurrencedygtige priser, mens andre kan være dyrere. Husk også faste afgifter og regler for supplerende varmekilder. En varmepumpe kan stadig være relevant til komfort, køling eller supplerende varme, men tilbagebetalingstiden kan være længere.
-        </p>
-
-        <h2 id="forklaring">Sådan beregner vi tilbagebetalingstid</h2>
-        <p>
-          Beregneren estimerer først boligens årlige varmebehov. Hvis du indtaster årlig varmeregning, omregnes beløbet med en typisk pris og virkningsgrad for den valgte varmekilde. Hvis du indtaster årligt varmeforbrug i kWh, bruges tallet direkte som varmebehov.
-        </p>
-        <p>
-          Derefter beregnes varmepumpens årlige elforbrug ved at dividere varmebehovet med SCOP. Tilbagebetalingstid beregnes som varmepumpepris inkl. montering divideret med den årlige besparelse.
-        </p>
-
-        {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
-
-        {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
-
-        <h2>Hvad betyder SCOP for økonomien?</h2>
-        <p>
-          SCOP er et af de vigtigste tal i en varmepumpe besparelse beregner. En højere SCOP betyder, at varmepumpen bruger mindre strøm til at levere samme varme. En model med SCOP 4 bruger cirka 2.500 kWh strøm til at levere 10.000 kWh varme, mens en model med SCOP 3,2 bruger cirka 3.125 kWh.
-        </p>
-
-        <h2>CO2-besparelse ved varmepumpe</h2>
-        <p>
-          CO2-besparelsen afhænger af din nuværende varmekilde og elmixet. Beregneren bruger grove emissionsfaktorer for at vise retningen, men den præcise klimagevinst afhænger af energikilder, leverandør og faktisk drift.
-        </p>
-
-        <h2>Husk installation, boligtype og støtteordninger</h2>
-        <p>
-          Energistyrelsen fremhæver energibesparelser og støtteordninger som relevante for boligejere, men regler og puljer ændrer sig. Tjek derfor aktuelle muligheder, og få en installatør til at vurdere placering, dimensionering og forventet årsydelse.
-        </p>
-        <p>
-          Læs også vores guides om <a href="/varmepumper/">varmepumper</a>, <a href="/varmepumper/luft-til-luft-varmepumpe-pris/">pris på luft til luft-varmepumpe</a> og <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">hvor stor varmepumpe du skal bruge</a>.
-        </p>
-
-        <FAQ items={faq} />
-      </div>
     </div>
+  </Fragment>
 
-    {showRightRailAd && (
-      <aside class="rail-ad right-rail" aria-label="Annonce">
-        <GoogleAd slotId={rightRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-  </article>
+  <Fragment slot="side-panel">
+    <div class="checklist">
+      <h2>Det påvirker økonomien</h2>
+      <ul>
+        <li>Nuværende varmekilde og varmeregning</li>
+        <li>Boligens varmebehov og isolering</li>
+        <li>Varmepumpens SCOP</li>
+        <li>Elpris og fremtidige energiafgifter</li>
+        <li>Pris inkl. montering</li>
+        <li>Om varmepumpen dækker hele eller dele af varmebehovet</li>
+      </ul>
+    </div>
+  </Fragment>
 
-  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
-  <JsonLd data={faqJsonLd(faq)} />
-  <JsonLd data={calculatorJsonLd} />
-</BaseLayout>
+  <Fragment slot="article-start">
+    <AnswerBox>
+      En varmepumpe kan især betale sig, hvis du i dag bruger elradiatorer, olie eller gas. Den bedste økonomi opstår, når den årlige varmeregning er høj, varmepumpen har god SCOP, og installationsprisen står mål med den årlige besparelse.
+    </AnswerBox>
+  </Fragment>
 
+  <Fragment slot="article-main">
+    <h2>Kan en varmepumpe betale sig?</h2>
+    <p>
+      Spørgsmålet “kan varmepumpe betale sig” afhænger først og fremmest af, hvad du varmer op med i dag. Direkte elvarme er ofte dyr i drift, og her kan en luft til luft-varmepumpe eller anden varmepumpeløsning give en tydelig besparelse. Olie og gas kan også give en stærk case, mens fjernvarme ofte kræver en mere konkret sammenligning.
+    </p>
+    <p>
+      Beregneren ovenfor bruger din nuværende varmeregning eller dit varmeforbrug til at estimere, hvor meget strøm en varmepumpe vil bruge med den SCOP, du angiver. Derefter sammenlignes den nye årlige strømudgift med din nuværende varmeudgift.
+    </p>
+
+    <h2>Hvornår er besparelsen størst?</h2>
+    <p>
+      Besparelsen er typisk størst i boliger med højt varmeforbrug og en dyr nuværende varmekilde. Derfor er varmepumper ofte mest interessante i huse, sommerhuse og tilbygninger med elvarme, olie eller gas. Boligstørrelse, isolering og brugsmønster betyder dog meget for det endelige resultat.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Nuværende varmekilde</th>
+          <th>Typisk potentiale</th>
+          <th>Kommentar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Elradiator</td>
+          <td>Meget højt</td>
+          <td>Ofte den bedste økonomiske case, fordi direkte elvarme bruger 1 kWh strøm pr. kWh varme.</td>
+        </tr>
+        <tr>
+          <td>Olie</td>
+          <td>Højt</td>
+          <td>Afhænger af oliepris, varmebehov og om varmepumpen kan dække nok af forbruget.</td>
+        </tr>
+        <tr>
+          <td>Gas</td>
+          <td>Middel/højt</td>
+          <td>Kan være relevant ved høj gaspris eller ønske om lavere CO2-udledning.</td>
+        </tr>
+        <tr>
+          <td>Fjernvarme</td>
+          <td>Lavere</td>
+          <td>Kræver sammenligning med lokale tariffer, faste afgifter og fjernvarmepris.</td>
+        </tr>
+        <tr>
+          <td>Brændeovn</td>
+          <td>Varierer</td>
+          <td>Økonomien afhænger meget af brændepris, egen arbejdskraft og hvor meget brændeovnen dækker.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Skift fra elvarme til varmepumpe</h2>
+    <p>
+      Skift fra elvarme til varmepumpe giver ofte den letteste besparelse at forstå: Hvis boligen tidligere brugte direkte el til opvarmning, kan en varmepumpe med SCOP 4 i princippet levere omtrent fire gange så meget varme pr. kWh strøm. Derfor er “skift fra elvarme til varmepumpe besparelse” et af de vigtigste scenarier for denne beregner.
+    </p>
+
+    <h2>Skift fra olie eller gas til varmepumpe</h2>
+    <p>
+      Ved olie og gas afhænger regnestykket af brændselspris, kedlens effektivitet og varmebehov. Beregneren bruger generelle virkningsgrader til at anslå varmebehovet, men et konkret tilbud og en vurdering af huset er vigtig, især hvis varmepumpen skal være primær varmekilde.
+    </p>
+
+    <h2>Er varmepumpe en god idé ved fjernvarme?</h2>
+    <p>
+      Ved fjernvarme er svaret mere nuanceret. Nogle fjernvarmeområder har konkurrencedygtige priser, mens andre kan være dyrere. Husk også faste afgifter og regler for supplerende varmekilder. En varmepumpe kan stadig være relevant til komfort, køling eller supplerende varme, men tilbagebetalingstiden kan være længere.
+    </p>
+
+    <h2 id="forklaring">Sådan beregner vi tilbagebetalingstid</h2>
+    <p>
+      Beregneren estimerer først boligens årlige varmebehov. Hvis du indtaster årlig varmeregning, omregnes beløbet med en typisk pris og virkningsgrad for den valgte varmekilde. Hvis du indtaster årligt varmeforbrug i kWh, bruges tallet direkte som varmebehov.
+    </p>
+    <p>
+      Derefter beregnes varmepumpens årlige elforbrug ved at dividere varmebehovet med SCOP. Tilbagebetalingstid beregnes som varmepumpepris inkl. montering divideret med den årlige besparelse.
+    </p>
+  </Fragment>
+
+  <Fragment slot="article-end">
+    <h2>Hvad betyder SCOP for økonomien?</h2>
+    <p>
+      SCOP er et af de vigtigste tal i en varmepumpe besparelse beregner. En højere SCOP betyder, at varmepumpen bruger mindre strøm til at levere samme varme. En model med SCOP 4 bruger cirka 2.500 kWh strøm til at levere 10.000 kWh varme, mens en model med SCOP 3,2 bruger cirka 3.125 kWh.
+    </p>
+
+    <h2>CO2-besparelse ved varmepumpe</h2>
+    <p>
+      CO2-besparelsen afhænger af din nuværende varmekilde og elmixet. Beregneren bruger grove emissionsfaktorer for at vise retningen, men den præcise klimagevinst afhænger af energikilder, leverandør og faktisk drift.
+    </p>
+
+    <h2>Husk installation, boligtype og støtteordninger</h2>
+    <p>
+      Energistyrelsen fremhæver energibesparelser og støtteordninger som relevante for boligejere, men regler og puljer ændrer sig. Tjek derfor aktuelle muligheder, og få en installatør til at vurdere placering, dimensionering og forventet årsydelse.
+    </p>
+    <p>
+      Læs også vores guides om <a href="/varmepumper/">varmepumper</a>, <a href="/varmepumper/luft-til-luft-varmepumpe-pris/">pris på luft til luft-varmepumpe</a> og <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">hvor stor varmepumpe du skal bruge</a>.
+    </p>
+
+    <FAQ items={faq} />
+  </Fragment>
+
+  <Fragment slot="structured-data">
+      <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+      <JsonLd data={faqJsonLd(faq)} />
+      <JsonLd data={calculatorJsonLd} />
+  </Fragment>
+
+</CalculatorLayout>
 <script>
   const form = document.querySelector('[data-calculator]');
   const result = document.querySelector('[data-result]');

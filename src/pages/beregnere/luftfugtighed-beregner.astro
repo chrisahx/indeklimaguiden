@@ -1,28 +1,12 @@
 ---
 import AnswerBox from '../../components/AnswerBox.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import FAQ from '../../components/FAQ.astro';
-import GoogleAd from '../../components/GoogleAd.astro';
 import JsonLd from '../../components/JsonLd.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import { absoluteUrl } from '../../lib/seo';
 import { breadcrumbsJsonLd, faqJsonLd } from '../../lib/structured-data';
 
 const path = '/beregnere/luftfugtighed-beregner/';
-const sidebarAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_SIDEBAR;
-const wideAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_WIDE;
-const articleAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_ARTICLE;
-const mobileAdSlotOne = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_1;
-const mobileAdSlotTwo = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_MOBILE_2;
-const leftRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_LEFT_RAIL;
-const rightRailAdSlot = import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_RIGHT_RAIL;
-const showSidebarAd = import.meta.env.DEV || sidebarAdSlot;
-const showWideAd = import.meta.env.DEV || wideAdSlot;
-const showArticleAd = import.meta.env.DEV || articleAdSlot;
-const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
-const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
-const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
-const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
 const breadcrumbs = [
   { name: 'Forside', url: '/' },
   { name: 'Beregnere', url: '/beregnere/' },
@@ -74,233 +58,196 @@ const calculatorJsonLd = {
 };
 ---
 
-<BaseLayout
+<CalculatorLayout
   title="Luftfugtighed beregner: Test dit indeklima på 30 sekunder"
   description="Brug vores luftfugtighed beregner og indeklima-tjek. Indtast temperatur, relativ luftfugtighed, rumtype og symptomer, og se om luften er lav, normal eller høj."
   path={path}
+  breadcrumbs={breadcrumbs}
+  pill="Luftfugtighed beregner"
+  h1="Test dit indeklima på 30 sekunder"
+  primaryAction={{ label: 'Start indeklima-tjek', href: '#beregner' }}
+  secondaryAction={{ label: 'Se normal luftfugtighed', href: '#normal-luftfugtighed' }}
+  calculatorPill="Indeklima-tjek"
+  calculatorHeading="Beregn din luftfugtighed og risiko"
+  calculatorDescription="Resultatet er vejledende og bygger på typiske grænser for relativ luftfugtighed, rumtype og synlige symptomer."
 >
-  <section class="calculator-hero">
-    <div class="container hero-copy">
-      <Breadcrumbs items={breadcrumbs} />
-      <span class="pill">Luftfugtighed beregner</span>
-      <h1>Test dit indeklima på 30 sekunder</h1>
-      <p>
-        Indtast temperatur, relativ luftfugtighed og de symptomer du oplever. Beregneren vurderer, om luftfugtigheden er lav, normal eller høj, og hvad du bør gøre som næste skridt.
-      </p>
-      <div class="hero-actions">
-        <a class="button" href="#beregner">Start indeklima-tjek</a>
-        <a class="button secondary" href="#normal-luftfugtighed">Se normal luftfugtighed</a>
-      </div>
-      <aside class="surface quick-answer" aria-label="Kort svar">
-        <span class="pill">Kort svar</span>
-        <p>
-          Normal luftfugtighed indendørs er typisk <strong>40-60 %</strong>. Vedvarende fugt over 60 % kan give kondens og skimmelrisiko, mens meget lav fugt kan føles tør for hals, hud og øjne.
-        </p>
-      </aside>
-    </div>
-  </section>
+  <Fragment slot="hero-intro">
+    <p>
+      Indtast temperatur, relativ luftfugtighed og de symptomer du oplever. Beregneren vurderer, om luftfugtigheden er lav, normal eller høj, og hvad du bør gøre som næste skridt.
+    </p>
+  </Fragment>
 
-  <section id="beregner" class="section container calculator-section" aria-labelledby="calculator-heading">
-    <div class="section-heading">
-      <span class="pill">Indeklima-tjek</span>
-      <h2 id="calculator-heading">Beregn din luftfugtighed og risiko</h2>
-      <p>Resultatet er vejledende og bygger på typiske grænser for relativ luftfugtighed, rumtype og synlige symptomer.</p>
-    </div>
+  <Fragment slot="quick-answer">
+    <p>
+      Normal luftfugtighed indendørs er typisk <strong>40-60 %</strong>. Vedvarende fugt over 60 % kan give kondens og skimmelrisiko, mens meget lav fugt kan føles tør for hals, hud og øjne.
+    </p>
+  </Fragment>
 
-    <div class:list={['calculator-layout', showSidebarAd && 'has-sidebar-ad']}>
-      <div class="surface calculator-panel">
-        <form class="calculator-form" data-calculator novalidate>
-          <div class="field-grid">
-            <label>
-              <span>Temperatur i rummet</span>
-              <input name="temperature" type="number" inputmode="decimal" min="10" max="32" step="0.5" value="21" required />
-            </label>
-            <label>
-              <span class="label-with-help">
-                Relativ luftfugtighed i %
-                <span class="tooltip">
-                  <button type="button" class="tooltip-trigger" aria-describedby="humidity-help">?</button>
-                  <span id="humidity-help" class="tooltip-content" role="tooltip">
-                    Brug et hygrometer, en vejrstation eller en smart indeklimamåler. Du kan også se fugtigheden for dit område på <a href="https://dmi.dk" target="_blank" rel="noopener noreferrer">DMI</a>. Mål midt i rummet, væk fra radiator, sol og åbne vinduer.
-                  </span>
+  <Fragment slot="calculator">
+    <div class="surface calculator-panel">
+      <form class="calculator-form" data-calculator novalidate>
+        <div class="field-grid">
+          <label>
+            <span>Temperatur i rummet</span>
+            <input name="temperature" type="number" inputmode="decimal" min="10" max="32" step="0.5" value="21" required />
+          </label>
+          <label>
+            <span class="label-with-help">
+              Relativ luftfugtighed i %
+              <span class="tooltip">
+                <button type="button" class="tooltip-trigger" aria-describedby="humidity-help">?</button>
+                <span id="humidity-help" class="tooltip-content" role="tooltip">
+                  Brug et hygrometer, en vejrstation eller en smart indeklimamåler. Du kan også se fugtigheden for dit område på <a href="https://dmi.dk" target="_blank" rel="noopener noreferrer">DMI</a>. Mål midt i rummet, væk fra radiator, sol og åbne vinduer.
                 </span>
               </span>
-              <input name="humidity" type="number" inputmode="decimal" min="15" max="95" step="1" value="55" required />
-            </label>
-            <label class="wide">
-              <span>Rumtype</span>
-              <select name="room">
-                <option value="bedroom" selected>Soveværelse</option>
-                <option value="basement">Kælder</option>
-                <option value="living">Stue</option>
-                <option value="bathroom">Badeværelse</option>
-              </select>
-            </label>
-          </div>
-
-          <fieldset class="symptom-fieldset">
-            <legend>Hvilke symptomer oplever du?</legend>
-            <label class="checkbox-label"><input name="symptoms" type="checkbox" value="condensation" /> Dug på ruder</label>
-            <label class="checkbox-label"><input name="symptoms" type="checkbox" value="dryThroat" /> Tør hals eller tørre øjne</label>
-            <label class="checkbox-label"><input name="symptoms" type="checkbox" value="mold" /> Skimmel eller mørke pletter</label>
-            <label class="checkbox-label"><input name="symptoms" type="checkbox" value="heavyAir" /> Tung eller indelukket luft</label>
-          </fieldset>
-
-          <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for temperatur og relativ luftfugtighed.</p>
-          <button class="button" type="submit">Beregn indeklima</button>
-        </form>
-
-        <aside class="result-card" aria-live="polite" data-result>
-          <div>
-            <span class="pill">Dit resultat</span>
-            <p class="result-kicker" data-status-label>Normal luftfugtighed</p>
-          </div>
-          <div class="result-main">
-            <strong data-main-result>Normal</strong>
-            <p data-range-result>55 % relativ luftfugtighed ved 21 °C ligger typisk i komfortområdet.</p>
-          </div>
-          <p class="risk-summary" data-risk-result>Lav til moderat risiko for kondens, hvis niveauet ikke er konstant højt.</p>
-        </aside>
-
-        <div class="recommendation-card" data-recommendations>
-          <h3>Anbefalinger</h3>
-          <ul>
-            <li>Hold øje med om fugten bliver liggende over 60 % flere dage i træk.</li>
-            <li>Luft kort og effektivt ud, især morgen og aften.</li>
-          </ul>
+            </span>
+            <input name="humidity" type="number" inputmode="decimal" min="15" max="95" step="1" value="55" required />
+          </label>
+          <label class="wide">
+            <span>Rumtype</span>
+            <select name="room">
+              <option value="bedroom" selected>Soveværelse</option>
+              <option value="basement">Kælder</option>
+              <option value="living">Stue</option>
+              <option value="bathroom">Badeværelse</option>
+            </select>
+          </label>
         </div>
-      </div>
 
-      {showSidebarAd && (
-        <aside class="ad-column" aria-label="Annonce">
-          <GoogleAd slotId={sidebarAdSlot} className="sidebar-ad" />
-        </aside>
-      )}
-    </div>
-  </section>
+        <fieldset class="symptom-fieldset">
+          <legend>Hvilke symptomer oplever du?</legend>
+          <label class="checkbox-label"><input name="symptoms" type="checkbox" value="condensation" /> Dug på ruder</label>
+          <label class="checkbox-label"><input name="symptoms" type="checkbox" value="dryThroat" /> Tør hals eller tørre øjne</label>
+          <label class="checkbox-label"><input name="symptoms" type="checkbox" value="mold" /> Skimmel eller mørke pletter</label>
+          <label class="checkbox-label"><input name="symptoms" type="checkbox" value="heavyAir" /> Tung eller indelukket luft</label>
+        </fieldset>
 
-  {showWideAd && (
-    <aside class="container" aria-label="Annonce">
-      <GoogleAd slotId={wideAdSlot} className="wide-ad" />
-    </aside>
-  )}
+        <p class="form-error" data-error hidden>Udfyld venligst realistiske værdier for temperatur og relativ luftfugtighed.</p>
+        <button class="button" type="submit">Beregn indeklima</button>
+      </form>
 
-  <article class:list={['article-shell', (showLeftRailAd || showRightRailAd) && 'has-rail-ads']}>
-    {showLeftRailAd && (
-      <aside class="rail-ad left-rail" aria-label="Annonce">
-        <GoogleAd slotId={leftRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-
-    <div class="article-main">
-      <aside class="reading side-panel">
-        <div class="checklist">
-          <h2>Det vurderer beregneren</h2>
-          <ul>
-            <li>Temperatur og relativ luftfugtighed</li>
-            <li>Om fugtniveauet er lavt, normalt eller højt</li>
-            <li>Rumtype: soveværelse, kælder, stue eller badeværelse</li>
-            <li>Symptomer som dug, tør hals, skimmel og tung luft</li>
-            <li>Risiko for kondens og skimmel</li>
-            <li>Om ventilation, affugter, dry mode eller bedre udluftning bør overvejes</li>
-          </ul>
+      <aside class="result-card" aria-live="polite" data-result>
+        <div>
+          <span class="pill">Dit resultat</span>
+          <p class="result-kicker" data-status-label>Normal luftfugtighed</p>
         </div>
+        <div class="result-main">
+          <strong data-main-result>Normal</strong>
+          <p data-range-result>55 % relativ luftfugtighed ved 21 °C ligger typisk i komfortområdet.</p>
+        </div>
+        <p class="risk-summary" data-risk-result>Lav til moderat risiko for kondens, hvis niveauet ikke er konstant højt.</p>
       </aside>
 
-      <div class="reading article-body content-card">
-        <AnswerBox>
-          En luftfugtighed beregner kan hurtigt vise, om dit indeklima peger mod tør luft, normalt fugtniveau eller for høj fugt. Det vigtigste er ikke kun tallet på hygrometeret, men også rumtype og symptomer som dug på ruder, tung luft eller skimmel.
-        </AnswerBox>
-
-        {showMobileAdOne && <GoogleAd slotId={mobileAdSlotOne} className="calculator-mobile-ad" />}
-
-        <h2 id="normal-luftfugtighed">Hvad er normal luftfugtighed indendørs?</h2>
-        <p>
-          Normal luftfugtighed indendørs ligger for de fleste hjem omkring 40-60 % relativ luftfugtighed. Det er et praktisk komfortområde, hvor luften sjældent føles meget tør, og hvor risikoen for kondens normalt er lavere end ved vedvarende høj fugt.
-        </p>
-        <p>
-          Tallet skal dog læses sammen med temperaturen. 60 % ved 16 °C i en kølig kælder er mere kritisk end 60 % ved 22 °C i en varm stue, fordi kolde overflader øger risikoen for kondens.
-        </p>
-
-        <h2>For høj luftfugtighed i soveværelse, kælder og badeværelse</h2>
-        <p>
-          For høj luftfugtighed i soveværelse viser sig ofte som dug på ruder om morgenen, tung luft eller mørke pletter ved kolde hjørner. I kældre er risikoen højere, fordi vægge og gulve ofte er køligere, og fordi fugt kan komme både indefra og udefra.
-        </p>
-        <p>
-          Badeværelser får naturligt fugtspidser efter bad. Det afgørende er, om fugten hurtigt falder igen. Hvis rummet forbliver fugtigt længe efter bad, bør udsugning, opvarmning og udluftningsvaner gennemgås.
-        </p>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Luftfugtighed</th>
-              <th>Typisk vurdering</th>
-              <th>Mulig handling</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Under 35 %</td>
-              <td>Lav luftfugtighed</td>
-              <td>Undgå overopvarmning, reducer støv og vurder ventilation.</td>
-            </tr>
-            <tr>
-              <td>40-60 %</td>
-              <td>Normal luftfugtighed</td>
-              <td>Fortsæt med jævn varme og korte, effektive udluftninger.</td>
-            </tr>
-            <tr>
-              <td>Over 60 %</td>
-              <td>Høj luftfugtighed</td>
-              <td>Øg ventilation, fjern fugtkilder og overvej affugtning ved vedvarende problem.</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h2>Dårligt indeklima test: hvad betyder symptomerne?</h2>
-        <p>
-          Et dårligt indeklima kan skyldes både fugt, manglende ventilation, støv, temperatur og luftbevægelse. Dug på ruder peger ofte mod fugt og kolde overflader. Tør hals kan pege mod lav luftfugtighed, støv eller for høj temperatur. Tung luft handler ofte om utilstrækkelig udluftning.
-        </p>
-        <p>
-          Hvis du ser skimmel, bør du ikke nøjes med at justere ventilationen. Find fugtkilden, rengør korrekt, og få hjælp ved større eller tilbagevendende områder.
-        </p>
-
-        <h2>Ventilation, affugter, dry mode eller varmepumpe?</h2>
-        <p>
-          Den rigtige løsning afhænger af årsagen. Ved almindelig fugt fra mennesker, bad og madlavning er bedre udluftning og udsugning ofte første skridt. Ved kælderfugt eller vedvarende høj fugt kan en affugter være mere relevant; se også vores <a href="/guides/indeklima/">guides til indeklima</a>.
-        </p>
-        <p>
-          En <a href="/aircondition/">aircondition</a> eller <a href="/varmepumper/">luft til luft-varmepumpe</a> med dry mode kan hjælpe med at sænke fugtniveauet i perioder, men den løser ikke nødvendigvis årsagen til fugten. Hvis du også undersøger køling eller opvarmning, kan du bruge vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a>.
-        </p>
-
-        {showMobileAdTwo && <GoogleAd slotId={mobileAdSlotTwo} className="calculator-mobile-ad" />}
-
-        {showArticleAd && <GoogleAd slotId={articleAdSlot} className="article-ad" />}
-
-        <h2>Sådan bruger du beregneren korrekt</h2>
-        <p>
-          Mål luftfugtigheden med et hygrometer placeret væk fra direkte sol, radiatorer og åbne vinduer. Tag gerne flere målinger morgen og aften, fordi luftfugtigheden skifter med aktivitet, temperatur og vejret udenfor.
-        </p>
-        <p>
-          Beregneren er bedst som et hurtigt indeklima-tjek. Ved skjult fugt, synlig skimmel, vandskade eller mistanke om problemer i konstruktionen bør du få en konkret vurdering.
-        </p>
-
-        <FAQ items={faq} />
+      <div class="recommendation-card" data-recommendations>
+        <h3>Anbefalinger</h3>
+        <ul>
+          <li>Hold øje med om fugten bliver liggende over 60 % flere dage i træk.</li>
+          <li>Luft kort og effektivt ud, især morgen og aften.</li>
+        </ul>
       </div>
     </div>
+  </Fragment>
 
-    {showRightRailAd && (
-      <aside class="rail-ad right-rail" aria-label="Annonce">
-        <GoogleAd slotId={rightRailAdSlot} className="rail-ad-unit" />
-      </aside>
-    )}
-  </article>
+  <Fragment slot="side-panel">
+    <div class="checklist">
+      <h2>Det vurderer beregneren</h2>
+      <ul>
+        <li>Temperatur og relativ luftfugtighed</li>
+        <li>Om fugtniveauet er lavt, normalt eller højt</li>
+        <li>Rumtype: soveværelse, kælder, stue eller badeværelse</li>
+        <li>Symptomer som dug, tør hals, skimmel og tung luft</li>
+        <li>Risiko for kondens og skimmel</li>
+        <li>Om ventilation, affugter, dry mode eller bedre udluftning bør overvejes</li>
+      </ul>
+    </div>
+  </Fragment>
 
-  <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
-  <JsonLd data={faqJsonLd(faq)} />
-  <JsonLd data={calculatorJsonLd} />
-</BaseLayout>
+  <Fragment slot="article-start">
+    <AnswerBox>
+      En luftfugtighed beregner kan hurtigt vise, om dit indeklima peger mod tør luft, normalt fugtniveau eller for høj fugt. Det vigtigste er ikke kun tallet på hygrometeret, men også rumtype og symptomer som dug på ruder, tung luft eller skimmel.
+    </AnswerBox>
+  </Fragment>
 
+  <Fragment slot="article-main">
+    <h2 id="normal-luftfugtighed">Hvad er normal luftfugtighed indendørs?</h2>
+    <p>
+      Normal luftfugtighed indendørs ligger for de fleste hjem omkring 40-60 % relativ luftfugtighed. Det er et praktisk komfortområde, hvor luften sjældent føles meget tør, og hvor risikoen for kondens normalt er lavere end ved vedvarende høj fugt.
+    </p>
+    <p>
+      Tallet skal dog læses sammen med temperaturen. 60 % ved 16 °C i en kølig kælder er mere kritisk end 60 % ved 22 °C i en varm stue, fordi kolde overflader øger risikoen for kondens.
+    </p>
+
+    <h2>For høj luftfugtighed i soveværelse, kælder og badeværelse</h2>
+    <p>
+      For høj luftfugtighed i soveværelse viser sig ofte som dug på ruder om morgenen, tung luft eller mørke pletter ved kolde hjørner. I kældre er risikoen højere, fordi vægge og gulve ofte er køligere, og fordi fugt kan komme både indefra og udefra.
+    </p>
+    <p>
+      Badeværelser får naturligt fugtspidser efter bad. Det afgørende er, om fugten hurtigt falder igen. Hvis rummet forbliver fugtigt længe efter bad, bør udsugning, opvarmning og udluftningsvaner gennemgås.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Luftfugtighed</th>
+          <th>Typisk vurdering</th>
+          <th>Mulig handling</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Under 35 %</td>
+          <td>Lav luftfugtighed</td>
+          <td>Undgå overopvarmning, reducer støv og vurder ventilation.</td>
+        </tr>
+        <tr>
+          <td>40-60 %</td>
+          <td>Normal luftfugtighed</td>
+          <td>Fortsæt med jævn varme og korte, effektive udluftninger.</td>
+        </tr>
+        <tr>
+          <td>Over 60 %</td>
+          <td>Høj luftfugtighed</td>
+          <td>Øg ventilation, fjern fugtkilder og overvej affugtning ved vedvarende problem.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Dårligt indeklima test: hvad betyder symptomerne?</h2>
+    <p>
+      Et dårligt indeklima kan skyldes både fugt, manglende ventilation, støv, temperatur og luftbevægelse. Dug på ruder peger ofte mod fugt og kolde overflader. Tør hals kan pege mod lav luftfugtighed, støv eller for høj temperatur. Tung luft handler ofte om utilstrækkelig udluftning.
+    </p>
+    <p>
+      Hvis du ser skimmel, bør du ikke nøjes med at justere ventilationen. Find fugtkilden, rengør korrekt, og få hjælp ved større eller tilbagevendende områder.
+    </p>
+
+    <h2>Ventilation, affugter, dry mode eller varmepumpe?</h2>
+    <p>
+      Den rigtige løsning afhænger af årsagen. Ved almindelig fugt fra mennesker, bad og madlavning er bedre udluftning og udsugning ofte første skridt. Ved kælderfugt eller vedvarende høj fugt kan en affugter være mere relevant; se også vores <a href="/guides/indeklima/">guides til indeklima</a>.
+    </p>
+    <p>
+      En <a href="/aircondition/">aircondition</a> eller <a href="/varmepumper/">luft til luft-varmepumpe</a> med dry mode kan hjælpe med at sænke fugtniveauet i perioder, men den løser ikke nødvendigvis årsagen til fugten. Hvis du også undersøger køling eller opvarmning, kan du bruge vores <a href="/beregnere/aircondition-varmepumpe-stoerrelse/">beregner til aircondition og varmepumpe størrelse</a>.
+    </p>
+  </Fragment>
+
+  <Fragment slot="article-end">
+    <h2>Sådan bruger du beregneren korrekt</h2>
+    <p>
+      Mål luftfugtigheden med et hygrometer placeret væk fra direkte sol, radiatorer og åbne vinduer. Tag gerne flere målinger morgen og aften, fordi luftfugtigheden skifter med aktivitet, temperatur og vejret udenfor.
+    </p>
+    <p>
+      Beregneren er bedst som et hurtigt indeklima-tjek. Ved skjult fugt, synlig skimmel, vandskade eller mistanke om problemer i konstruktionen bør du få en konkret vurdering.
+    </p>
+
+    <FAQ items={faq} />
+  </Fragment>
+
+  <Fragment slot="structured-data">
+      <JsonLd data={breadcrumbsJsonLd(breadcrumbs)} />
+      <JsonLd data={faqJsonLd(faq)} />
+      <JsonLd data={calculatorJsonLd} />
+  </Fragment>
+
+</CalculatorLayout>
 <script>
   const form = document.querySelector('[data-calculator]');
   const result = document.querySelector('[data-result]');
