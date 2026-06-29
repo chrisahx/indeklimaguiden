@@ -6,13 +6,15 @@ interface Props {
   fullWidthResponsive?: boolean;
 }
 
+import { ADSENSE_CLIENT } from '../lib/adsense';
+
 const {
   slotId,
   className = '',
   format = 'auto',
   fullWidthResponsive = true,
 } = Astro.props;
-const client = import.meta.env.PUBLIC_GOOGLE_ADSENSE_CLIENT;
+const client = ADSENSE_CLIENT;
 const shouldRenderAd = Boolean(client && slotId);
 const shouldRenderPlaceholder = import.meta.env.DEV && !shouldRenderAd;
 ---

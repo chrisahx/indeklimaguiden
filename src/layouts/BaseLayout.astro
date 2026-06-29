@@ -3,6 +3,7 @@ import CookieConsent from "../components/CookieConsent.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import JsonLd from "../components/JsonLd.astro";
+import { ADSENSE_CLIENT } from "../lib/adsense";
 import { SITE } from "../lib/constants";
 import { absoluteUrl, titleWithBrand, type SeoProps } from "../lib/seo";
 import { organizationJsonLd, websiteJsonLd } from "../lib/structured-data";
@@ -22,7 +23,7 @@ const {
 const pageTitle = titleWithBrand(title);
 const canonical = absoluteUrl(path);
 const imageUrl = absoluteUrl(image);
-const adsenseClient = import.meta.env.PUBLIC_GOOGLE_ADSENSE_CLIENT;
+const adsenseClient = ADSENSE_CLIENT;
 ---
 
 <!doctype html>

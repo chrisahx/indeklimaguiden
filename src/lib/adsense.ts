@@ -1,0 +1,1 @@
+export const ADSENSE_CLIENT = import.meta.env.PUBLIC_GOOGLE_ADSENSE_CLIENT || "ca-pub-7017228270866952";
