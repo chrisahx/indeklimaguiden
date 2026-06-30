@@ -23,6 +23,84 @@ astro dev --background
 
 Manage it with `astro dev status`, `astro dev logs`, and `astro dev stop`.
 
+## Google Maps Scraper CLI
+
+The repository includes an unofficial Playwright-based Google Maps scraper in `scripts/google_maps_scraper/`.
+It exports visible Google Maps business data to CSV. It does not visit company websites and does not scrape emails.
+
+### Setup
+
+Create and activate a Python virtual environment from the project root:
+
+```sh
+python -m venv .venv-google-maps-scraper
+source .venv-google-maps-scraper/bin/activate
+```
+
+If you use `fish`, activate it with:
+
+```fish
+source .venv-google-maps-scraper/bin/activate.fish
+```
+
+Install dependencies and the Playwright browser:
+
+```sh
+pip install -r scripts/google_maps_scraper/requirements.txt
+python -m playwright install chromium
+```
+
+### Required Parameters
+
+| Parameter | Description |
+| :-- | :-- |
+| `--category` | Business category or search query, for example `Aircondition Forhandler` |
+| `--country` | Country to scrape, for example `Denmark` |
+| `--output` | CSV output path |
+
+Minimal command:
+
+```sh
+python -m scripts.google_maps_scraper.cli \
+  --category "Aircondition Forhandler" \
+  --country "Denmark" \
+  --output scripts/google_maps_scraper/output/aircondition_denmark.csv
+```
+
+### Recommended Test Run
+
+Start with a small visible browser run before scraping more broadly:
+
+```sh
+python -m scripts.google_maps_scraper.cli \
+  --category "Aircondition Forhandler" \
+  --country "Denmark" \
+  --city "Copenhagen" \
+  --max-results 10 \
+  --max-per-query 10 \
+  --headed \
+  --output scripts/google_maps_scraper/output/test.csv
+```
+
+### Common Options
+
+| Option | Description |
+| :-- | :-- |
+| `--city "Copenhagen"` | Scrape one city only |
+| `--max-results 100` | Stop after writing this many CSV rows |
+| `--max-per-query 50` | Limit listings collected per city/query |
+| `--headed` | Show Chromium while scraping |
+| `--headless` | Run Chromium in the background |
+| `--country-strategy city-list` | Use known cities for broader country coverage; default |
+| `--country-strategy single-query` | Use one national Google Maps query |
+| `--language en` | Google Maps UI language |
+| `--delay-min 1 --delay-max 3` | Random delay range between business profile visits |
+| `--verbose` | Enable debug logging |
+
+For Denmark, the default `city-list` strategy searches major cities and deduplicates businesses in the CSV. This usually gives better national coverage than a single query like `Aircondition Forhandler Denmark`.
+
+Unofficial Google Maps scraping can trigger captchas, throttling, or blocking. Use small limits first, keep delays conservative, and run with `--headed` when debugging.
+
 ## Project Structure
 
 ```text
