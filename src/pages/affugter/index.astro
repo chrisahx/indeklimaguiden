@@ -1,0 +1,53 @@
+---
+import ArticleCard from '../../components/ArticleCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getArticlesByCategoryAndType } from '../../lib/articles';
+import { CATEGORIES } from '../../lib/constants';
+
+const category = CATEGORIES.affugter;
+const guides = await getArticlesByCategoryAndType('affugter', 'guide');
+const anmeldelser = await getArticlesByCategoryAndType('affugter', 'anmeldelse');
+const topics = ['Affugter til kælder', 'Fugt efter bad og tørring', 'Luftfugtighed og skimmel', 'Strømforbrug og kapacitet'];
+---
+
+<BaseLayout title="Affugter" description={category.description} path="/affugter/">
+  <section class="section container page-head">
+    <div>
+      <span class="pill">Affugter guides</span>
+      <h1>Affugtere til fugt, kælder og bedre indeklima</h1>
+      <p>{category.description}</p>
+      <p>Få hjælp til at vælge affugter, forstå kapacitet, placering, strømforbrug og hvornår fugt kræver mere end almindelig udluftning.</p>
+    </div>
+    <div class="topic-panel surface">
+      <h2>Populære spørgsmål</h2>
+      {topics.map((topic) => <span>{topic}</span>)}
+    </div>
+  </section>
+  <section class="container article-list">
+    <div class="section-heading">
+      <span class="pill">Guides</span>
+      <h2>Guides om fugt, kapacitet og brug</h2>
+    </div>
+    {guides.length > 0 ? <div class="grid">{guides.map((article) => <ArticleCard article={article} />)}</div> : <p>Der er endnu ingen publicerede guides i denne kategori.</p>}
+  </section>
+  <section class="container article-list compact">
+    <div class="section-heading">
+      <span class="pill">Anmeldelser</span>
+      <h2>Anmeldelser af affugtere</h2>
+    </div>
+    {anmeldelser.length > 0 ? <div class="grid">{anmeldelser.map((article) => <ArticleCard article={article} />)}</div> : <p>Der er endnu ingen publicerede anmeldelser i denne kategori.</p>}
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.65fr); gap: 2rem; align-items: end; }
+  .page-head p { max-width: 780px; color: var(--color-muted); font-size: 1.16rem; }
+  .topic-panel { padding: 1.25rem; }
+  .topic-panel h2 { margin: 0 0 1rem; font-size: 1.25rem; }
+  .topic-panel span { display: block; border-top: 1px solid var(--color-border); padding: 0.75rem 0; color: var(--color-primary); font-weight: 800; }
+  .article-list { padding-bottom: clamp(3rem, 7vw, 6rem); }
+  .article-list.compact { padding-top: 0; }
+  .section-heading { margin-bottom: 1.5rem; }
+  .section-heading h2 { margin-top: 0.8rem; }
+  @media (max-width: 860px) { .page-head { grid-template-columns: 1fr; } }
+</style>

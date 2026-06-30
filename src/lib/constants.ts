@@ -27,6 +27,12 @@ export const CATEGORIES = {
     description:
       'Råd om luftfugtighed, ventilation, luftkvalitet, affugtere og luftrensere i hjemmet.',
   },
+  affugter: {
+    name: 'Affugter',
+    slug: 'affugter',
+    description:
+      'Guides til affugtere, fugtproblemer, kældre, badeværelser og sund luftfugtighed i danske hjem.',
+  },
 } as const;
 
 export type CategoryKey = keyof typeof CATEGORIES;

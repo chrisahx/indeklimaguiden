@@ -13,7 +13,7 @@ const articles = defineCollection({
         seoDescription: z.string().optional(),
         pubDate: z.coerce.date(),
         updatedDate: z.coerce.date().optional(),
-        category: z.enum(['aircondition', 'varmepumper', 'indeklima']),
+        category: z.enum(['aircondition', 'varmepumper', 'indeklima', 'affugter']),
         articleType: z.enum(['guide', 'anmeldelse']).default('guide'),
         slug: z.string(),
         tags: z.array(z.string()).default([]),

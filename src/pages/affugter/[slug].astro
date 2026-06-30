@@ -1,0 +1,19 @@
+---
+import { render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { getArticles } from '../../lib/articles';
+
+export async function getStaticPaths() {
+  const allArticles = await getArticles();
+  return allArticles
+    .filter((article) => article.data.category === 'affugter')
+    .map((article) => ({ params: { slug: article.data.slug }, props: { article, allArticles } }));
+}
+
+const { article, allArticles } = Astro.props;
+const { Content } = await render(article);
+---
+
+<ArticleLayout article={article} allArticles={allArticles}>
+  <Content />
+</ArticleLayout>
