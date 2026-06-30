@@ -1,0 +1,53 @@
+---
+import ArticleCard from '../../components/ArticleCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getArticlesByCategoryAndType } from '../../lib/articles';
+import { CATEGORIES } from '../../lib/constants';
+
+const category = CATEGORIES.luftrenser;
+const guides = await getArticlesByCategoryAndType('luftrenser', 'guide');
+const anmeldelser = await getArticlesByCategoryAndType('luftrenser', 'anmeldelse');
+const topics = ['HEPA-filtre og CADR', 'Allergi og pollen', 'Partikler og røg', 'Placering og vedligeholdelse'];
+---
+
+<BaseLayout title="Luftrenser" description={category.description} path="/luftrenser/">
+  <section class="section container page-head">
+    <div>
+      <span class="pill">Luftrenser guides</span>
+      <h1>Luftrensere til allergi, støv og bedre luftkvalitet</h1>
+      <p>{category.description}</p>
+      <p>Få hjælp til at vælge luftrenser, forstå filtertyper, CADR, placering, støjniveau og hvornår en luftrenser giver mening i hjemmet.</p>
+    </div>
+    <div class="topic-panel surface">
+      <h2>Populære spørgsmål</h2>
+      {topics.map((topic) => <span>{topic}</span>)}
+    </div>
+  </section>
+  <section class="container article-list">
+    <div class="section-heading">
+      <span class="pill">Guides</span>
+      <h2>Guides om filtre, luftkvalitet og brug</h2>
+    </div>
+    {guides.length > 0 ? <div class="grid">{guides.map((article) => <ArticleCard article={article} />)}</div> : <p>Der er endnu ingen publicerede guides i denne kategori.</p>}
+  </section>
+  <section class="container article-list compact">
+    <div class="section-heading">
+      <span class="pill">Anmeldelser</span>
+      <h2>Anmeldelser af luftrensere</h2>
+    </div>
+    {anmeldelser.length > 0 ? <div class="grid">{anmeldelser.map((article) => <ArticleCard article={article} />)}</div> : <p>Der er endnu ingen publicerede anmeldelser i denne kategori.</p>}
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.65fr); gap: 2rem; align-items: end; }
+  .page-head p { max-width: 780px; color: var(--color-muted); font-size: 1.16rem; }
+  .topic-panel { padding: 1.25rem; }
+  .topic-panel h2 { margin: 0 0 1rem; font-size: 1.25rem; }
+  .topic-panel span { display: block; border-top: 1px solid var(--color-border); padding: 0.75rem 0; color: var(--color-primary); font-weight: 800; }
+  .article-list { padding-bottom: clamp(3rem, 7vw, 6rem); }
+  .article-list.compact { padding-top: 0; }
+  .section-heading { margin-bottom: 1.5rem; }
+  .section-heading h2 { margin-top: 0.8rem; }
+  @media (max-width: 860px) { .page-head { grid-template-columns: 1fr; } }
+</style>
