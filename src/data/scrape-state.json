@@ -1,0 +1,26 @@
+{
+  "companies": {
+    "a-s-brdr-jensen-vvs": {
+      "google_last_scraped_at": "2026-07-01T18:34:13+00:00",
+      "google_status": "ok",
+      "last_updated_at": "2026-07-01T18:34:23+00:00",
+      "trustpilot_last_scraped_at": "2026-07-01T18:34:23+00:00",
+      "trustpilot_status": "ok"
+    },
+    "a-s-poul-larsen-autoriseret-el-og-vvs-installatr": {
+      "google_last_scraped_at": "2026-07-01T18:37:41+00:00",
+      "google_status": "ok",
+      "last_updated_at": "2026-07-01T18:37:49+00:00",
+      "trustpilot_last_scraped_at": "2026-07-01T18:37:49+00:00",
+      "trustpilot_status": "ok"
+    },
+    "abildaa-smede-og-maskinforretning-a-s": {
+      "google_last_scraped_at": "2026-07-01T18:39:19+00:00",
+      "google_status": "ok",
+      "last_updated_at": "2026-07-01T18:39:22+00:00",
+      "trustpilot_last_scraped_at": "2026-07-01T18:39:22+00:00",
+      "trustpilot_status": "ok"
+    }
+  },
+  "last_run_at": "2026-07-01T18:39:22+00:00"
+}

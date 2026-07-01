@@ -1,0 +1,54 @@
+{
+  "profile": {
+    "claimed_domain": "dk.business.trustpilot.com",
+    "domain": "as-pl.dk",
+    "last_scraped_at": "2026-07-01T18:37:44+00:00",
+    "profile_url": "https://dk.trustpilot.com/review/as-pl.dk",
+    "rating": "3.8",
+    "rating_text": "3,8",
+    "review_count": "22",
+    "status": "ok",
+    "verified_by_domain": false
+  },
+  "reviews": [
+    {
+      "author": "TC",
+      "company_id": "a-s-poul-larsen-autoriseret-el-og-vvs-installatr",
+      "date": "2022-10-04T15:58:03.000Z",
+      "profile_url": "https://dk.trustpilot.com/review/as-pl.dk",
+      "rating": "5",
+      "rating_label": "Bedømt til 5 ud af 5 stjerner",
+      "review_id": "trustpilot:a-s-poul-larsen-autoriseret-el-og-vvs-installatr:42259a7af9aaa8ae",
+      "scraped_at": "2026-07-01T18:37:44+00:00",
+      "source": "trustpilot",
+      "text": "TC Trine Christina Kristoffersen DK • 4 anmeldelser 4. okt. 2022 Bedste oplevelse med et VVS-firma (brug dem i stedet for Sorø VVS) Min oplevelse af at have fået installeret varmepumpe har været 100% professionel. Dygtige folk - Kim Mikkelsen, chefen selv Ole Larsen og et par andre dygtige folk, fik på 2 dage fjernet mit gamle gasfyr, revet skab ned, så der er plads til det nye. Poul Larsen A/S laver en samlet pakke med en underleverandør Murer Peter Larsen - dygtig murer - så han kommer og udfører murerarbejdet og div tømrerarbejde. De rydder op efter sig, og de hjalp lige med lidt ekstra småting. De er venlige, i godt humør og energiske. Jeg kan varmt anbefale Poul Larsen A/S. 27. september 2022 Uopfordret anmeldelse Nyttig Del",
+      "title": "Bedste oplevelse med et VVS-firma (brug dem i stedet for Sorø VVS)"
+    },
+    {
+      "author": "JB",
+      "company_id": "a-s-poul-larsen-autoriseret-el-og-vvs-installatr",
+      "date": "2021-04-07T09:16:49.000Z",
+      "profile_url": "https://dk.trustpilot.com/review/as-pl.dk",
+      "rating": "1",
+      "rating_label": "Bedømt til 1 ud af 5 stjerner",
+      "review_id": "trustpilot:a-s-poul-larsen-autoriseret-el-og-vvs-installatr:54a60dadb1cb3153",
+      "scraped_at": "2026-07-01T18:37:44+00:00",
+      "source": "trustpilot",
+      "text": "JB jens busck DK • 2 anmeldelser Opdateret den 7. apr. 2021 Svindelforetagende A/S Poul Larsen skulle ordne en lille ting hos mig. En ubehagelig og inkompetent montør dukkede op, og det lykkedes ham med hiv og sving at ordne det på under en time. Jeg blev ikke desto mindre faktureret for 2,5 timer + kørselsgebyr. De havde (uden tvivl med vilje) konstrueret beløbet, således at det lige akkurat landede under ankenævnets minimumsgrænse. 7. april 2021 Uopfordret anmeldelse Nyttig Del",
+      "title": "Svindelforetagende"
+    },
+    {
+      "author": "LM",
+      "company_id": "a-s-poul-larsen-autoriseret-el-og-vvs-installatr",
+      "date": "2021-07-23T15:01:59.000Z",
+      "profile_url": "https://dk.trustpilot.com/review/as-pl.dk",
+      "rating": "5",
+      "rating_label": "Bedømt til 5 ud af 5 stjerner",
+      "review_id": "trustpilot:a-s-poul-larsen-autoriseret-el-og-vvs-installatr:ad5dd5c69027749b",
+      "scraped_at": "2026-07-01T18:37:44+00:00",
+      "source": "trustpilot",
+      "text": "LM Lise Mouritzen DK • 104 anmeldelser Opdateret den 23. jul. 2021 Men til sidst godt arbejde Arbejdsopgave: Installation af duka ventilator i bad (uhørt dårlig arbejde og vildt timeregnskab). Skift stikkontakt: 3 stk (fungerer) Installation udendørs stik-kontakt (fungerer) Første installatør som kommer ud ved ikke hvordan han installere baderums ventilator. Derudover kom han for sent og takserede alligevel timer for dette. Efter installationen - som er takseret til 4 timer (for at føre en ledning 3 meter på loftet) - Endte det med hele huset fik non-stop strømafbrydelse indtil det blev afmonteret igen. Suk. En anden elinstallatør kom ud fra samme firma lavede det om og lavede flot finish m ledning. Nu virker den uden strømafbrydelser. Jeg modtager dog regning til en ukendt kvinde som ikke bor / aldrig har boet på min ejendom. Jeg rykker x 2 pr mail for at modtage min egen regning regning i mit navn kommer efter 6 mdr. Generelt tilfreds - ny medarbejder der ikke kender egen kompetance-grænser kan ske i alle firmaer. Vigtigst er at der hurtigt kommer nogle kompetente medarbejder som kunne lave det bestilte arbejde. Timeregnskab blev korrigeret uden problemer. 21. februar 2021 Uopfordret anmeldelse Nyttig Del",
+      "title": "Men til sidst godt arbejde"
+    }
+  ]
+}

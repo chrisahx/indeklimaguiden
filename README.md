@@ -101,6 +101,163 @@ For Denmark, the default `city-list` strategy searches major cities and deduplic
 
 Unofficial Google Maps scraping can trigger captchas, throttling, or blocking. Use small limits first, keep delays conservative, and run with `--headed` when debugging.
 
+## Company Enrichment Scraper
+
+The repository also includes a batch enrichment scraper in `scripts/company_enrichment/` for varmepumpe installer company lists. It uses Playwright to scrape Google Maps and Trustpilot directly, then writes Astro-friendly JSON data.
+
+Use the same Python environment and Playwright setup as the Google Maps scraper above.
+
+### Input CSV
+
+Default input path:
+
+```text
+data/input/varmepumpe-installatorer.csv
+```
+
+Supported columns include Danish and English names:
+
+| Column | Notes |
+| :-- | :-- |
+| `id` | Optional stable company id; generated from name/city if missing |
+| `name` or `navn` | Company name |
+| `website`, `hjemmeside`, or `url` | Company website; used for Trustpilot domain verification |
+| `city` or `by` | City, used for Google Maps matching |
+| `address` or `adresse` | Address, used for Google Maps matching |
+| `phone` or `telefon` | Optional phone number |
+| `email` or `e-mail` | Optional email address |
+| `contact` or `kontakt` | Optional combined contact field; phone and email are split automatically |
+| `cvr` | Optional CVR number |
+
+If the company name contains a CVR marker, for example `Example ApS CVR: 12345678`, the scraper removes the CVR part from `name` and stores the number in the separate `cvr` property.
+
+Example CSV:
+
+```csv
+id,name,website,city,address,phone,cvr
+nova-solar-aalborg,Nova Solar A/S,https://example.dk,Aalborg,Eksempelvej 1,+45 12345678,12345678
+```
+
+### Batch Scrape
+
+Scrape the next 10 companies from the CSV:
+
+```sh
+python -m scripts.company_enrichment.cli \
+  --input data/input/varmepumpe-installatorer.csv \
+  --batch-size 10
+```
+
+The script saves after each company, so a failed run can be resumed safely by running the same command again.
+
+### Update One Company
+
+Update by company id:
+
+```sh
+python -m scripts.company_enrichment.cli \
+  --company-id nova-solar-aalborg \
+  --force
+```
+
+Update by name substring:
+
+```sh
+python -m scripts.company_enrichment.cli \
+  --name "Nova Solar" \
+  --force
+```
+
+### Source-Specific Runs
+
+Only scrape Google Maps:
+
+```sh
+python -m scripts.company_enrichment.cli \
+  --source google \
+  --batch-size 10
+```
+
+Only scrape Trustpilot:
+
+```sh
+python -m scripts.company_enrichment.cli \
+  --source trustpilot \
+  --batch-size 10
+```
+
+Only re-import CSV fields without scraping Google Maps or Trustpilot:
+
+```sh
+python -m scripts.company_enrichment.cli \
+  --input data/input/varmepumpe-installatorer.csv \
+  --source input \
+  --batch-size 1000
+```
+
+### Debug Run
+
+Start with one visible browser run when testing selectors, captchas, or matching:
+
+```sh
+python -m scripts.company_enrichment.cli \
+  --input data/input/varmepumpe-installatorer.csv \
+  --batch-size 1 \
+  --headed \
+  --verbose
+```
+
+### Common Options
+
+| Option | Description |
+| :-- | :-- |
+| `--batch-size 10` | Number of companies to process in this run; default is 10 |
+| `--company-id ID` | Update one specific company |
+| `--name "Name"` | Update the first company matching the name substring |
+| `--source all` | Scrape Google Maps and Trustpilot; default |
+| `--source google` | Scrape only Google Maps |
+| `--source trustpilot` | Scrape only Trustpilot |
+| `--source input` | Only import/normalize CSV fields without scraping external sources |
+| `--force` | Re-scrape even if data already exists |
+| `--stale-days 30` | Re-scrape source data older than this many days |
+| `--max-google-reviews 100` | Maximum Google reviews per company; `0` means try all |
+| `--max-trustpilot-reviews 100` | Maximum Trustpilot reviews per company; `0` means try all |
+| `--google-candidate-limit 2` | Maximum Google Maps candidates to inspect per query |
+| `--delay-min 5 --delay-max 15` | Random delay range between Google profile visits |
+| `--headed` | Show Chromium while scraping |
+| `--headless` | Run Chromium hidden; default |
+| `--language da` | Google Maps UI language; default is Danish |
+| `--verbose` | Enable debug logging |
+
+### Outputs
+
+The default output directory is `data/companies/`.
+
+```text
+data/companies/companies.json
+data/companies/scrape-state.json
+data/companies/reviews/google-reviews.jsonl
+data/companies/reviews/trustpilot-reviews.jsonl
+data/companies/raw/google/{company_id}.json
+data/companies/raw/trustpilot/{company_id}.json
+```
+
+`companies.json` is the main company index for Astro. Review files are JSONL, with one review per line linked to the company through `company_id`.
+
+The script replaces old reviews for the same `company_id` and source when updating a company, so repeated runs do not append duplicate reviews for that company.
+
+### What It Scrapes
+
+Google Maps data includes best-effort extraction of name, category, phone, website, address, rating, review count, opening hours, description, latitude/longitude, Google Maps URL, image URLs, and reviews.
+
+If Google Maps contact text contains both phone and email, the scraper stores them separately as `phone` and `email`. The full parsed contact data is also stored under `google.contact` with `phones` and `emails` arrays when available.
+
+Trustpilot data includes best-effort extraction of profile URL, domain, rating, review count, domain verification status, and reviews.
+
+Trustpilot matches are verified against the company website domain when possible. If the domain cannot be confidently verified, inspect the output before publishing the data.
+
+Google Maps and Trustpilot markup changes often. Keep batches small, use conservative delays, and debug with `--headed` if fields start coming back empty.
+
 ## Project Structure
 
 ```text

@@ -1,0 +1,523 @@
+{
+  "candidates": [
+    {
+      "address": "",
+      "category": "Log ind",
+      "contact": {},
+      "cvr": "24393828",
+      "description": "RestauranterHotellerOplevelserOff. trans.ParkeringApotekerHæveautomater",
+      "email": "",
+      "last_scraped_at": "2026-07-01T18:34:49+00:00",
+      "latitude": "55.4391934",
+      "longitude": "11.6634532",
+      "maps_url": "https://www.google.com/maps/place/Valborgvej+7,+4173+Fjenneslev/@55.758668,11.7969843,10z/data=!4m6!3m5!1s0x46529aef6b2a35f3:0xb4e83cde076e67c4!8m2!3d55.4391934!4d11.6634532!16s%2Fg%2F11swrgjp_g?hl=da&entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D",
+      "match_score": 0,
+      "name": "Valborgvej 7",
+      "opening_hours": "",
+      "phone": "",
+      "photos": [
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w80-h92-p-k-no"
+        }
+      ],
+      "rating": "4,3",
+      "review_count": "",
+      "status": "ok",
+      "website": ""
+    },
+    {
+      "address": "",
+      "category": "Log ind",
+      "contact": {},
+      "cvr": "24393828",
+      "description": "RestauranterHotellerOplevelserOff. trans.ParkeringApotekerHæveautomater",
+      "email": "",
+      "last_scraped_at": "2026-07-01T18:35:16+00:00",
+      "latitude": "55.7721603",
+      "longitude": "12.1852144",
+      "maps_url": "https://www.google.com/maps/place/Valborgvej+7,+3660+Stenl%C3%B8se/@55.7721603,12.1852144,17z/data=!3m1!4b1!4m6!3m5!1s0x46525d2ea81a038b:0xe6711efb66c8e9c1!8m2!3d55.7721603!4d12.1852144!16s%2Fg%2F11c1kj3r1d?hl=da&entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D",
+      "match_score": 0,
+      "name": "Valborgvej 7",
+      "opening_hours": "",
+      "phone": "",
+      "photos": [],
+      "rating": "",
+      "review_count": "",
+      "status": "ok",
+      "website": ""
+    },
+    {
+      "address": "Valborgvej 7, 4173 Fjenneslev",
+      "category": "Elinstallatør",
+      "contact": {
+        "phone": "57 80 90 81",
+        "phones": [
+          "57 80 90 81"
+        ]
+      },
+      "cvr": "24393828",
+      "description": "RestauranterHotellerOplevelserOff. trans.ParkeringApotekerHæveautomater",
+      "email": "",
+      "last_scraped_at": "2026-07-01T18:35:42+00:00",
+      "latitude": "55.4391743",
+      "longitude": "11.6634599",
+      "maps_url": "https://www.google.com/maps/place/Poul+Larsen+A%2FS/@55.4391743,11.6634599,17z/data=!3m1!4b1!4m6!3m5!1s0x46529aef693c4e7d:0xb6a7c03a06b8f4c3!8m2!3d55.4391743!4d11.6634599!16s%2Fg%2F1tdy7p8z?hl=da&entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D",
+      "match_score": 40,
+      "name": "Poul Larsen A/S",
+      "opening_hours": "onsdag06.30–16torsdag06.30–16fredag06.30–13lørdagLukketsøndagLukketmandag06.30–16tirsdag06.30–16",
+      "phone": "57 80 90 81",
+      "photos": [
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w32-h32-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w418-h240-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w519-h298-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF_Zte7zPs5ty-X3iX4o95yYpMj2peVRa3WAkcDjQoNwtNQ9d3eFi7jS4a49PGzfPifYxPRpc3Rf44rtQLwmxBaSOdqY7MAuuR-yUT2SDglKR1LyVZvR4MK-DvjmGU6DwWPa0U=w460-h298-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjUxaTB9dI58W2zFai3D-av-3gHrlOPPg1Vf9G2R2jpu9PUBRjT3=w36-h36-p-rp-mo-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a/ACg8ocIsQlhEApmjWkRfpuLZrcvYr30sm0jWe3Op6BBffLLuoaWZLA=w36-h36-p-rp-mo-ba12-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjWbEFfaaPskKOuZ-Xl9XYnIiqde_q1_mnNW1CeHkwr5833V8U8=w36-h36-p-rp-mo-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFINQ1mumvRfKz90RDXroK6xNJDSagk35gbexKxhmro-CSuCPYM_w_nRCNsjQfcyg49vnNFxSeEJnFArpOSrCEgp2x9eV_llfw_5thgnPqWhQ3TXu8F82_edlrTTgvfSxlptnRP=w156-h114-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGniOBg458yigN2RqxPEtTlT3KHQsthe_0gYRftZ_IYfplMEuYQN2X7y-6_4d8ZTDA8Y2oR1Y0CZzQp-gZ48pcuK5zK-gGLXDte5fFiSwz_wi8RKOqEwDX4yR6HAI9Gp83OH74=w156-h114-p-k-no"
+        }
+      ],
+      "rating": "4,3",
+      "review_count": "",
+      "status": "ok",
+      "website": "http://www.as-pl.dk/"
+    },
+    {
+      "address": "Valborgvej 7, 4173 Fjenneslev",
+      "category": "Elinstallatør",
+      "contact": {
+        "phone": "57 80 90 81",
+        "phones": [
+          "57 80 90 81"
+        ]
+      },
+      "cvr": "24393828",
+      "description": "RestauranterHotellerOplevelserOff. trans.ParkeringApotekerHæveautomater",
+      "email": "",
+      "last_scraped_at": "2026-07-01T18:36:10+00:00",
+      "latitude": "55.4391743",
+      "longitude": "11.6634599",
+      "maps_url": "https://www.google.com/maps/place/Poul+Larsen+A%2FS/@55.4391743,11.6634599,17z/data=!3m1!4b1!4m6!3m5!1s0x46529aef693c4e7d:0xb6a7c03a06b8f4c3!8m2!3d55.4391743!4d11.6634599!16s%2Fg%2F1tdy7p8z?hl=da&entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D",
+      "match_score": 40,
+      "name": "Poul Larsen A/S",
+      "opening_hours": "onsdag06.30–16torsdag06.30–16fredag06.30–13lørdagLukketsøndagLukketmandag06.30–16tirsdag06.30–16",
+      "phone": "57 80 90 81",
+      "photos": [
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w32-h32-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w418-h240-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w519-h298-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF_Zte7zPs5ty-X3iX4o95yYpMj2peVRa3WAkcDjQoNwtNQ9d3eFi7jS4a49PGzfPifYxPRpc3Rf44rtQLwmxBaSOdqY7MAuuR-yUT2SDglKR1LyVZvR4MK-DvjmGU6DwWPa0U=w460-h298-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjUxaTB9dI58W2zFai3D-av-3gHrlOPPg1Vf9G2R2jpu9PUBRjT3=w36-h36-p-rp-mo-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a/ACg8ocIsQlhEApmjWkRfpuLZrcvYr30sm0jWe3Op6BBffLLuoaWZLA=w36-h36-p-rp-mo-ba12-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjWbEFfaaPskKOuZ-Xl9XYnIiqde_q1_mnNW1CeHkwr5833V8U8=w36-h36-p-rp-mo-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFINQ1mumvRfKz90RDXroK6xNJDSagk35gbexKxhmro-CSuCPYM_w_nRCNsjQfcyg49vnNFxSeEJnFArpOSrCEgp2x9eV_llfw_5thgnPqWhQ3TXu8F82_edlrTTgvfSxlptnRP=w156-h114-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGniOBg458yigN2RqxPEtTlT3KHQsthe_0gYRftZ_IYfplMEuYQN2X7y-6_4d8ZTDA8Y2oR1Y0CZzQp-gZ48pcuK5zK-gGLXDte5fFiSwz_wi8RKOqEwDX4yR6HAI9Gp83OH74=w156-h114-p-k-no"
+        }
+      ],
+      "rating": "4,3",
+      "review_count": "",
+      "status": "ok",
+      "website": "http://www.as-pl.dk/"
+    },
+    {
+      "address": "Valborgvej 7, 4173 Fjenneslev",
+      "category": "Elinstallatør",
+      "contact": {
+        "phone": "57 80 90 81",
+        "phones": [
+          "57 80 90 81"
+        ]
+      },
+      "cvr": "24393828",
+      "description": "RestauranterHotellerOplevelserOff. trans.ParkeringApotekerHæveautomater",
+      "email": "",
+      "last_scraped_at": "2026-07-01T18:36:35+00:00",
+      "latitude": "55.4391743",
+      "longitude": "11.6634599",
+      "maps_url": "https://www.google.com/maps/place/Poul+Larsen+A%2FS/@55.4391743,11.6634599,17z/data=!3m1!4b1!4m6!3m5!1s0x46529aef693c4e7d:0xb6a7c03a06b8f4c3!8m2!3d55.4391743!4d11.6634599!16s%2Fg%2F1tdy7p8z?hl=da&entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D",
+      "match_score": 40,
+      "name": "Poul Larsen A/S",
+      "opening_hours": "onsdag06.30–16torsdag06.30–16fredag06.30–13lørdagLukketsøndagLukketmandag06.30–16tirsdag06.30–16",
+      "phone": "57 80 90 81",
+      "photos": [
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w32-h32-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w418-h240-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w519-h298-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF_Zte7zPs5ty-X3iX4o95yYpMj2peVRa3WAkcDjQoNwtNQ9d3eFi7jS4a49PGzfPifYxPRpc3Rf44rtQLwmxBaSOdqY7MAuuR-yUT2SDglKR1LyVZvR4MK-DvjmGU6DwWPa0U=w460-h298-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjUxaTB9dI58W2zFai3D-av-3gHrlOPPg1Vf9G2R2jpu9PUBRjT3=w36-h36-p-rp-mo-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a/ACg8ocIsQlhEApmjWkRfpuLZrcvYr30sm0jWe3Op6BBffLLuoaWZLA=w36-h36-p-rp-mo-ba12-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjWbEFfaaPskKOuZ-Xl9XYnIiqde_q1_mnNW1CeHkwr5833V8U8=w36-h36-p-rp-mo-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFINQ1mumvRfKz90RDXroK6xNJDSagk35gbexKxhmro-CSuCPYM_w_nRCNsjQfcyg49vnNFxSeEJnFArpOSrCEgp2x9eV_llfw_5thgnPqWhQ3TXu8F82_edlrTTgvfSxlptnRP=w156-h114-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGniOBg458yigN2RqxPEtTlT3KHQsthe_0gYRftZ_IYfplMEuYQN2X7y-6_4d8ZTDA8Y2oR1Y0CZzQp-gZ48pcuK5zK-gGLXDte5fFiSwz_wi8RKOqEwDX4yR6HAI9Gp83OH74=w156-h114-p-k-no"
+        }
+      ],
+      "rating": "4,3",
+      "review_count": "",
+      "status": "ok",
+      "website": "http://www.as-pl.dk/"
+    },
+    {
+      "address": "Valborgvej 7, 4173 Fjenneslev",
+      "category": "Elinstallatør",
+      "contact": {
+        "phone": "57 80 90 81",
+        "phones": [
+          "57 80 90 81"
+        ]
+      },
+      "cvr": "24393828",
+      "description": "RestauranterHotellerOplevelserOff. trans.ParkeringApotekerHæveautomater",
+      "email": "",
+      "last_scraped_at": "2026-07-01T18:37:01+00:00",
+      "latitude": "55.4391743",
+      "longitude": "11.6634599",
+      "maps_url": "https://www.google.com/maps/place/Poul+Larsen+A%2FS/@55.4391743,11.6634599,17z/data=!3m1!4b1!4m6!3m5!1s0x46529aef693c4e7d:0xb6a7c03a06b8f4c3!8m2!3d55.4391743!4d11.6634599!16s%2Fg%2F1tdy7p8z?hl=da&entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D",
+      "match_score": 40,
+      "name": "Poul Larsen A/S",
+      "opening_hours": "onsdag06.30–16torsdag06.30–16fredag06.30–13lørdagLukketsøndagLukketmandag06.30–16tirsdag06.30–16",
+      "phone": "57 80 90 81",
+      "photos": [
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w32-h32-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w418-h240-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w519-h298-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF_Zte7zPs5ty-X3iX4o95yYpMj2peVRa3WAkcDjQoNwtNQ9d3eFi7jS4a49PGzfPifYxPRpc3Rf44rtQLwmxBaSOdqY7MAuuR-yUT2SDglKR1LyVZvR4MK-DvjmGU6DwWPa0U=w460-h298-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjUxaTB9dI58W2zFai3D-av-3gHrlOPPg1Vf9G2R2jpu9PUBRjT3=w36-h36-p-rp-mo-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a/ACg8ocIsQlhEApmjWkRfpuLZrcvYr30sm0jWe3Op6BBffLLuoaWZLA=w36-h36-p-rp-mo-ba12-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjWbEFfaaPskKOuZ-Xl9XYnIiqde_q1_mnNW1CeHkwr5833V8U8=w36-h36-p-rp-mo-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFINQ1mumvRfKz90RDXroK6xNJDSagk35gbexKxhmro-CSuCPYM_w_nRCNsjQfcyg49vnNFxSeEJnFArpOSrCEgp2x9eV_llfw_5thgnPqWhQ3TXu8F82_edlrTTgvfSxlptnRP=w156-h114-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGniOBg458yigN2RqxPEtTlT3KHQsthe_0gYRftZ_IYfplMEuYQN2X7y-6_4d8ZTDA8Y2oR1Y0CZzQp-gZ48pcuK5zK-gGLXDte5fFiSwz_wi8RKOqEwDX4yR6HAI9Gp83OH74=w156-h114-p-k-no"
+        }
+      ],
+      "rating": "4,3",
+      "review_count": "",
+      "status": "ok",
+      "website": "http://www.as-pl.dk/"
+    },
+    {
+      "address": "Valborgvej 7, 4173 Fjenneslev",
+      "category": "Elinstallatør",
+      "contact": {
+        "phone": "57 80 90 81",
+        "phones": [
+          "57 80 90 81"
+        ]
+      },
+      "cvr": "24393828",
+      "description": "RestauranterHotellerOplevelserOff. trans.ParkeringApotekerHæveautomater",
+      "email": "",
+      "last_scraped_at": "2026-07-01T18:37:18+00:00",
+      "latitude": "55.4391743",
+      "longitude": "11.6634599",
+      "maps_url": "https://www.google.com/maps/place/Poul+Larsen+A%2FS/data=!4m7!3m6!1s0x46529aef693c4e7d:0xb6a7c03a06b8f4c3!8m2!3d55.4391743!4d11.6634599!16s%2Fg%2F1tdy7p8z!19sChIJfU48ae-aUkYRw_S4BjrAp7Y?authuser=0&hl=da&rclk=1",
+      "match_score": 40,
+      "name": "Poul Larsen A/S",
+      "opening_hours": "onsdag06.30–16torsdag06.30–16fredag06.30–13lørdagLukketsøndagLukketmandag06.30–16tirsdag06.30–16",
+      "phone": "57 80 90 81",
+      "photos": [
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w32-h32-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w418-h240-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w519-h298-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF_Zte7zPs5ty-X3iX4o95yYpMj2peVRa3WAkcDjQoNwtNQ9d3eFi7jS4a49PGzfPifYxPRpc3Rf44rtQLwmxBaSOdqY7MAuuR-yUT2SDglKR1LyVZvR4MK-DvjmGU6DwWPa0U=w460-h298-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjUxaTB9dI58W2zFai3D-av-3gHrlOPPg1Vf9G2R2jpu9PUBRjT3=w36-h36-p-rp-mo-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a/ACg8ocIsQlhEApmjWkRfpuLZrcvYr30sm0jWe3Op6BBffLLuoaWZLA=w36-h36-p-rp-mo-ba12-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjWbEFfaaPskKOuZ-Xl9XYnIiqde_q1_mnNW1CeHkwr5833V8U8=w36-h36-p-rp-mo-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFINQ1mumvRfKz90RDXroK6xNJDSagk35gbexKxhmro-CSuCPYM_w_nRCNsjQfcyg49vnNFxSeEJnFArpOSrCEgp2x9eV_llfw_5thgnPqWhQ3TXu8F82_edlrTTgvfSxlptnRP=w156-h114-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGniOBg458yigN2RqxPEtTlT3KHQsthe_0gYRftZ_IYfplMEuYQN2X7y-6_4d8ZTDA8Y2oR1Y0CZzQp-gZ48pcuK5zK-gGLXDte5fFiSwz_wi8RKOqEwDX4yR6HAI9Gp83OH74=w156-h114-p-k-no"
+        }
+      ],
+      "rating": "4,3",
+      "review_count": "",
+      "status": "ok",
+      "website": "http://www.as-pl.dk/"
+    },
+    {
+      "address": "Dronninggårds Alle 2, 9330 Dronninglund",
+      "category": "VVS-installatør",
+      "contact": {
+        "phone": "20 70 17 84",
+        "phones": [
+          "20 70 17 84"
+        ]
+      },
+      "cvr": "24393828",
+      "description": "RestauranterHotellerOplevelserOff. trans.ParkeringApotekerHæveautomater",
+      "email": "",
+      "last_scraped_at": "2026-07-01T18:37:26+00:00",
+      "latitude": "57.1437145",
+      "longitude": "10.2644503",
+      "maps_url": "https://www.google.com/maps/place/PL+Teknik+v%2FPoul+Larsen/data=!4m7!3m6!1s0x464ed74f75fd73af:0x70f9297143a331e9!8m2!3d57.1437145!4d10.2644503!16s%2Fg%2F1td7xppg!19sChIJr3P9dU_XTkYR6TGjQ3Ep-XA?authuser=0&hl=da&rclk=1",
+      "match_score": 0,
+      "name": "PL Teknik v/Poul Larsen",
+      "opening_hours": "onsdag07.30–16.30torsdag07.30–16.30fredag07.30–16.30lørdagLukketsøndagLukketmandag07.30–16.30tirsdag07.30–16.30",
+      "phone": "20 70 17 84",
+      "photos": [
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGvcQ3DjidW6f4hEraHlQaOz8r2qARXFjeNX1e-VfMveq-9gqOEuCmpAB4tvfJoniJI1wPCBOgYyCQ6Ca99sswqA_ZW2xgpajy5Xhnn4pJuIOpznv9hBtp7T3E4nsQR-GzXqHe_=w32-h32-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGvcQ3DjidW6f4hEraHlQaOz8r2qARXFjeNX1e-VfMveq-9gqOEuCmpAB4tvfJoniJI1wPCBOgYyCQ6Ca99sswqA_ZW2xgpajy5Xhnn4pJuIOpznv9hBtp7T3E4nsQR-GzXqHe_=w1200-h240-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGvcQ3DjidW6f4hEraHlQaOz8r2qARXFjeNX1e-VfMveq-9gqOEuCmpAB4tvfJoniJI1wPCBOgYyCQ6Ca99sswqA_ZW2xgpajy5Xhnn4pJuIOpznv9hBtp7T3E4nsQR-GzXqHe_=w1490-h298-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a/ACg8ocJ9YYET6X76ifDqgi_S8-365QqylL5EFY-zVe4_AinjJKyOjg=w36-h36-p-rp-mo-ba12-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a/ACg8ocJcabNI0oPRZ-kKC6nRxU3G5hQ2nQ1YieXhQYCjiJ4cd2NczQ=w36-h36-p-rp-mo-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjU2EJSjb6LSBueBLVt3J4zJkqzK_vv3WLAFKvUN5ZtVBeyz4ITc=w36-h36-p-rp-mo-ba12-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF5ZWRxGcI87_Pw2_umy6BlSLNBpfXaksj5HaAbYxnuTxzCp2f2SgTchRVaRTvUTsL_glY17siWWixJiC-iAHoBLRamhlI3RY9-ziMYkUBMgkAw6fNOr4XL_SoOEKzpYPuRggna=w156-h114-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEcjSrnzL5PUb7NLjHo2GGiidQs_T4qI131mkPS8tQdrws8LsExelVutGm7gVg4hGpp-QiiteLrnUo-Doa8heAi6ViCKBYcCAsV8_283adr3vivPkMbK_-Ilm63NY6uPaF9rDgzWUW91BXO=w156-h114-p-k-no"
+        }
+      ],
+      "rating": "4,4",
+      "review_count": "",
+      "status": "ok",
+      "website": "http://www.pl-teknik.com/"
+    }
+  ],
+  "reviews": [
+    {
+      "author": "",
+      "company_id": "a-s-poul-larsen-autoriseret-el-og-vvs-installatr",
+      "date": "for ét år siden",
+      "rating": "5",
+      "rating_label": "5 stjerner",
+      "review_id": "google:a-s-poul-larsen-autoriseret-el-og-vvs-installatr:7208a860ca24ecda",
+      "scraped_at": "2026-07-01T18:37:41+00:00",
+      "source": "google",
+      "text": "Pris og tid brugt på elinstallationer og tilslutning af hvidevarer endte under prisoverslaget, så positivt overrasket. behagelig og grundig elektriker, som også hjalp med at rette op på noget, en tømrer havde lavet elendigt☺️"
+    },
+    {
+      "author": "",
+      "company_id": "a-s-poul-larsen-autoriseret-el-og-vvs-installatr",
+      "date": "for 5 år siden",
+      "rating": "1",
+      "rating_label": "1 stjerne",
+      "review_id": "google:a-s-poul-larsen-autoriseret-el-og-vvs-installatr:b7dae9b9d85b253f",
+      "scraped_at": "2026-07-01T18:37:41+00:00",
+      "source": "google",
+      "text": "Ved tilbud på en opgave informerer firmaet ikke om, at de tager fuld montørløn (525 kr. pr. Time) for deres kørselstimer. Altså timer hvor intet faktisk arbejde udføres. …"
+    },
+    {
+      "author": "",
+      "company_id": "a-s-poul-larsen-autoriseret-el-og-vvs-installatr",
+      "date": "for 6 år siden",
+      "rating": "5",
+      "rating_label": "5 stjerner",
+      "review_id": "google:a-s-poul-larsen-autoriseret-el-og-vvs-installatr:043d60a16aec40b6",
+      "scraped_at": "2026-07-01T18:37:41+00:00",
+      "source": "google",
+      "text": "Vores gasfyr gik pludselig i udu, ældre model, skulle udskiftes. Nu uden varme og varmt vand, ringer til vor Vvs, som gav sit bud, noget pebret pris, men vidste jo ikke bedre, og så ville de først kunne komme om en uge, tænkte det lang tid …"
+    }
+  ],
+  "selected": {
+    "address": "Valborgvej 7, 4173 Fjenneslev",
+    "category": "Elinstallatør",
+    "contact": {
+      "phone": "57 80 90 81",
+      "phones": [
+        "57 80 90 81"
+      ]
+    },
+    "cvr": "24393828",
+    "description": "RestauranterHotellerOplevelserOff. trans.ParkeringApotekerHæveautomater",
+    "email": "",
+    "last_scraped_at": "2026-07-01T18:37:28+00:00",
+    "latitude": "55.4391743",
+    "longitude": "11.6634599",
+    "maps_url": "https://www.google.com/maps/place/Poul+Larsen+A%2FS/@55.4391743,11.6634599,17z/data=!3m1!4b1!4m6!3m5!1s0x46529aef693c4e7d:0xb6a7c03a06b8f4c3!8m2!3d55.4391743!4d11.6634599!16s%2Fg%2F1tdy7p8z?hl=da&entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D",
+    "match_score": 40,
+    "name": "Poul Larsen A/S",
+    "opening_hours": "onsdag06.30–16torsdag06.30–16fredag06.30–13lørdagLukketsøndagLukketmandag06.30–16tirsdag06.30–16",
+    "phone": "57 80 90 81",
+    "photos": [
+      {
+        "source": "google",
+        "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w32-h32-p-k-no"
+      },
+      {
+        "source": "google",
+        "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w418-h240-k-no"
+      },
+      {
+        "source": "google",
+        "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w519-h298-k-no"
+      },
+      {
+        "source": "google",
+        "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF_Zte7zPs5ty-X3iX4o95yYpMj2peVRa3WAkcDjQoNwtNQ9d3eFi7jS4a49PGzfPifYxPRpc3Rf44rtQLwmxBaSOdqY7MAuuR-yUT2SDglKR1LyVZvR4MK-DvjmGU6DwWPa0U=w460-h298-k-no"
+      },
+      {
+        "source": "google",
+        "url": "https://lh3.googleusercontent.com/a-/ALV-UjUxaTB9dI58W2zFai3D-av-3gHrlOPPg1Vf9G2R2jpu9PUBRjT3=w36-h36-p-rp-mo-br100"
+      },
+      {
+        "source": "google",
+        "url": "https://lh3.googleusercontent.com/a/ACg8ocIsQlhEApmjWkRfpuLZrcvYr30sm0jWe3Op6BBffLLuoaWZLA=w36-h36-p-rp-mo-ba12-br100"
+      },
+      {
+        "source": "google",
+        "url": "https://lh3.googleusercontent.com/a-/ALV-UjWbEFfaaPskKOuZ-Xl9XYnIiqde_q1_mnNW1CeHkwr5833V8U8=w36-h36-p-rp-mo-br100"
+      },
+      {
+        "source": "google",
+        "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFINQ1mumvRfKz90RDXroK6xNJDSagk35gbexKxhmro-CSuCPYM_w_nRCNsjQfcyg49vnNFxSeEJnFArpOSrCEgp2x9eV_llfw_5thgnPqWhQ3TXu8F82_edlrTTgvfSxlptnRP=w156-h114-p-k-no"
+      },
+      {
+        "source": "google",
+        "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGniOBg458yigN2RqxPEtTlT3KHQsthe_0gYRftZ_IYfplMEuYQN2X7y-6_4d8ZTDA8Y2oR1Y0CZzQp-gZ48pcuK5zK-gGLXDte5fFiSwz_wi8RKOqEwDX4yR6HAI9Gp83OH74=w156-h114-p-k-no"
+      }
+    ],
+    "rating": "4,3",
+    "review_count": "",
+    "status": "ok",
+    "website": "http://www.as-pl.dk/"
+  }
+}

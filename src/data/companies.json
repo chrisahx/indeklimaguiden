@@ -1,0 +1,296 @@
+[
+  {
+    "cvr": "75916817",
+    "email": "mail@abildaa-smede.dk",
+    "google": {
+      "address": "Timringvej 2, 6973 Abildå",
+      "category": "Udstyrsleverandør",
+      "contact": {
+        "phone": "97 38 41 62",
+        "phones": [
+          "97 38 41 62"
+        ]
+      },
+      "cvr": "75916817",
+      "description": "RestauranterHotellerOplevelserOff. trans.ParkeringApotekerHæveautomater",
+      "email": "",
+      "last_scraped_at": "2026-07-01T18:39:06+00:00",
+      "latitude": "56.166559",
+      "longitude": "8.617047",
+      "maps_url": "https://www.google.com/maps/place/Abildaa+Smede-+Og+Maskinforretning+A%2FS/@56.166559,8.617047,17z/data=!3m1!4b1!4m6!3m5!1s0x464bb3546e719001:0x3701fb05885ca589!8m2!3d56.166559!4d8.617047!16s%2Fg%2F1tdd8fr3?hl=da&entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D",
+      "match_score": 60,
+      "name": "Abildaa Smede- Og Maskinforretning A/S",
+      "opening_hours": "onsdag07–16torsdag07–16fredag07–12.30lørdagLukketsøndagLukketmandag07–16tirsdag07–16",
+      "phone": "97 38 41 62",
+      "photos": [
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjWj0XibRswihCNg1H6hmjzMTpQAmjShOQfk-RGchaEhVyE9vf81=w36-h36-p-rp-mo-ba12-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a/ACg8ocLzWMnb-jfUkcB24mWOgp5ikywXSs2UF2bsaHStEdHqWNqysQ=w36-h36-p-rp-mo-ba12-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjXcMnxH-QJiU10GCIy0VG41jacuNbaotp7_pk2zL6ob0FYsenU=w36-h36-p-rp-mo-ba12-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHSaZdRLxwx6vwebKCuZc559U7r4WF6SnpUwNmOseAOgBoagriaDfSRxF990KQi1UaQ3P6gGBlQWqSt7LU8emnxoZmR1Wj3A95eo5Jw--2r3eCPkwCkAxXQyikjecLseKNAjhbHbg=w156-h114-p-k-no"
+        }
+      ],
+      "rating": "4,7",
+      "review_count": "",
+      "status": "ok",
+      "website": "https://www.abildaa-smede.dk/"
+    },
+    "id": "abildaa-smede-og-maskinforretning-a-s",
+    "input": {
+      "address": "Timringvej 2, 6973 Ørnhøj",
+      "city": "",
+      "cvr": "75916817",
+      "email": "mail@abildaa-smede.dk",
+      "id": "abildaa-smede-og-maskinforretning-a-s",
+      "name": "Abildaa Smede- og Maskinforretning A/S",
+      "phone": "97 38 41 62",
+      "website": ""
+    },
+    "location": {
+      "address": "Timringvej 2, 6973 Abildå",
+      "country": "Denmark",
+      "latitude": "56.166559",
+      "longitude": "8.617047"
+    },
+    "meta": {
+      "last_updated_at": "2026-07-01T18:39:22+00:00",
+      "status": "scraped"
+    },
+    "name": "Abildaa Smede- Og Maskinforretning A/S",
+    "phone": "97 38 41 62",
+    "trustpilot": {
+      "claimed_domain": "dk.business.trustpilot.com",
+      "domain": "abildaa-smede.dk",
+      "last_scraped_at": "2026-07-01T18:39:22+00:00",
+      "profile_url": "https://dk.trustpilot.com/review/abildaa-smede.dk",
+      "rating": "2026",
+      "rating_text": "Kategorier Blog Log ind For virksomheder Ups! Siden, du leder efter, blev desværre ikke fundet. Vil du gå tilbage? Dette site er beskyttet af reCAPTCHA. Vi indsamler enheds- og interaktionssignaler af",
+      "review_count": "",
+      "status": "ok",
+      "verified_by_domain": false
+    },
+    "website": "https://www.abildaa-smede.dk/"
+  },
+  {
+    "cvr": "26512891",
+    "email": "info@bj-vvs.dk",
+    "google": {
+      "address": "Hjortekærsvej 180, 2800 Hjortekær",
+      "category": "VVS-installatør",
+      "contact": {
+        "phone": "45 87 80 88",
+        "phones": [
+          "45 87 80 88"
+        ]
+      },
+      "cvr": "26512891",
+      "description": "RestauranterHotellerOplevelserOff. trans.ParkeringApotekerHæveautomater",
+      "email": "",
+      "last_scraped_at": "2026-07-01T18:34:01+00:00",
+      "latitude": "55.7962214",
+      "longitude": "12.5421532",
+      "maps_url": "https://www.google.com/maps/place/Brdr.+Jensen+VVS/@55.7962214,12.5421532,17z/data=!3m1!4b1!4m6!3m5!1s0x46524e829ebac6ef:0xc2ebaa8151574f60!8m2!3d55.7962214!4d12.5421532!16s%2Fg%2F1tfrkyyr?hl=da&entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D",
+      "match_score": 60,
+      "name": "Brdr. Jensen VVS",
+      "opening_hours": "onsdag07.30–15.30torsdag07.30–15.30fredag07.30–13.30lørdagLukketsøndagLukketmandag07.30–16tirsdag07.30–16",
+      "phone": "45 87 80 88",
+      "photos": [
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE3-GPN9JuRqCBlQH3UenqdX4W1bUFwBaN9B0uDznH3gJPhkoYE-7io_Nn6YRoa9M13jzO19QETN0Sq2uSgS1Lvw5Tt8MyXVf6m8SxTweqW59WPHVUuXlUVqZEcHw1lVivEg-5H=w32-h32-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE3-GPN9JuRqCBlQH3UenqdX4W1bUFwBaN9B0uDznH3gJPhkoYE-7io_Nn6YRoa9M13jzO19QETN0Sq2uSgS1Lvw5Tt8MyXVf6m8SxTweqW59WPHVUuXlUVqZEcHw1lVivEg-5H=w408-h289-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE3-GPN9JuRqCBlQH3UenqdX4W1bUFwBaN9B0uDznH3gJPhkoYE-7io_Nn6YRoa9M13jzO19QETN0Sq2uSgS1Lvw5Tt8MyXVf6m8SxTweqW59WPHVUuXlUVqZEcHw1lVivEg-5H=w420-h298-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a/ACg8ocKZB9JQxdoFilXjsYPiFPYPYHkjU34mOu7Bvh06UF_cJqJUzs4=w36-h36-p-rp-mo-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a/ACg8ocKaTgmOfXirFD1U62jc0DLPLmUnijv5Na2fUyiurhoeKtVNEg=w36-h36-p-rp-mo-ba12-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a/ACg8ocLyJUGvJAN9z-UXjgCZtBXp8FDmPV9zcQJcSbMuoB_SBMYKPg=w36-h36-p-rp-mo-ba12-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHSPt5OzC2XmgNQew3yL0nbp3JMxYd9JBEkRnL2DkmA_hdKEbuS1yo3uf6EQy7evjQuB3ahRF1QHceDENjIyHLNRaN_vT6VJj6Edno0TAd3slotu4JKFO8_Hb7QvoqLP7BMdOo=w156-h114-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGwYxl58gxRqHbj2K0tx-dJkypgg6qzORZ4PYUpDoEwE39r_tSLVeuPmMXUTnj4K6auVz5tiPg8nHsX52DwpgCZ1s1UDvk9mjBJyY6OUkTJ8ObVoPEOBGk47sbJnTOc-A4hX87mLQ=w156-h114-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF6lN-SSbpe6KWavwTVHJRCDlhlY2past3eQIWo-q9xOP32j3TpGibw5dVwPBKFG3kKImG1rofn9AKOQnMKxQsXvUgbBwFyNeYaHzulO4WGN0qWO57CgvtZ7_E8IXNxGp9fXXui=w156-h114-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGzlPVaLVdmO17IkvDvF2yJGgpwS_RLIA5ScFq5foALgh6nbG_L-syeWylIkB-TsIGQS1cO5cJQc_YNpdkGLt5HxgvfIG3uzcH1uHyJHYFUbBbW4mrBFWE4TFqNmN6nB1qFcweAIw=w156-h114-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFfdPr0TfC3uAoKZxcyYUtelWkWzzAOFHMuCEnnXmKsvRj-MwB843yI7iPqscezOw-yozcJ_qFrwToX2X0vEv8BfKwG0yTPn8ndXbctQb4NoaNnGGnejrtq3ZLL02njcrc6ZCU-EA=w156-h114-p-k-no"
+        }
+      ],
+      "rating": "4,0",
+      "review_count": "",
+      "status": "ok",
+      "website": "http://www.brdrjensenvvs.dk/"
+    },
+    "id": "a-s-brdr-jensen-vvs",
+    "input": {
+      "address": "Hjortekærsvej 180, 2800 Kongens Lyngby",
+      "city": "",
+      "cvr": "26512891",
+      "email": "info@bj-vvs.dk",
+      "id": "a-s-brdr-jensen-vvs",
+      "name": "A/S BRDR. JENSEN VVS",
+      "phone": "78 74 13 54",
+      "website": ""
+    },
+    "location": {
+      "address": "Hjortekærsvej 180, 2800 Hjortekær",
+      "country": "Denmark",
+      "latitude": "55.7962214",
+      "longitude": "12.5421532"
+    },
+    "meta": {
+      "last_updated_at": "2026-07-01T18:34:23+00:00",
+      "status": "scraped"
+    },
+    "name": "Brdr. Jensen VVS",
+    "phone": "45 87 80 88",
+    "trustpilot": {
+      "claimed_domain": "dk.business.trustpilot.com",
+      "domain": "brdrjensenvvs.dk",
+      "last_scraped_at": "2026-07-01T18:34:16+00:00",
+      "profile_url": "https://dk.trustpilot.com/review/brdrjensenvvs.dk",
+      "rating": "3.5",
+      "rating_text": "3,5",
+      "review_count": "5",
+      "status": "ok",
+      "verified_by_domain": false
+    },
+    "website": "http://www.brdrjensenvvs.dk/"
+  },
+  {
+    "cvr": "24393828",
+    "email": "info@as-pl.dk",
+    "google": {
+      "address": "Valborgvej 7, 4173 Fjenneslev",
+      "category": "Elinstallatør",
+      "contact": {
+        "phone": "57 80 90 81",
+        "phones": [
+          "57 80 90 81"
+        ]
+      },
+      "cvr": "24393828",
+      "description": "RestauranterHotellerOplevelserOff. trans.ParkeringApotekerHæveautomater",
+      "email": "",
+      "last_scraped_at": "2026-07-01T18:37:28+00:00",
+      "latitude": "55.4391743",
+      "longitude": "11.6634599",
+      "maps_url": "https://www.google.com/maps/place/Poul+Larsen+A%2FS/@55.4391743,11.6634599,17z/data=!3m1!4b1!4m6!3m5!1s0x46529aef693c4e7d:0xb6a7c03a06b8f4c3!8m2!3d55.4391743!4d11.6634599!16s%2Fg%2F1tdy7p8z?hl=da&entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D",
+      "match_score": 40,
+      "name": "Poul Larsen A/S",
+      "opening_hours": "onsdag06.30–16torsdag06.30–16fredag06.30–13lørdagLukketsøndagLukketmandag06.30–16tirsdag06.30–16",
+      "phone": "57 80 90 81",
+      "photos": [
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w32-h32-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w418-h240-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGpmYya7Y3jLAvCGTmNrJLi7AEKUyEFo2E7T-53mi0ec2KZL1cjoCzXZCXt1SfJi7gjUCCuOQHRe-JEh20hCuXi62jRkFeTU5QQ_2vQsY3aqUPddH8VDF_usr6fDwyCBAXmpfI_cg=w519-h298-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF_Zte7zPs5ty-X3iX4o95yYpMj2peVRa3WAkcDjQoNwtNQ9d3eFi7jS4a49PGzfPifYxPRpc3Rf44rtQLwmxBaSOdqY7MAuuR-yUT2SDglKR1LyVZvR4MK-DvjmGU6DwWPa0U=w460-h298-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjUxaTB9dI58W2zFai3D-av-3gHrlOPPg1Vf9G2R2jpu9PUBRjT3=w36-h36-p-rp-mo-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a/ACg8ocIsQlhEApmjWkRfpuLZrcvYr30sm0jWe3Op6BBffLLuoaWZLA=w36-h36-p-rp-mo-ba12-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/a-/ALV-UjWbEFfaaPskKOuZ-Xl9XYnIiqde_q1_mnNW1CeHkwr5833V8U8=w36-h36-p-rp-mo-br100"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFINQ1mumvRfKz90RDXroK6xNJDSagk35gbexKxhmro-CSuCPYM_w_nRCNsjQfcyg49vnNFxSeEJnFArpOSrCEgp2x9eV_llfw_5thgnPqWhQ3TXu8F82_edlrTTgvfSxlptnRP=w156-h114-p-k-no"
+        },
+        {
+          "source": "google",
+          "url": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGniOBg458yigN2RqxPEtTlT3KHQsthe_0gYRftZ_IYfplMEuYQN2X7y-6_4d8ZTDA8Y2oR1Y0CZzQp-gZ48pcuK5zK-gGLXDte5fFiSwz_wi8RKOqEwDX4yR6HAI9Gp83OH74=w156-h114-p-k-no"
+        }
+      ],
+      "rating": "4,3",
+      "review_count": "",
+      "status": "ok",
+      "website": "http://www.as-pl.dk/"
+    },
+    "id": "a-s-poul-larsen-autoriseret-el-og-vvs-installatr",
+    "input": {
+      "address": "Valborgvej 7, 4173 Fjenneslev",
+      "city": "",
+      "cvr": "24393828",
+      "email": "info@as-pl.dk",
+      "id": "a-s-poul-larsen-autoriseret-el-og-vvs-installatr",
+      "name": "A/S POUL LARSEN AUTORISERET EL- OG VVS-INSTALLATØR",
+      "phone": "57 80 90 81",
+      "website": ""
+    },
+    "location": {
+      "address": "Valborgvej 7, 4173 Fjenneslev",
+      "country": "Denmark",
+      "latitude": "55.4391743",
+      "longitude": "11.6634599"
+    },
+    "meta": {
+      "last_updated_at": "2026-07-01T18:37:49+00:00",
+      "status": "scraped"
+    },
+    "name": "Poul Larsen A/S",
+    "phone": "57 80 90 81",
+    "trustpilot": {
+      "claimed_domain": "dk.business.trustpilot.com",
+      "domain": "as-pl.dk",
+      "last_scraped_at": "2026-07-01T18:37:44+00:00",
+      "profile_url": "https://dk.trustpilot.com/review/as-pl.dk",
+      "rating": "3.8",
+      "rating_text": "3,8",
+      "review_count": "22",
+      "status": "ok",
+      "verified_by_domain": false
+    },
+    "website": "http://www.as-pl.dk/"
+  }
+]
