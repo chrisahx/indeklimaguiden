@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import logging
+import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -10,19 +11,9 @@ from scripts.google_maps_scraper.config import ScraperConfig
 from scripts.google_maps_scraper.utils import setup_logging, utc_now_iso
 
 from .contact import split_name_and_cvr
-from .google_maps import scrape_google_company
+from .db_storage import PostgresCompanyStorage
 from .models import InputCompany
-from .storage import (
-    load_companies,
-    load_input_companies,
-    load_json,
-    replace_reviews,
-    save_companies,
-    upsert_base_company,
-    write_json,
-    write_raw,
-)
-from .trustpilot import scrape_trustpilot_company
+from .storage import load_input_companies
 
 
 LOGGER = logging.getLogger(__name__)
@@ -31,7 +22,8 @@ LOGGER = logging.getLogger(__name__)
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Enrich installer companies from Google Maps and Trustpilot.")
     parser.add_argument("--input", type=Path, default=Path("data/input/varmepumpe-installatorer.csv"), help="Input CSV with companies.")
-    parser.add_argument("--output-dir", type=Path, default=Path("data/companies"), help="Output directory for JSON data.")
+    parser.add_argument("--database-url", help="PostgreSQL connection URL. Defaults to DATABASE_URL from the environment or .env.")
+    parser.add_argument("--output-dir", type=Path, default=Path("data/companies"), help="Deprecated; accepted for old commands but no longer used.")
     parser.add_argument("--batch-size", type=positive_int, default=10, help="Companies to scrape per run. Default: 10.")
     parser.add_argument("--company-id", help="Scrape/update one company id.")
     parser.add_argument("--name", help="Scrape/update one company by name substring.")
@@ -81,63 +73,72 @@ def main() -> None:
 
 
 async def run(args: argparse.Namespace) -> None:
-    companies_path = args.output_dir / "companies.json"
-    state_path = args.output_dir / "scrape-state.json"
-    google_reviews_path = args.output_dir / "reviews" / "google-reviews.jsonl"
-    trustpilot_reviews_path = args.output_dir / "reviews" / "trustpilot-reviews.jsonl"
-    raw_google_dir = args.output_dir / "raw" / "google"
-    raw_trustpilot_dir = args.output_dir / "raw" / "trustpilot"
+    database_url = resolve_database_url(args.database_url)
+    if not database_url:
+        raise SystemExit("DATABASE_URL is not configured. Pass --database-url or add DATABASE_URL to .env.")
 
-    companies = load_companies(companies_path)
-    state = load_json(state_path, {"companies": {}})
-    if not isinstance(state, dict):
-        state = {"companies": {}}
-    state.setdefault("companies", {})
+    with PostgresCompanyStorage(database_url) as storage:
+        companies = storage.load_companies()
+        inputs = load_input_companies(args.input) if args.input.exists() else inputs_from_existing(companies)
+        selected = select_companies(inputs, companies, args)
+        if not selected:
+            LOGGER.info("No companies selected for scraping.")
+            return
 
-    inputs = load_input_companies(args.input) if args.input.exists() else inputs_from_existing(companies)
-    selected = select_companies(inputs, companies, args)
-    if not selected:
-        LOGGER.info("No companies selected for scraping.")
-        return
+        config = ScraperConfig(headless=args.headless, language=args.language, delay_min=args.delay_min, delay_max=args.delay_max)
+        LOGGER.info("Selected %s company/companies", len(selected))
 
-    config = ScraperConfig(headless=args.headless, language=args.language, delay_min=args.delay_min, delay_max=args.delay_max)
-    LOGGER.info("Selected %s company/companies", len(selected))
+        for index, input_company in enumerate(selected, start=1):
+            LOGGER.info("[%s/%s] Enriching %s (%s)", index, len(selected), input_company.name, input_company.id)
+            company = companies.get(input_company.id) or {}
+            company.update(storage.upsert_base_company(input_company))
+            company_meta = ensure_dict(company, "meta")
 
-    for index, input_company in enumerate(selected, start=1):
-        LOGGER.info("[%s/%s] Enriching %s (%s)", index, len(selected), input_company.name, input_company.id)
-        company = upsert_base_company(companies, input_company)
-        company_meta = ensure_dict(company, "meta")
-        state_company = ensure_state_company(state, input_company.id)
+            if args.source in ("all", "google") and should_scrape(company, "google", args.force, args.stale_days):
+                from .google_maps import scrape_google_company
 
-        if args.source in ("all", "google") and should_scrape(company, "google", args.force, args.stale_days):
-            google_data, google_reviews, google_raw = await scrape_google_company(input_company, config, args.max_google_reviews, args.google_candidate_limit)
-            merge_google(company, google_data)
-            replace_reviews(google_reviews_path, input_company.id, "google", google_reviews)
-            write_raw(raw_google_dir / f"{input_company.id}.json", google_raw)
-            state_company["google_status"] = google_data.get("status", "unknown")
-            state_company["google_last_scraped_at"] = utc_now_iso()
-            LOGGER.info("Google status for %s: %s (%s reviews)", input_company.id, google_data.get("status"), len(google_reviews))
+                google_data, google_reviews, google_raw = await scrape_google_company(input_company, config, args.max_google_reviews, args.google_candidate_limit)
+                merge_google(company, google_data)
+                storage.save_google_result(company, google_data, google_reviews, google_raw)
+                LOGGER.info("Google status for %s: %s (%s reviews)", input_company.id, google_data.get("status"), len(google_reviews))
 
-        if args.source in ("all", "trustpilot") and should_scrape(company, "trustpilot", args.force, args.stale_days):
-            website = str(company.get("website") or input_company.website or "")
-            trustpilot_data, trustpilot_reviews, trustpilot_raw = await scrape_trustpilot_company(input_company, website, config, args.max_trustpilot_reviews)
-            company["trustpilot"] = trustpilot_data
-            replace_reviews(trustpilot_reviews_path, input_company.id, "trustpilot", trustpilot_reviews)
-            write_raw(raw_trustpilot_dir / f"{input_company.id}.json", trustpilot_raw)
-            state_company["trustpilot_status"] = trustpilot_data.get("status", "unknown")
-            state_company["trustpilot_last_scraped_at"] = utc_now_iso()
-            LOGGER.info("Trustpilot status for %s: %s (%s reviews)", input_company.id, trustpilot_data.get("status"), len(trustpilot_reviews))
+            if args.source in ("all", "trustpilot") and should_scrape(company, "trustpilot", args.force, args.stale_days):
+                from .trustpilot import scrape_trustpilot_company
 
-        company_meta["status"] = combined_status(company)
-        company_meta["last_updated_at"] = utc_now_iso()
-        state_company["last_updated_at"] = company_meta["last_updated_at"]
-        save_companies(companies_path, companies)
-        write_json(state_path, state)
+                website = str(company.get("website") or input_company.website or "")
+                trustpilot_data, trustpilot_reviews, trustpilot_raw = await scrape_trustpilot_company(input_company, website, config, args.max_trustpilot_reviews)
+                company["trustpilot"] = trustpilot_data
+                storage.save_trustpilot_result(company, trustpilot_data, trustpilot_reviews, trustpilot_raw)
+                LOGGER.info("Trustpilot status for %s: %s (%s reviews)", input_company.id, trustpilot_data.get("status"), len(trustpilot_reviews))
 
-    state["last_run_at"] = utc_now_iso()
-    save_companies(companies_path, companies)
-    write_json(state_path, state)
-    LOGGER.info("Finished enrichment. Wrote %s", companies_path)
+            company_meta["status"] = combined_status(company)
+            company_meta["last_updated_at"] = utc_now_iso()
+            storage.update_company_status(input_company.id, str(company_meta["status"]))
+            companies[input_company.id] = company
+
+    LOGGER.info("Finished enrichment. Updated PostgreSQL database.")
+
+
+def resolve_database_url(value: str | None) -> str:
+    if value:
+        return value
+    if os.environ.get("DATABASE_URL"):
+        return str(os.environ["DATABASE_URL"])
+    dotenv_values = load_dotenv(Path(".env"))
+    return dotenv_values.get("DATABASE_URL", "")
+
+
+def load_dotenv(path: Path) -> dict[str, str]:
+    values: dict[str, str] = {}
+    if not path.exists():
+        return values
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        values[key.strip()] = value.strip().strip('"').strip("'")
+    return values
 
 
 def inputs_from_existing(companies: dict[str, dict[str, object]]) -> list[InputCompany]:

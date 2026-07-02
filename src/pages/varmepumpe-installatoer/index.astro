@@ -8,7 +8,7 @@ import { slugifyCity } from '../../lib/slugs';
 
 interface CityRow {
   city_name: string;
-  company_count: string;
+  company_count: number;
 }
 
 let cities: Array<{ name: string; slug: string; companyCount: number }> = [];
@@ -16,18 +16,23 @@ let dbError = '';
 
 try {
   const rows = await getPrisma().$queryRaw<CityRow[]>`
+    with company_cities as (
+      select
+        coalesce(
+          nullif(trim(company_locations.city), ''),
+          nullif(trim(substring(company_locations.address from ',\\s*[0-9]{4}\\s+(.+)$')), '')
+        ) as city_name
+      from company_locations
+      join companies on companies.id = company_locations.company_id
+    )
     select
-      min(trim(company_locations.city)) as city_name,
+      min(city_name) as city_name,
       count(*)::int as company_count
-    from company_locations
-    join companies on companies.id = company_locations.company_id
-    where companies.is_published = true
-      and company_locations.city is not null
-      and trim(company_locations.city) != ''
-    group by lower(trim(company_locations.city))
+    from company_cities
+    where city_name is not null
+    group by lower(city_name)
     order by city_name asc
   `;
-
   cities = rows
     .map((row) => ({
       name: row.city_name,
@@ -58,7 +63,7 @@ const totalCompanies = cities.reduce((sum, city) => sum + city.companyCount, 0);
     </div>
     <aside class="surface stats-card" aria-label="Status for installatørregisteret">
       <strong>{totalCompanies}</strong>
-      <span>publicerede installatører fordelt på {cities.length} byer</span>
+      <span>installatører fordelt på {cities.length} byer</span>
     </aside>
   </section>
 
@@ -66,7 +71,7 @@ const totalCompanies = cities.reduce((sum, city) => sum + city.companyCount, 0);
     <div class="section-heading">
       <span class="pill">Byer</span>
       <h2>Vælg by</h2>
-      <p>Listen opdateres automatisk ud fra de publicerede installatører i databasen.</p>
+      <p>Listen opdateres automatisk ud fra installatørerne i databasen.</p>
     </div>
 
     {dbError ? (
@@ -86,7 +91,7 @@ const totalCompanies = cities.reduce((sum, city) => sum + city.companyCount, 0);
     ) : (
       <div class="surface notice">
         <strong>Ingen byer fundet endnu.</strong>
-        <p>Importer scrapedata til PostgreSQL, og sørg for at virksomhederne har en by og er markeret som publicerede.</p>
+        <p>Importer scrapedata til PostgreSQL, og sørg for at virksomhederne har en by.</p>
       </div>
     )}
   </section>

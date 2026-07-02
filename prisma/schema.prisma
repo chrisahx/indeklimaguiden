@@ -16,7 +16,6 @@ model Company {
   phone         String?          @db.Text
   email         String?          @db.Text
   status        String           @default("pending") @db.Text
-  isPublished   Boolean          @default(false) @map("is_published")
   isClaimed     Boolean          @default(false) @map("is_claimed")
   createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt     DateTime         @default(now()) @map("updated_at") @db.Timestamptz(6)
@@ -28,7 +27,7 @@ model Company {
   claims        CompanyClaim[]
   editRequests  CompanyEditRequest[]
 
-  @@index([isPublished, name], map: "companies_published_idx")
+  @@index([name], map: "companies_name_idx")
   @@map("companies")
 }
 

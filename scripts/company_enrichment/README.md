@@ -2,7 +2,7 @@
 
 Batch scraper for enriching Danish varmepumpe installer companies from Google Maps and Trustpilot.
 
-It builds on `scripts/google_maps_scraper/` and writes Astro-friendly JSON plus JSONL review files.
+It builds on `scripts/google_maps_scraper/` and writes company, source, review, location, and photo data directly to PostgreSQL.
 
 ## Install
 
@@ -11,7 +11,7 @@ From the repository root:
 ```bash
 python -m venv .venv-google-maps-scraper
 source .venv-google-maps-scraper/bin/activate
-pip install -r scripts/google_maps_scraper/requirements.txt
+pip install -r scripts/company_enrichment/requirements.txt
 python -m playwright install chromium
 ```
 
@@ -35,6 +35,20 @@ Scrape the next 10 companies:
 
 ```bash
 python -m scripts.company_enrichment.cli --input data/input/varmepumpe-installatorer.csv --batch-size 10
+```
+
+The scraper reads `DATABASE_URL` from the environment or `.env` by default:
+
+```text
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/indeklimaguiden
+```
+
+You can also pass a database explicitly, for example to target production:
+
+```bash
+python -m scripts.company_enrichment.cli \
+  --database-url postgresql://user:password@host:5432/database \
+  --batch-size 10
 ```
 
 Update one company:
@@ -64,16 +78,17 @@ python -m scripts.company_enrichment.cli --source trustpilot --batch-size 10
 
 ## Outputs
 
+The scraper writes to the Prisma-managed PostgreSQL tables:
+
 ```text
-data/companies/companies.json
-data/companies/scrape-state.json
-data/companies/reviews/google-reviews.jsonl
-data/companies/reviews/trustpilot-reviews.jsonl
-data/companies/raw/google/{company_id}.json
-data/companies/raw/trustpilot/{company_id}.json
+companies
+company_locations
+company_sources
+company_reviews
+company_photos
 ```
 
-`companies.json` is the primary Astro-friendly company index. Reviews are stored separately as JSONL and linked with `company_id`.
+Each `company_sources` row stores the normalized scraper output plus raw scrape details in `payload`. Reviews are replaced per `company_id` and source on each successful source scrape, preserving the old JSONL replacement behavior without creating duplicates.
 
 ## Database direction
 
@@ -82,9 +97,8 @@ The website now uses Prisma migrations in `prisma/migrations` for the PostgreSQL
 Recommended flow:
 
 1. Keep scraping as a separate batch process.
-2. Write raw JSON/JSONL files as an audit/debug artifact.
-3. Add an ingestion step that upserts the normalized scraper output into PostgreSQL.
-4. Let Astro SSR directory pages read from PostgreSQL with `DATABASE_URL`.
+2. Run it against the desired database with `DATABASE_URL` or `--database-url`.
+3. Let Astro SSR directory pages read from PostgreSQL with the same schema.
 
 This keeps scraping failures, rate limits, and markup changes away from page requests, while still allowing company pages to update without rebuilding the static site.
 
