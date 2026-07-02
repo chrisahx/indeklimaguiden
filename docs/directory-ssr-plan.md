@@ -17,7 +17,7 @@ Add a company directory for Danish varmepumpe installers while keeping the exist
 ## Database Approach
 
 1. Use PostgreSQL locally through `docker-compose.yml`.
-2. Use `db/schema.sql` as the initial schema.
+2. Use Prisma migrations in `prisma/migrations` as the database schema source of truth.
 3. Keep stable public company fields normalized in `companies` and `company_locations`.
 4. Store source-specific Google/Trustpilot snapshots in `company_sources.payload` as `jsonb`.
 5. Store reviews in `company_reviews`, keyed by scraper-generated review IDs.
@@ -39,7 +39,7 @@ This avoids slow page requests, scraper rate-limit failures, and accidental data
 
 ## Next Implementation Steps
 
-1. Add a database helper in `src/lib/db.ts` using `DATABASE_URL`.
+1. Add a Prisma helper in `src/lib/prisma.ts` using `DATABASE_URL`.
 2. Add an ingestion command for `scripts/company_enrichment` that upserts existing `companies.json` and review JSONL files into PostgreSQL.
 3. Build `/installatoerer` and `/installatoerer/[slug]` as SSR pages.
 4. Add filters for city, rating, and source availability.

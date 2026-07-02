@@ -77,7 +77,7 @@ data/companies/raw/trustpilot/{company_id}.json
 
 ## Database direction
 
-The website now includes a local PostgreSQL schema in `db/schema.sql` and a development database in `docker-compose.yml`.
+The website now uses Prisma migrations in `prisma/migrations` for the PostgreSQL schema and a development database in `docker-compose.yml`.
 
 Recommended flow:
 

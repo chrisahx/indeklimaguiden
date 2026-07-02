@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Company {
+  id            String           @id @db.Text
+  slug          String           @unique @db.Text
+  name          String           @db.Text
+  cvr           String?          @unique @db.Text
+  website       String?          @db.Text
+  phone         String?          @db.Text
+  email         String?          @db.Text
+  status        String           @default("pending") @db.Text
+  isPublished   Boolean          @default(false) @map("is_published")
+  isClaimed     Boolean          @default(false) @map("is_claimed")
+  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime         @default(now()) @map("updated_at") @db.Timestamptz(6)
+  lastScrapedAt DateTime?        @map("last_scraped_at") @db.Timestamptz(6)
+  location      CompanyLocation?
+  sources       CompanySource[]
+  reviews       CompanyReview[]
+  photos        CompanyPhoto[]
+  claims        CompanyClaim[]
+  editRequests  CompanyEditRequest[]
+
+  @@index([isPublished, name], map: "companies_published_idx")
+  @@map("companies")
+}
+
+model CompanyLocation {
+  companyId  String   @id @map("company_id") @db.Text
+  address    String?  @db.Text
+  postalCode String?  @map("postal_code") @db.Text
+  city       String?  @db.Text
+  country    String   @default("Denmark") @db.Text
+  latitude   Decimal? @db.Decimal(10, 7)
+  longitude  Decimal? @db.Decimal(10, 7)
+  updatedAt  DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([city], map: "company_locations_city_idx")
+  @@map("company_locations")
+}
+
+model CompanySource {
+  id          String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  companyId   String            @map("company_id") @db.Text
+  source      String   @db.Text
+  sourceUrl   String?           @map("source_url") @db.Text
+  externalId  String?           @map("external_id") @db.Text
+  status      String            @default("pending") @db.Text
+  rating      Decimal?          @db.Decimal(3, 2)
+  reviewCount Int?              @map("review_count")
+  payload     Json              @default("{}")
+  scrapedAt   DateTime?         @map("scraped_at") @db.Timestamptz(6)
+  createdAt   DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime          @default(now()) @map("updated_at") @db.Timestamptz(6)
+  company     Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, source])
+  @@map("company_sources")
+}
+
+model CompanyReview {
+  id              String           @id @db.Text
+  companyId       String           @map("company_id") @db.Text
+  source          String   @db.Text
+  sourceUrl       String?          @map("source_url") @db.Text
+  author          String?          @db.Text
+  title           String?          @db.Text
+  body            String?          @db.Text
+  rating          Decimal?         @db.Decimal(3, 2)
+  ratingLabel     String?          @map("rating_label") @db.Text
+  reviewedAt      DateTime?        @map("reviewed_at") @db.Timestamptz(6)
+  reviewedAtLabel String?          @map("reviewed_at_label") @db.Text
+  scrapedAt       DateTime         @default(now()) @map("scraped_at") @db.Timestamptz(6)
+  payload         Json             @default("{}")
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime         @default(now()) @map("updated_at") @db.Timestamptz(6)
+  company         Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, source, reviewedAt(sort: Desc)], map: "company_reviews_company_source_idx")
+  @@index([rating], map: "company_reviews_rating_idx")
+  @@map("company_reviews")
+}
+
+model CompanyPhoto {
+  id        String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  companyId String            @map("company_id") @db.Text
+  source    String   @db.Text
+  url       String            @db.Text
+  alt       String?           @db.Text
+  position  Int               @default(0)
+  payload   Json              @default("{}")
+  createdAt DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  company   Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, source, url])
+  @@map("company_photos")
+}
+
+model User {
+  id           String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String               @unique @db.Text
+  name         String?              @db.Text
+  createdAt    DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime             @default(now()) @map("updated_at") @db.Timestamptz(6)
+  claims       CompanyClaim[]
+  editRequests CompanyEditRequest[]
+
+  @@map("users")
+}
+
+model CompanyClaim {
+  id                  String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  companyId           String       @map("company_id") @db.Text
+  userId              String?      @map("user_id") @db.Uuid
+  claimantEmail       String       @map("claimant_email") @db.Text
+  claimantName        String?      @map("claimant_name") @db.Text
+  status              String       @default("pending") @db.Text
+  verificationMethod  String?      @map("verification_method") @db.Text
+  verificationPayload Json         @default("{}") @map("verification_payload")
+  createdAt           DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  decidedAt           DateTime?    @map("decided_at") @db.Timestamptz(6)
+  company             Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user                User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([companyId, status], map: "company_claims_company_status_idx")
+  @@map("company_claims")
+}
+
+model CompanyEditRequest {
+  id               String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  companyId        String            @map("company_id") @db.Text
+  userId           String?           @map("user_id") @db.Uuid
+  status           String   @default("pending") @db.Text
+  requestedChanges Json              @map("requested_changes")
+  createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  decidedAt        DateTime?         @map("decided_at") @db.Timestamptz(6)
+  company          Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user             User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("company_edit_requests")
+}
