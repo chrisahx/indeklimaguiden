@@ -75,6 +75,19 @@ data/companies/raw/trustpilot/{company_id}.json
 
 `companies.json` is the primary Astro-friendly company index. Reviews are stored separately as JSONL and linked with `company_id`.
 
+## Database direction
+
+The website now includes a local PostgreSQL schema in `db/schema.sql` and a development database in `docker-compose.yml`.
+
+Recommended flow:
+
+1. Keep scraping as a separate batch process.
+2. Write raw JSON/JSONL files as an audit/debug artifact.
+3. Add an ingestion step that upserts the normalized scraper output into PostgreSQL.
+4. Let Astro SSR directory pages read from PostgreSQL with `DATABASE_URL`.
+
+This keeps scraping failures, rate limits, and markup changes away from page requests, while still allowing company pages to update without rebuilding the static site.
+
 ## Notes
 
 Google Maps and Trustpilot markup changes often. This scraper is deliberately conservative: it processes small batches, saves after each company, and marks failures/statuses so runs can be resumed safely.
