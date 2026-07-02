@@ -2,6 +2,7 @@
 export const prerender = false;
 
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CompanyRatingBadge from '../../components/CompanyRatingBadge.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getPrisma } from '../../lib/prisma';
 import { slugifyCity } from '../../lib/slugs';
@@ -14,14 +15,9 @@ interface CompanyRow {
   id: string;
   slug: string;
   name: string;
-  website: string | null;
-  phone: string | null;
-  email: string | null;
   cvr: string | null;
   address: string | null;
   city: string;
-  latitude: string | null;
-  longitude: string | null;
   google_rating: string | null;
   google_review_count: number | null;
   trustpilot_rating: string | null;
@@ -57,14 +53,9 @@ try {
       companies.id,
       companies.slug,
       companies.name,
-      companies.website,
-      companies.phone,
-      companies.email,
       companies.cvr,
       company_locations.address,
       trim(company_locations.city) as city,
-      company_locations.latitude::text as latitude,
-      company_locations.longitude::text as longitude,
       google.rating::text as google_rating,
       google.review_count as google_review_count,
       trustpilot.rating::text as trustpilot_rating,
@@ -86,8 +77,8 @@ try {
 
 const title = cityName ? `Varmepumpe installatører i ${cityName}` : 'Varmepumpe installatører';
 const description = cityName
-  ? `Find varmepumpe installatører i ${cityName}. Se lokale virksomheder, kontaktoplysninger og offentligt indsamlede anmeldelsesdata.`
-  : 'Find lokale varmepumpe installatører og kontaktoplysninger.';
+  ? `Find varmepumpe installatører i ${cityName}. Se lokale virksomheder, CVR og offentligt indsamlede anmeldelsesdata.`
+  : 'Find lokale varmepumpe installatører, CVR og anmeldelsesdata.';
 ---
 
 <BaseLayout title={title} description={description} path={`/varmepumpe-installatoer/${citySlug}/`}>
@@ -96,7 +87,7 @@ const description = cityName
     <span class="pill">Lokal oversigt</span>
     <h1>{cityName ? `Varmepumpe installatører i ${cityName}` : 'Varmepumpe installatører'}</h1>
     <p>
-      Sammenlign lokale installatører, kontaktoplysninger og anmeldelsesdata. Brug oversigten som startpunkt, og verificér altid autorisation, opgaveomfang og pris direkte med virksomheden.
+      Sammenlign lokale installatører, adresser og anmeldelsesdata. Brug oversigten som startpunkt, og åbn virksomhedssiden for kontaktoplysninger og mere data.
     </p>
   </section>
 
@@ -120,16 +111,14 @@ const description = cityName
                 <div>
                   <h2>{company.name}</h2>
                   <p class="address">{company.address || company.city}</p>
-                  <dl class="ratings">
-                    {company.google_rating && <div><dt>Google</dt><dd>{company.google_rating}{company.google_review_count ? ` (${company.google_review_count})` : ''}</dd></div>}
-                    {company.trustpilot_rating && <div><dt>Trustpilot</dt><dd>{company.trustpilot_rating}{company.trustpilot_review_count ? ` (${company.trustpilot_review_count})` : ''}</dd></div>}
-                    {company.cvr && <div><dt>CVR</dt><dd>{company.cvr}</dd></div>}
-                  </dl>
+                  <div class="ratings">
+                    <CompanyRatingBadge source="google" rating={company.google_rating} reviewCount={company.google_review_count} />
+                    <CompanyRatingBadge source="trustpilot" rating={company.trustpilot_rating} reviewCount={company.trustpilot_review_count} />
+                    {company.cvr && <span class="cvr-badge"><span>CVR</span><strong>{company.cvr}</strong></span>}
+                  </div>
                 </div>
                 <div class="actions">
-                  {company.website && <a class="button" href={company.website} rel="nofollow noopener" target="_blank">Besøg website</a>}
-                  {company.phone && <a class="button secondary" href={`tel:${company.phone.replace(/\s+/g, '')}`}>{company.phone}</a>}
-                  {company.email && <a class="button secondary" href={`mailto:${company.email}`}>Send mail</a>}
+                  <a class="button" href={`/varmepumpe-installatoer/${citySlug}/${company.slug}/`}>Se info</a>
                 </div>
               </article>
             ))}
@@ -161,10 +150,9 @@ const description = cityName
   .company-card h2 { margin: 0 0 0.5rem; font-size: clamp(1.35rem, 2.5vw, 2rem); }
   .address { color: var(--color-muted); }
   .ratings { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1rem 0 0; }
-  .ratings div { border: 1px solid var(--color-border); border-radius: 999px; padding: 0.45rem 0.7rem; background: var(--color-surface-strong); }
-  .ratings dt, .ratings dd { display: inline; margin: 0; }
-  .ratings dt { color: var(--color-muted); font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
-  .ratings dd { margin-left: 0.35rem; color: var(--color-primary); font-weight: 900; }
+  .cvr-badge { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--color-border); border-radius: 999px; padding: 0.45rem 0.7rem; background: var(--color-surface-strong); color: var(--color-primary); font-weight: 900; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06); }
+  .cvr-badge span { color: var(--color-muted); font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .cvr-badge strong { font-size: 0.98rem; }
   .actions { display: flex; flex-direction: column; gap: 0.6rem; min-width: 180px; }
   .actions .button { width: 100%; padding: 0.75rem 1rem; }
   .notice { padding: 1.25rem; }
