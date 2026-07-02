@@ -36,19 +36,11 @@ let dbError = '';
 try {
   const prisma = getPrisma();
   const cityRows = await prisma.$queryRaw<CityRow[]>`
-    with company_cities as (
-      select
-        coalesce(
-          nullif(trim(company_locations.city), ''),
-          nullif(trim(substring(company_locations.address from ',\\s*[0-9]{4}\\s+(.+)$')), '')
-        ) as city_name
-      from company_locations
-      join companies on companies.id = company_locations.company_id
-    )
-    select min(city_name) as city_name
-    from company_cities
-    where city_name is not null
-    group by lower(city_name)
+    select min(trim(company_locations.city)) as city_name
+    from company_locations
+    join companies on companies.id = company_locations.company_id
+    where nullif(trim(company_locations.city), '') is not null
+    group by lower(trim(company_locations.city))
     order by city_name asc
   `;
 
@@ -70,10 +62,7 @@ try {
       companies.email,
       companies.cvr,
       company_locations.address,
-      coalesce(
-        nullif(trim(company_locations.city), ''),
-        nullif(trim(substring(company_locations.address from ',\\s*[0-9]{4}\\s+(.+)$')), '')
-      ) as city,
+      trim(company_locations.city) as city,
       company_locations.latitude::text as latitude,
       company_locations.longitude::text as longitude,
       google.rating::text as google_rating,
@@ -86,10 +75,7 @@ try {
       on google.company_id = companies.id and google.source = 'google'
     left join company_sources trustpilot
       on trustpilot.company_id = companies.id and trustpilot.source = 'trustpilot'
-    where lower(trim(coalesce(
-        nullif(trim(company_locations.city), ''),
-        nullif(trim(substring(company_locations.address from ',\\s*[0-9]{4}\\s+(.+)$')), '')
-      ))) = lower(trim(${cityName}))
+    where lower(trim(company_locations.city)) = lower(trim(${cityName}))
     order by companies.name asc
   `;
 

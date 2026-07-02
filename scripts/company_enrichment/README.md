@@ -26,7 +26,7 @@ data/input/varmepumpe-installatorer.csv
 Supported column names include Danish and English variants:
 
 ```text
-id,name/navn,website/hjemmeside,url,city/by,address/adresse,phone/telefon,cvr
+id,name/navn,website/hjemmeside,url,city/by,postal_code/postnummer/postnr,address/adresse,phone/telefon,cvr
 ```
 
 ## Usage

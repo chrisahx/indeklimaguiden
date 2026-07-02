@@ -12,7 +12,7 @@ from scripts.google_maps_scraper.utils import setup_logging, utc_now_iso
 
 from .contact import split_name_and_cvr
 from .db_storage import PostgresCompanyStorage
-from .models import InputCompany
+from .models import InputCompany, parse_postal_code_and_city
 from .storage import load_input_companies
 
 
@@ -150,6 +150,7 @@ def inputs_from_existing(companies: dict[str, dict[str, object]]) -> list[InputC
             name=str(company.get("name", "")),
             website=str(company.get("website", "")),
             city=str(location.get("city", "")) if isinstance(location, dict) else "",
+            postal_code=str(location.get("postal_code", "")) if isinstance(location, dict) else "",
             address=str(location.get("address", "")) if isinstance(location, dict) else "",
             phone=str(company.get("phone", "")),
             email=str(company.get("email", "")),
@@ -221,6 +222,11 @@ def merge_google(company: dict[str, object], google_data: dict[str, object]) -> 
         if cvr:
             company["cvr"] = cvr
     location = ensure_dict(company, "location")
+    postal_code, city = google_location_parts(google_data)
+    if postal_code:
+        location["postal_code"] = postal_code
+    if city:
+        location["city"] = city
     for source_key, target_key in (("address", "address"), ("latitude", "latitude"), ("longitude", "longitude")):
         if google_data.get(source_key):
             location[target_key] = google_data[source_key]
@@ -260,6 +266,16 @@ def combined_status(company: dict[str, object]) -> str:
     if any(status in {"not_found", "needs_manual_review"} for status in statuses):
         return "partial"
     return "pending"
+
+
+def google_location_parts(google_data: dict[str, object]) -> tuple[str, str]:
+    postal_code = str(google_data.get("postal_code") or "")
+    city = str(google_data.get("city") or "")
+    parsed = parse_postal_code_and_city(str(google_data.get("address") or ""))
+    if parsed:
+        postal_code = postal_code or parsed[0]
+        city = city or parsed[1]
+    return postal_code, city
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ from decimal import Decimal, InvalidOperation
 from typing import Iterable
 
 from .matching import slugify
-from .models import InputCompany
+from .models import InputCompany, parse_postal_code_and_city
 
 
 class PostgresCompanyStorage:
@@ -41,7 +41,6 @@ class PostgresCompanyStorage:
                   c.phone,
                   c.email,
                   c.status,
-                  c.is_published,
                   c.is_claimed,
                   c.last_scraped_at,
                   l.address,
@@ -66,7 +65,6 @@ class PostgresCompanyStorage:
                     "phone": row["phone"] or "",
                     "email": row["email"] or "",
                     "status": row["status"],
-                    "is_published": row["is_published"],
                     "is_claimed": row["is_claimed"],
                     "last_scraped_at": iso_datetime(row["last_scraped_at"]),
                     "location": {
@@ -135,14 +133,15 @@ class PostgresCompanyStorage:
                 company = dict(cursor.fetchone())
                 cursor.execute(
                     """
-                    insert into company_locations (company_id, address, city, country)
-                    values (%s, nullif(%s, ''), nullif(%s, ''), 'Denmark')
+                    insert into company_locations (company_id, address, postal_code, city, country)
+                    values (%s, nullif(%s, ''), nullif(%s, ''), nullif(%s, ''), 'Denmark')
                     on conflict (company_id) do update set
                       address = coalesce(company_locations.address, excluded.address),
+                      postal_code = coalesce(company_locations.postal_code, excluded.postal_code),
                       city = coalesce(company_locations.city, excluded.city),
                       country = coalesce(company_locations.country, excluded.country)
                     """,
-                    (input_company.id, input_company.address, input_company.city),
+                    (input_company.id, input_company.address, input_company.postal_code, input_company.city),
                 )
                 cursor.execute(
                     """
@@ -168,6 +167,7 @@ class PostgresCompanyStorage:
             "input": input_company.to_dict(),
             "location": {
                 "address": input_company.address,
+                "postal_code": input_company.postal_code,
                 "city": input_company.city,
                 "country": "Denmark",
             },
@@ -309,12 +309,15 @@ class PostgresCompanyStorage:
                         company_id,
                     ),
                 )
+                postal_code, city = google_location_parts(google_data)
                 cursor.execute(
                     """
-                    insert into company_locations (company_id, address, country, latitude, longitude)
-                    values (%s, nullif(%s, ''), 'Denmark', %s, %s)
+                    insert into company_locations (company_id, address, postal_code, city, country, latitude, longitude)
+                    values (%s, nullif(%s, ''), nullif(%s, ''), nullif(%s, ''), 'Denmark', %s, %s)
                     on conflict (company_id) do update set
                       address = coalesce(excluded.address, company_locations.address),
+                      postal_code = coalesce(excluded.postal_code, company_locations.postal_code),
+                      city = coalesce(excluded.city, company_locations.city),
                       country = coalesce(company_locations.country, excluded.country),
                       latitude = coalesce(excluded.latitude, company_locations.latitude),
                       longitude = coalesce(excluded.longitude, company_locations.longitude)
@@ -322,6 +325,8 @@ class PostgresCompanyStorage:
                     (
                         company_id,
                         str(google_data.get("address") or ""),
+                        postal_code,
+                        city,
                         decimal_or_none(google_data.get("latitude")),
                         decimal_or_none(google_data.get("longitude")),
                     ),
@@ -421,3 +426,13 @@ def external_id(source: str, source_data: dict[str, object]) -> str:
     if source == "trustpilot":
         return str(source_data.get("domain") or "")
     return str(source_data.get("place_id") or source_data.get("maps_url") or "")
+
+
+def google_location_parts(google_data: dict[str, object]) -> tuple[str, str]:
+    postal_code = str(google_data.get("postal_code") or "")
+    city = str(google_data.get("city") or "")
+    parsed = parse_postal_code_and_city(str(google_data.get("address") or ""))
+    if parsed:
+        postal_code = postal_code or parsed[0]
+        city = city or parsed[1]
+    return postal_code, city

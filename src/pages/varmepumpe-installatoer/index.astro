@@ -16,21 +16,13 @@ let dbError = '';
 
 try {
   const rows = await getPrisma().$queryRaw<CityRow[]>`
-    with company_cities as (
-      select
-        coalesce(
-          nullif(trim(company_locations.city), ''),
-          nullif(trim(substring(company_locations.address from ',\\s*[0-9]{4}\\s+(.+)$')), '')
-        ) as city_name
-      from company_locations
-      join companies on companies.id = company_locations.company_id
-    )
     select
-      min(city_name) as city_name,
+      min(trim(company_locations.city)) as city_name,
       count(*)::int as company_count
-    from company_cities
-    where city_name is not null
-    group by lower(city_name)
+    from company_locations
+    join companies on companies.id = company_locations.company_id
+    where nullif(trim(company_locations.city), '') is not null
+    group by lower(trim(company_locations.city))
     order by city_name asc
   `;
   cities = rows
