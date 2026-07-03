@@ -35,10 +35,22 @@ interface CompanyRow {
   trustpilot_source_url: string | null;
 }
 
+interface CompanyReviewRow {
+  source: 'google' | 'trustpilot';
+  source_url: string | null;
+  author: string | null;
+  title: string | null;
+  body: string | null;
+  rating: string | null;
+  rating_label: string | null;
+  reviewed_at_display: string | null;
+}
+
 const citySlug = Astro.params.city ?? '';
 const companySlug = Astro.params.company ?? '';
 let cityName = '';
 let company: CompanyRow | null = null;
+let reviews: CompanyReviewRow[] = [];
 let dbError = '';
 
 try {
@@ -99,6 +111,41 @@ try {
   if (!company) {
     return new Response('Virksomheden blev ikke fundet.', { status: 404 });
   }
+
+  reviews = await prisma.$queryRaw<CompanyReviewRow[]>`
+    select
+      source,
+      source_url,
+      author,
+      title,
+      body,
+      rating::text as rating,
+      rating_label,
+      reviewed_at_display
+    from (
+      select
+        company_reviews.source,
+        company_reviews.source_url,
+        company_reviews.author,
+        company_reviews.title,
+        company_reviews.body,
+        company_reviews.rating,
+        company_reviews.rating_label,
+        coalesce(
+          company_reviews.reviewed_at_label,
+          to_char(company_reviews.reviewed_at at time zone 'Europe/Copenhagen', 'DD.MM.YYYY')
+        ) as reviewed_at_display,
+        row_number() over (
+          partition by company_reviews.source
+          order by company_reviews.reviewed_at desc nulls last, company_reviews.created_at desc
+        ) as source_rank
+      from company_reviews
+      where company_reviews.company_id = ${company.id}
+        and company_reviews.source in ('google', 'trustpilot')
+    ) ranked_reviews
+    where source_rank <= 20
+    order by source asc, source_rank asc
+  `;
 } catch (error) {
   dbError = error instanceof Error ? error.message : 'Kunne ikke hente virksomheden fra databasen.';
 }
@@ -108,6 +155,12 @@ const description = company
   ? `Se kontaktoplysninger, adresse, CVR og anmeldelsesdata for ${company.name} i ${cityName}.`
   : 'Se kontaktoplysninger og anmeldelsesdata for en varmepumpe installatør.';
 const fullAddress = company ? [company.address, company.postal_code, company.city].filter(Boolean).join(', ') : '';
+const googleReviews = reviews.filter((review) => review.source === 'google');
+const trustpilotReviews = reviews.filter((review) => review.source === 'trustpilot');
+const getRatingValue = (rating: string | null) => {
+  const ratingNumber = Number(rating);
+  return Number.isFinite(ratingNumber) ? Math.max(0, Math.min(5, ratingNumber)) : null;
+};
 ---
 
 <BaseLayout title={title} description={description} path={`/varmepumpe-installatoer/${citySlug}/${companySlug}/`}>
@@ -148,7 +201,7 @@ const fullAddress = company ? [company.address, company.postal_code, company.cit
   {company && !dbError && (
     <>
       <section class="container detail-section">
-        <div class="surface info-card">
+        <div class="surface info-card" data-company-data-card>
           <h2>Virksomhedsdata</h2>
           <dl class="info-grid">
             <div><dt>Navn</dt><dd>{company.name}</dd></div>
@@ -162,17 +215,90 @@ const fullAddress = company ? [company.address, company.postal_code, company.cit
           </dl>
         </div>
 
-        <div class="surface info-card">
+        <div class="surface info-card reviews-card" data-reviews-card>
           <h2>Anmeldelsesdata</h2>
-          <div class="review-sources">
-            <div class="review-source">
+
+          <div class="review-tabs" role="tablist" aria-label="Anmeldelseskilder">
+            <button class="review-tab is-active" type="button" role="tab" id="google-reviews-tab" aria-controls="google-reviews-panel" aria-selected="true" data-review-tab="google">Google anmeldelser</button>
+            <button class="review-tab" type="button" role="tab" id="trustpilot-reviews-tab" aria-controls="trustpilot-reviews-panel" aria-selected="false" data-review-tab="trustpilot">Trustpilot anmeldelser</button>
+          </div>
+
+          <div class="review-panel" role="tabpanel" id="google-reviews-panel" aria-labelledby="google-reviews-tab" data-review-panel="google">
+            <div class="review-panel__summary">
               <CompanyRatingBadge source="google" rating={company.google_rating} reviewCount={company.google_review_count} />
               {company.google_source_url && <a href={company.google_source_url} rel="nofollow noopener" target="_blank">Se Google-kilde</a>}
             </div>
-            <div class="review-source">
+
+            {googleReviews.length > 0 ? (
+              <div class="review-list" aria-label="Google anmeldelser">
+                {googleReviews.map((review) => {
+                  const ratingValue = getRatingValue(review.rating);
+
+                  return (
+                    <article class="review-item">
+                      <header class="review-item__header">
+                        <div>
+                          <h3>{review.author || 'Anonym anmelder'}</h3>
+                          {review.reviewed_at_display && <p>{review.reviewed_at_display}</p>}
+                        </div>
+                        {ratingValue !== null && (
+                          <span class="review-item__rating" aria-label={`${ratingValue.toFixed(1)} ud af 5 stjerner`}>
+                            <strong>{ratingValue.toFixed(1)}</strong>
+                            <span aria-hidden="true">
+                              {[1, 2, 3, 4, 5].map((star) => <span class={star <= Math.round(ratingValue) ? 'is-filled' : ''}>★</span>)}
+                            </span>
+                          </span>
+                        )}
+                      </header>
+                      {review.title && <strong class="review-item__title">{review.title}</strong>}
+                      {review.body && <p class="review-item__body">{review.body}</p>}
+                      {review.source_url && <a class="review-item__link" href={review.source_url} rel="nofollow noopener" target="_blank">Læs original anmeldelse</a>}
+                    </article>
+                  );
+                })}
+              </div>
+            ) : (
+              <p class="empty-reviews">Der er endnu ingen importerede Google-anmeldelser.</p>
+            )}
+          </div>
+
+          <div class="review-panel" role="tabpanel" id="trustpilot-reviews-panel" aria-labelledby="trustpilot-reviews-tab" data-review-panel="trustpilot" hidden>
+            <div class="review-panel__summary">
               <CompanyRatingBadge source="trustpilot" rating={company.trustpilot_rating} reviewCount={company.trustpilot_review_count} />
               {company.trustpilot_source_url && <a href={company.trustpilot_source_url} rel="nofollow noopener" target="_blank">Se Trustpilot-kilde</a>}
             </div>
+
+            {trustpilotReviews.length > 0 ? (
+              <div class="review-list" aria-label="Trustpilot anmeldelser">
+                {trustpilotReviews.map((review) => {
+                  const ratingValue = getRatingValue(review.rating);
+
+                  return (
+                    <article class="review-item review-item--trustpilot">
+                      <header class="review-item__header">
+                        <div>
+                          <h3>{review.author || 'Anonym anmelder'}</h3>
+                          {review.reviewed_at_display && <p>{review.reviewed_at_display}</p>}
+                        </div>
+                        {ratingValue !== null && (
+                          <span class="review-item__rating" aria-label={`${ratingValue.toFixed(1)} ud af 5 stjerner`}>
+                            <strong>{ratingValue.toFixed(1)}</strong>
+                            <span aria-hidden="true">
+                              {[1, 2, 3, 4, 5].map((star) => <span class={star <= Math.round(ratingValue) ? 'is-filled' : ''}>★</span>)}
+                            </span>
+                          </span>
+                        )}
+                      </header>
+                      {review.title && <strong class="review-item__title">{review.title}</strong>}
+                      {review.body && <p class="review-item__body">{review.body}</p>}
+                      {review.source_url && <a class="review-item__link" href={review.source_url} rel="nofollow noopener" target="_blank">Læs original anmeldelse</a>}
+                    </article>
+                  );
+                })}
+              </div>
+            ) : (
+              <p class="empty-reviews">Der er endnu ingen importerede Trustpilot-anmeldelser.</p>
+            )}
           </div>
         </div>
       </section>
@@ -194,22 +320,83 @@ const fullAddress = company ? [company.address, company.postal_code, company.cit
   .contact-card h2 { margin: 0 0 1rem; font-size: 1.35rem; }
   .contact-actions { display: grid; gap: 0.65rem; }
   .contact-actions .button { width: 100%; padding: 0.75rem 1rem; }
-  .detail-section { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.75fr); gap: 1rem; padding-bottom: clamp(2rem, 5vw, 4rem); }
+  .detail-section { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.75fr); gap: 1rem; align-items: stretch; padding-bottom: clamp(2rem, 5vw, 4rem); }
   .info-card { padding: clamp(1rem, 2vw, 1.35rem); }
   .info-card h2 { margin: 0 0 1rem; font-size: clamp(1.45rem, 2.6vw, 2rem); }
   .info-grid { display: grid; gap: 0.75rem; margin: 0; }
   .info-grid div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 1rem; border-top: 1px solid var(--color-border); padding-top: 0.75rem; }
   .info-grid dt { color: var(--color-muted); font-weight: 900; }
   .info-grid dd { margin: 0; color: var(--color-primary); font-weight: 800; overflow-wrap: anywhere; }
-  .review-sources { display: grid; gap: 1rem; }
-  .review-source { display: grid; gap: 0.55rem; justify-items: start; border-top: 1px solid var(--color-border); padding-top: 0.85rem; }
-  .review-source a { color: var(--color-primary); font-weight: 900; }
+  .reviews-card { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+  .review-tabs { display: flex; gap: 0.25rem; border: 1px solid var(--color-border); border-radius: 999px; background: color-mix(in srgb, var(--color-surface-strong) 78%, var(--color-background)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72); margin-top: 0.2rem; padding: 0.25rem; }
+  .review-tab { flex: 1 1 0; border: 0; border-radius: 999px; background: transparent; color: var(--color-muted); cursor: pointer; font: inherit; font-size: 0.86rem; font-weight: 900; letter-spacing: -0.01em; padding: 0.58rem 0.8rem; transition: background 160ms ease, box-shadow 160ms ease, color 160ms ease, transform 160ms ease; }
+  .review-tab:hover, .review-tab:focus-visible { color: var(--color-primary); }
+  .review-tab:focus-visible { outline: 2px solid color-mix(in srgb, var(--color-primary) 34%, transparent); outline-offset: 2px; }
+  .review-tab.is-active { background: var(--color-primary); box-shadow: 0 10px 24px rgba(10, 52, 83, 0.16); color: var(--color-surface-strong); }
+  .review-panel { display: grid; gap: 1rem; min-height: 0; margin-top: 1rem; overflow-y: auto; padding-right: 0.35rem; scrollbar-color: color-mix(in srgb, var(--color-primary) 35%, transparent) transparent; }
+  .review-panel[hidden] { display: none; }
+  .review-panel__summary { display: grid; gap: 0.6rem; justify-items: start; }
+  .review-panel__summary a, .review-item__link { color: var(--color-primary); font-weight: 900; }
+  .review-list { display: grid; gap: 0.85rem; }
+  .review-item { display: grid; gap: 0.65rem; border: 1px solid var(--color-border); border-radius: 1rem; background: color-mix(in srgb, var(--color-surface-strong) 72%, transparent); padding: 0.9rem; }
+  .review-item__header { display: flex; justify-content: space-between; gap: 0.8rem; align-items: flex-start; }
+  .review-item h3 { margin: 0; color: var(--color-primary); font-size: 1rem; }
+  .review-item__header p, .review-item__body, .empty-reviews { margin: 0; color: var(--color-muted); }
+  .review-item__header p { font-size: 0.9rem; font-weight: 800; }
+  .review-item__rating { display: inline-flex; align-items: center; gap: 0.3rem; color: color-mix(in srgb, var(--color-muted) 34%, transparent); font-size: 0.78rem; white-space: nowrap; }
+  .review-item__rating strong { color: var(--color-primary); font-size: 0.95rem; }
+  .review-item__rating .is-filled { color: #fbbc04; }
+  .review-item--trustpilot .review-item__rating .is-filled { color: #00b67a; }
+  .review-item__title { color: var(--color-primary); font-size: 0.98rem; }
+  .review-item__body { line-height: 1.6; }
   .notice { padding: 1.25rem; }
   .notice strong { color: var(--color-primary); }
   .notice p { margin: 0.5rem 0 0; color: var(--color-muted); }
   .disclosure { margin-bottom: clamp(3.5rem, 7vw, 7rem); padding: 1.25rem; }
   .disclosure h2 { margin: 0 0 0.75rem; font-size: 1.35rem; }
   .disclosure p { margin: 0; color: var(--color-muted); }
-  @media (max-width: 860px) { .company-hero__grid, .detail-section { grid-template-columns: 1fr; } }
-  @media (max-width: 560px) { .info-grid div { grid-template-columns: 1fr; gap: 0.25rem; } }
+  @media (max-width: 860px) { .company-hero__grid, .detail-section { grid-template-columns: 1fr; } .reviews-card { height: auto !important; } .review-panel { max-height: 520px; } }
+  @media (max-width: 560px) { .info-grid div { grid-template-columns: 1fr; gap: 0.25rem; } .review-tabs { border-radius: 1rem; flex-direction: column; } .review-tab { border-radius: 0.75rem; } .review-item__header { display: grid; } }
 </style>
+
+<script>
+  const companyDataCard = document.querySelector<HTMLElement>('[data-company-data-card]');
+  const reviewsCard = document.querySelector<HTMLElement>('[data-reviews-card]');
+  const reviewTabButtons = document.querySelectorAll('[data-review-tab]');
+  const reviewPanels = document.querySelectorAll('[data-review-panel]');
+
+  const syncReviewCardHeight = () => {
+    if (!companyDataCard || !reviewsCard || window.matchMedia('(max-width: 860px)').matches) {
+      if (reviewsCard) reviewsCard.style.height = '';
+      return;
+    }
+
+    reviewsCard.style.height = `${companyDataCard.offsetHeight}px`;
+  };
+
+  syncReviewCardHeight();
+
+  if (companyDataCard && 'ResizeObserver' in window) {
+    new ResizeObserver(syncReviewCardHeight).observe(companyDataCard);
+  }
+
+  window.addEventListener('resize', syncReviewCardHeight);
+
+  reviewTabButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const selectedTab = button.getAttribute('data-review-tab');
+
+      reviewTabButtons.forEach((tabButton) => {
+        const isSelected = tabButton.getAttribute('data-review-tab') === selectedTab;
+        tabButton.classList.toggle('is-active', isSelected);
+        tabButton.setAttribute('aria-selected', String(isSelected));
+      });
+
+      reviewPanels.forEach((panel) => {
+        panel.toggleAttribute('hidden', panel.getAttribute('data-review-panel') !== selectedTab);
+      });
+
+      syncReviewCardHeight();
+    });
+  });
+</script>

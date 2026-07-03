@@ -16,6 +16,7 @@ interface CompanyRow {
   slug: string;
   name: string;
   cvr: string | null;
+  is_verified: boolean;
   address: string | null;
   city: string;
   google_rating: string | null;
@@ -54,6 +55,7 @@ try {
       companies.slug,
       companies.name,
       companies.cvr,
+      companies.is_verified,
       company_locations.address,
       trim(company_locations.city) as city,
       google.rating::text as google_rating,
@@ -109,8 +111,26 @@ const description = cityName
             {companies.map((company) => (
               <article class="surface company-card">
                 <div>
-                  <h2>{company.name}</h2>
+                  <div class="company-title-row">
+                    <h2>{company.name}</h2>
+                    {company.is_verified && (
+                      <span class="verified-badge verified-badge--desktop">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M12 3.1 5.2 5.7v5.1c0 4.4 2.8 8.4 6.8 9.9 4-1.5 6.8-5.5 6.8-9.9V5.7L12 3.1Zm3.6 6.8-4.3 4.3-2.1-2.1 1.1-1.1 1 1 3.2-3.2 1.1 1.1Z" />
+                        </svg>
+                        Verificeret
+                      </span>
+                    )}
+                  </div>
                   <p class="address">{company.address || company.city}</p>
+                  {company.is_verified && (
+                    <span class="verified-badge verified-badge--mobile">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 3.1 5.2 5.7v5.1c0 4.4 2.8 8.4 6.8 9.9 4-1.5 6.8-5.5 6.8-9.9V5.7L12 3.1Zm3.6 6.8-4.3 4.3-2.1-2.1 1.1-1.1 1 1 3.2-3.2 1.1 1.1Z" />
+                      </svg>
+                      Verificeret
+                    </span>
+                  )}
                   <div class="ratings">
                     <CompanyRatingBadge source="google" rating={company.google_rating} reviewCount={company.google_review_count} />
                     <CompanyRatingBadge source="trustpilot" rating={company.trustpilot_rating} reviewCount={company.trustpilot_review_count} />
@@ -147,9 +167,13 @@ const description = cityName
   .section-heading h2 { margin-top: 0.8rem; }
   .company-list { display: grid; gap: 1rem; }
   .company-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; padding: clamp(1rem, 2vw, 1.35rem); align-items: start; }
-  .company-card h2 { margin: 0 0 0.5rem; font-size: clamp(1.35rem, 2.5vw, 2rem); }
+  .company-title-row { display: flex; flex-wrap: nowrap; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+  .company-card h2 { flex: 0 1 auto; min-width: 0; margin: 0; font-size: clamp(1.35rem, 2.5vw, 2rem); }
   .address { color: var(--color-muted); }
   .ratings { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1rem 0 0; }
+  .verified-badge { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 0.55rem; border: 1px solid rgba(17, 185, 129, 0.28); border-radius: 999px; padding: 0.62rem 1rem; background: rgba(236, 253, 245, 0.72); color: #07966f; font-size: clamp(0.92rem, 1.7vw, 1.08rem); font-weight: 900; line-height: 1; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 8px 20px rgba(15, 23, 42, 0.04); }
+  .verified-badge svg { width: 1.35em; height: 1.35em; flex: 0 0 auto; fill: currentColor; }
+  .verified-badge--mobile { display: none; width: fit-content; margin-top: 0.85rem; }
   .cvr-badge { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--color-border); border-radius: 999px; padding: 0.45rem 0.7rem; background: var(--color-surface-strong); color: var(--color-primary); font-weight: 900; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06); }
   .cvr-badge span { color: var(--color-muted); font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; }
   .cvr-badge strong { font-size: 0.98rem; }
@@ -161,5 +185,5 @@ const description = cityName
   .disclosure { margin-bottom: clamp(3.5rem, 7vw, 7rem); padding: 1.25rem; }
   .disclosure h2 { margin: 0 0 0.75rem; font-size: 1.35rem; }
   .disclosure p { margin: 0; color: var(--color-muted); }
-  @media (max-width: 760px) { .company-card { grid-template-columns: 1fr; } .actions { min-width: 0; } }
+  @media (max-width: 760px) { .company-card { grid-template-columns: 1fr; } .actions { min-width: 0; } .company-title-row .verified-badge--desktop { display: none; } .verified-badge--mobile { display: inline-flex; } }
 </style>
