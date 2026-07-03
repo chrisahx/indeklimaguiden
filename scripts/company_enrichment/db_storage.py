@@ -48,7 +48,8 @@ class PostgresCompanyStorage:
                   l.city,
                   l.country,
                   l.latitude,
-                  l.longitude
+                  l.longitude,
+                  l.opening_hours
                 from companies c
                 left join company_locations l on l.company_id = c.id
                 order by c.name
@@ -74,6 +75,7 @@ class PostgresCompanyStorage:
                         "country": company.get("country") or "Denmark",
                         "latitude": decimal_to_string(company.get("latitude")),
                         "longitude": decimal_to_string(company.get("longitude")),
+                        "opening_hours": list_or_empty(company.get("opening_hours")),
                     },
                     "meta": {"status": row["status"]},
                 }
@@ -312,15 +314,19 @@ class PostgresCompanyStorage:
                 postal_code, city = google_location_parts(google_data)
                 cursor.execute(
                     """
-                    insert into company_locations (company_id, address, postal_code, city, country, latitude, longitude)
-                    values (%s, nullif(%s, ''), nullif(%s, ''), nullif(%s, ''), 'Denmark', %s, %s)
+                    insert into company_locations (company_id, address, postal_code, city, country, latitude, longitude, opening_hours)
+                    values (%s, nullif(%s, ''), nullif(%s, ''), nullif(%s, ''), 'Denmark', %s, %s, %s)
                     on conflict (company_id) do update set
                       address = coalesce(excluded.address, company_locations.address),
                       postal_code = coalesce(excluded.postal_code, company_locations.postal_code),
                       city = coalesce(excluded.city, company_locations.city),
                       country = coalesce(company_locations.country, excluded.country),
                       latitude = coalesce(excluded.latitude, company_locations.latitude),
-                      longitude = coalesce(excluded.longitude, company_locations.longitude)
+                      longitude = coalesce(excluded.longitude, company_locations.longitude),
+                      opening_hours = case
+                        when jsonb_array_length(excluded.opening_hours) > 0 then excluded.opening_hours
+                        else company_locations.opening_hours
+                      end
                     """,
                     (
                         company_id,
@@ -329,6 +335,7 @@ class PostgresCompanyStorage:
                         city,
                         decimal_or_none(google_data.get("latitude")),
                         decimal_or_none(google_data.get("longitude")),
+                        jsonb(list_or_empty(google_data.get("opening_hours"))),
                     ),
                 )
 
@@ -376,6 +383,10 @@ def payload_dict(value: object) -> dict[str, object]:
             return {}
         return parsed if isinstance(parsed, dict) else {}
     return {}
+
+
+def list_or_empty(value: object) -> list[object]:
+    return value if isinstance(value, list) else []
 
 
 def parse_datetime(value: object) -> datetime | None:

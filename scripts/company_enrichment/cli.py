@@ -230,6 +230,8 @@ def merge_google(company: dict[str, object], google_data: dict[str, object]) -> 
     for source_key, target_key in (("address", "address"), ("latitude", "latitude"), ("longitude", "longitude")):
         if google_data.get(source_key):
             location[target_key] = google_data[source_key]
+    if isinstance(google_data.get("opening_hours"), list):
+        location["opening_hours"] = google_data["opening_hours"]
     location.setdefault("country", "Denmark")
 
 

@@ -33,15 +33,16 @@ model Company {
 }
 
 model CompanyLocation {
-  companyId  String   @id @map("company_id") @db.Text
-  address    String?  @db.Text
-  postalCode String?  @map("postal_code") @db.Text
-  city       String?  @db.Text
-  country    String   @default("Denmark") @db.Text
-  latitude   Decimal? @db.Decimal(10, 7)
-  longitude  Decimal? @db.Decimal(10, 7)
-  updatedAt  DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
-  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId    String   @id @map("company_id") @db.Text
+  address      String?  @db.Text
+  postalCode   String?  @map("postal_code") @db.Text
+  city         String?  @db.Text
+  country      String   @default("Denmark") @db.Text
+  latitude     Decimal? @db.Decimal(10, 7)
+  longitude    Decimal? @db.Decimal(10, 7)
+  openingHours Json     @default("[]") @map("opening_hours")
+  updatedAt    DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   @@index([city], map: "company_locations_city_idx")
   @@map("company_locations")
