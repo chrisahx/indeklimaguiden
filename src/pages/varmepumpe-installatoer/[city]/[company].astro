@@ -21,6 +21,7 @@ interface CompanyRow {
   email: string | null;
   cvr: string | null;
   status: string;
+  is_verified: boolean;
   is_claimed: boolean;
   address: string | null;
   postal_code: string | null;
@@ -90,6 +91,7 @@ try {
       companies.email,
       companies.cvr,
       companies.status,
+      companies.is_verified,
       companies.is_claimed,
       company_locations.address,
       company_locations.postal_code,
@@ -175,11 +177,27 @@ const title = company ? `${company.name} - varmepumpe installatør i ${cityName}
 const description = company
   ? `Se kontaktoplysninger, adresse, CVR og anmeldelsesdata for ${company.name} i ${cityName}.`
   : 'Se kontaktoplysninger og anmeldelsesdata for en varmepumpe installatør.';
-const fullAddress = company ? [company.address, company.postal_code, company.city].filter(Boolean).join(', ') : '';
+const formatAddress = (row: CompanyRow | null) => {
+  if (!row) return '';
+
+  const address = row.address?.replace(/^[^\p{L}\p{N}]+/u, '').trim() ?? '';
+  const lowerAddress = address.toLocaleLowerCase('da-DK');
+  const parts = [address];
+
+  if (row.postal_code && !lowerAddress.includes(row.postal_code.toLocaleLowerCase('da-DK'))) {
+    parts.push(row.postal_code);
+  }
+
+  if (row.city && !lowerAddress.includes(row.city.toLocaleLowerCase('da-DK'))) {
+    parts.push(row.city);
+  }
+
+  return parts.filter(Boolean).join(', ');
+};
+const fullAddress = formatAddress(company);
 const latitude = company?.latitude ? Number(company.latitude) : null;
 const longitude = company?.longitude ? Number(company.longitude) : null;
 const hasMapCoordinates = latitude !== null && longitude !== null && Number.isFinite(latitude) && Number.isFinite(longitude);
-const showLocationMedia = hasMapCoordinates || googlePhotos.length > 0;
 const googleReviews = reviews.filter((review) => review.source === 'google');
 const trustpilotReviews = reviews.filter((review) => review.source === 'trustpilot');
 const getRatingValue = (rating: string | null) => {
@@ -225,59 +243,18 @@ const getRatingValue = (rating: string | null) => {
 
   {company && !dbError && (
     <>
-      {showLocationMedia && (
-        <section class="container location-media-section" aria-label="Kort og Google-fotos">
+      {hasMapCoordinates && (
+        <section class="container location-media-section" aria-label="Kort">
           <div class="surface location-media-card">
-            {hasMapCoordinates ? (
-              <div
-                class="company-map"
-                id="company-map"
-                data-company-map
-                data-lat={String(latitude)}
-                data-lng={String(longitude)}
-                data-name={company.name}
-                aria-label={`Kortplacering for ${company.name}`}
-              ></div>
-            ) : (
-              <div class="company-map company-map--empty">
-                <strong>Kort ikke tilgængeligt</strong>
-                <p>Der mangler koordinater for virksomheden.</p>
-              </div>
-            )}
-
-            <aside class="photo-carousel" data-photo-carousel aria-label="Google Maps-fotos">
-              <div class="photo-carousel__header">
-                <div>
-                  <span class="photo-carousel__eyebrow">Google Maps</span>
-                  <h2>Fotos</h2>
-                </div>
-                {googlePhotos.length > 1 && <span class="photo-carousel__counter" data-carousel-counter>1 / {googlePhotos.length}</span>}
-              </div>
-
-              {googlePhotos.length > 0 ? (
-                <>
-                  <div class="photo-carousel__viewport">
-                    {googlePhotos.map((photo, index) => (
-                      <figure class="photo-carousel__slide" data-carousel-slide hidden={index !== 0}>
-                        <img src={photo.url} alt={photo.alt || `${company.name} på Google Maps`} loading={index === 0 ? 'eager' : 'lazy'} />
-                      </figure>
-                    ))}
-                  </div>
-
-                  {googlePhotos.length > 1 && (
-                    <div class="photo-carousel__controls">
-                      <button type="button" aria-label="Forrige billede" data-carousel-prev>Forrige</button>
-                      <button type="button" aria-label="Næste billede" data-carousel-next>Næste</button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div class="photo-carousel__empty">
-                  <strong>Ingen Google-fotos endnu</strong>
-                  <p>Der er endnu ingen importerede Google Maps-fotos for virksomheden.</p>
-                </div>
-              )}
-            </aside>
+            <div
+              class="company-map"
+              id="company-map"
+              data-company-map
+              data-lat={String(latitude)}
+              data-lng={String(longitude)}
+              data-name={company.name}
+              aria-label={`Kortplacering for ${company.name}`}
+            ></div>
           </div>
         </section>
       )}
@@ -291,10 +268,54 @@ const getRatingValue = (rating: string | null) => {
             <div><dt>CVR</dt><dd>{company.cvr || 'Ikke oplyst'}</dd></div>
             <div><dt>By</dt><dd>{company.city}</dd></div>
             <div><dt>Land</dt><dd>{company.country}</dd></div>
-            <div><dt>Status</dt><dd>{company.status}</dd></div>
-            <div><dt>Profil verificeret</dt><dd>{company.is_claimed ? 'Ja' : 'Nej'}</dd></div>
-            <div><dt>Koordinater</dt><dd>{company.latitude && company.longitude ? `${company.latitude}, ${company.longitude}` : 'Ikke oplyst'}</dd></div>
+            <div>
+              <dt>Profil verificeret</dt>
+              <dd>
+                {company.is_verified ? (
+                  <span class="verified-badge">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M12 3.1 5.2 5.7v5.1c0 4.4 2.8 8.4 6.8 9.9 4-1.5 6.8-5.5 6.8-9.9V5.7L12 3.1Zm3.6 6.8-4.3 4.3-2.1-2.1 1.1-1.1 1 1 3.2-3.2 1.1 1.1Z" />
+                    </svg>
+                    Verificeret
+                  </span>
+                ) : (
+                  <span class="verified-badge verified-badge--warning">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M12 3.1 5.2 5.7v5.1c0 4.4 2.8 8.4 6.8 9.9 4-1.5 6.8-5.5 6.8-9.9V5.7L12 3.1Zm-.8 5.2h1.6v5.8h-1.6V8.3Zm0 7.2h1.6v1.7h-1.6v-1.7Z" />
+                    </svg>
+                    Ikke verificeret
+                  </span>
+                )}
+              </dd>
+            </div>
           </dl>
+
+          {googlePhotos.length > 0 && (
+            <aside class="photo-carousel company-data-photos" data-photo-carousel aria-label="Google Maps-fotos">
+              <div class="photo-carousel__header">
+                <div>
+                  <span class="photo-carousel__eyebrow">Google Maps</span>
+                  <h2>Fotos</h2>
+                </div>
+                {googlePhotos.length > 1 && <span class="photo-carousel__counter" data-carousel-counter>1 / {googlePhotos.length}</span>}
+              </div>
+
+              <div class="photo-carousel__viewport">
+                {googlePhotos.map((photo, index) => (
+                  <figure class="photo-carousel__slide" data-carousel-slide hidden={index !== 0}>
+                    <img src={photo.url} alt={photo.alt || `${company.name} på Google Maps`} loading={index === 0 ? 'eager' : 'lazy'} />
+                  </figure>
+                ))}
+              </div>
+
+              {googlePhotos.length > 1 && (
+                <div class="photo-carousel__controls">
+                  <button type="button" aria-label="Forrige billede" data-carousel-prev>Forrige</button>
+                  <button type="button" aria-label="Næste billede" data-carousel-next>Næste</button>
+                </div>
+              )}
+            </aside>
+          )}
         </div>
 
         <div class="surface info-card reviews-card" data-reviews-card>
@@ -403,11 +424,8 @@ const getRatingValue = (rating: string | null) => {
   .contact-actions { display: grid; gap: 0.65rem; }
   .contact-actions .button { width: 100%; padding: 0.75rem 1rem; }
   .location-media-section { padding-bottom: clamp(1.25rem, 4vw, 2.5rem); }
-  .location-media-card { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr); gap: clamp(0.9rem, 2vw, 1.25rem); padding: clamp(0.75rem, 2vw, 1rem); }
+  .location-media-card { padding: clamp(0.75rem, 2vw, 1rem); }
   .company-map { min-height: clamp(360px, 38vw, 520px); overflow: hidden; border: 1px solid var(--color-border); border-radius: 1.35rem; background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface-strong)); z-index: 0; }
-  .company-map--empty { display: grid; align-content: center; gap: 0.35rem; padding: 1.25rem; text-align: center; }
-  .company-map--empty strong { color: var(--color-primary); font-size: 1.1rem; }
-  .company-map--empty p { margin: 0; color: var(--color-muted); }
   :global(.company-map__marker) { display: grid; place-items: center; width: 34px !important; height: 34px !important; margin-left: -17px !important; margin-top: -34px !important; border: 3px solid var(--color-surface-strong); border-radius: 999px 999px 999px 0; background: var(--color-primary); box-shadow: 0 14px 32px rgba(10, 52, 83, 0.28); transform: rotate(-45deg); }
   :global(.company-map__marker::after) { width: 10px; height: 10px; border-radius: 999px; background: var(--color-surface-strong); content: ''; }
   :global(.leaflet-popup-content-wrapper) { border-radius: 1rem; color: var(--color-primary); font-family: inherit; font-weight: 900; }
@@ -426,6 +444,8 @@ const getRatingValue = (rating: string | null) => {
   .photo-carousel__empty { display: grid; flex: 1 1 auto; align-content: center; gap: 0.45rem; min-height: 270px; border: 1px dashed var(--color-border); border-radius: 1rem; color: var(--color-muted); padding: 1rem; text-align: center; }
   .photo-carousel__empty strong { color: var(--color-primary); }
   .photo-carousel__empty p { margin: 0; }
+  .company-data-photos { margin-top: 1.25rem; }
+  .company-data-photos .photo-carousel__viewport { height: clamp(260px, 32vw, 420px); }
   .detail-section { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.75fr); gap: 1rem; align-items: stretch; padding-bottom: clamp(2rem, 5vw, 4rem); }
   .info-card { padding: clamp(1rem, 2vw, 1.35rem); }
   .info-card h2 { margin: 0 0 1rem; font-size: clamp(1.45rem, 2.6vw, 2rem); }
@@ -433,6 +453,9 @@ const getRatingValue = (rating: string | null) => {
   .info-grid div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 1rem; border-top: 1px solid var(--color-border); padding-top: 0.75rem; }
   .info-grid dt { color: var(--color-muted); font-weight: 900; }
   .info-grid dd { margin: 0; color: var(--color-primary); font-weight: 800; overflow-wrap: anywhere; }
+  .verified-badge { display: inline-flex; align-items: center; gap: 0.4rem; width: fit-content; border: 1px solid rgba(17, 185, 129, 0.28); border-radius: 999px; padding: 0.38rem 0.65rem; background: rgba(236, 253, 245, 0.72); color: #07966f; font-size: 0.92rem; font-weight: 900; line-height: 1; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 8px 20px rgba(15, 23, 42, 0.04); }
+  .verified-badge svg { width: 1.1em; height: 1.1em; flex: 0 0 auto; fill: currentColor; }
+  .verified-badge--warning { border-color: rgba(217, 119, 6, 0.3); background: rgba(254, 243, 199, 0.72); color: #b45309; }
   .reviews-card { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
   .review-tabs { display: flex; gap: 0.25rem; border: 1px solid var(--color-border); border-radius: 999px; background: color-mix(in srgb, var(--color-surface-strong) 78%, var(--color-background)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72); margin-top: 0.2rem; padding: 0.25rem; }
   .review-tab { flex: 1 1 0; border: 0; border-radius: 999px; background: transparent; color: var(--color-muted); cursor: pointer; font: inherit; font-size: 0.86rem; font-weight: 900; letter-spacing: -0.01em; padding: 0.58rem 0.8rem; transition: background 160ms ease, box-shadow 160ms ease, color 160ms ease, transform 160ms ease; }
@@ -461,7 +484,7 @@ const getRatingValue = (rating: string | null) => {
   .disclosure { margin-bottom: clamp(3.5rem, 7vw, 7rem); padding: 1.25rem; }
   .disclosure h2 { margin: 0 0 0.75rem; font-size: 1.35rem; }
   .disclosure p { margin: 0; color: var(--color-muted); }
-  @media (max-width: 860px) { .company-hero__grid, .location-media-card, .detail-section { grid-template-columns: 1fr; } .reviews-card { height: auto !important; } .review-panel { max-height: 520px; } .photo-carousel__viewport { height: 320px; } }
+  @media (max-width: 860px) { .company-hero__grid, .detail-section { grid-template-columns: 1fr; } .reviews-card { height: auto !important; } .review-panel { max-height: 520px; } .photo-carousel__viewport { height: 320px; } }
   @media (max-width: 560px) { .info-grid div { grid-template-columns: 1fr; gap: 0.25rem; } .review-tabs { border-radius: 1rem; flex-direction: column; } .review-tab { border-radius: 0.75rem; } .review-item__header { display: grid; } }
 </style>
 
