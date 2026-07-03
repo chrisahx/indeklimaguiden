@@ -113,24 +113,20 @@ const description = cityName
                 <div>
                   <div class="company-title-row">
                     <h2>{company.name}</h2>
-                    {company.is_verified && (
-                      <span class="verified-badge verified-badge--desktop">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                          <path d="M12 3.1 5.2 5.7v5.1c0 4.4 2.8 8.4 6.8 9.9 4-1.5 6.8-5.5 6.8-9.9V5.7L12 3.1Zm3.6 6.8-4.3 4.3-2.1-2.1 1.1-1.1 1 1 3.2-3.2 1.1 1.1Z" />
-                        </svg>
-                        Verificeret
-                      </span>
-                    )}
+                    <span class={`verified-badge verified-badge--desktop${company.is_verified ? '' : ' verified-badge--warning'}`}>
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d={company.is_verified ? 'M12 3.1 5.2 5.7v5.1c0 4.4 2.8 8.4 6.8 9.9 4-1.5 6.8-5.5 6.8-9.9V5.7L12 3.1Zm3.6 6.8-4.3 4.3-2.1-2.1 1.1-1.1 1 1 3.2-3.2 1.1 1.1Z' : 'M12 3.1 5.2 5.7v5.1c0 4.4 2.8 8.4 6.8 9.9 4-1.5 6.8-5.5 6.8-9.9V5.7L12 3.1Zm-.8 5.2h1.6v5.8h-1.6V8.3Zm0 7.2h1.6v1.7h-1.6v-1.7Z'} />
+                      </svg>
+                      {company.is_verified ? 'Verificeret' : 'Ikke verificeret'}
+                    </span>
                   </div>
                   <p class="address">{company.address || company.city}</p>
-                  {company.is_verified && (
-                    <span class="verified-badge verified-badge--mobile">
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M12 3.1 5.2 5.7v5.1c0 4.4 2.8 8.4 6.8 9.9 4-1.5 6.8-5.5 6.8-9.9V5.7L12 3.1Zm3.6 6.8-4.3 4.3-2.1-2.1 1.1-1.1 1 1 3.2-3.2 1.1 1.1Z" />
-                      </svg>
-                      Verificeret
-                    </span>
-                  )}
+                  <span class={`verified-badge verified-badge--mobile${company.is_verified ? '' : ' verified-badge--warning'}`}>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d={company.is_verified ? 'M12 3.1 5.2 5.7v5.1c0 4.4 2.8 8.4 6.8 9.9 4-1.5 6.8-5.5 6.8-9.9V5.7L12 3.1Zm3.6 6.8-4.3 4.3-2.1-2.1 1.1-1.1 1 1 3.2-3.2 1.1 1.1Z' : 'M12 3.1 5.2 5.7v5.1c0 4.4 2.8 8.4 6.8 9.9 4-1.5 6.8-5.5 6.8-9.9V5.7L12 3.1Zm-.8 5.2h1.6v5.8h-1.6V8.3Zm0 7.2h1.6v1.7h-1.6v-1.7Z'} />
+                    </svg>
+                    {company.is_verified ? 'Verificeret' : 'Ikke verificeret'}
+                  </span>
                   <div class="ratings">
                     <CompanyRatingBadge source="google" rating={company.google_rating} reviewCount={company.google_review_count} />
                     <CompanyRatingBadge source="trustpilot" rating={company.trustpilot_rating} reviewCount={company.trustpilot_review_count} />
@@ -171,8 +167,9 @@ const description = cityName
   .company-card h2 { flex: 0 1 auto; min-width: 0; margin: 0; font-size: clamp(1.35rem, 2.5vw, 2rem); }
   .address { color: var(--color-muted); }
   .ratings { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1rem 0 0; }
-  .verified-badge { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 0.55rem; border: 1px solid rgba(17, 185, 129, 0.28); border-radius: 999px; padding: 0.62rem 1rem; background: rgba(236, 253, 245, 0.72); color: #07966f; font-size: clamp(0.92rem, 1.7vw, 1.08rem); font-weight: 900; line-height: 1; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 8px 20px rgba(15, 23, 42, 0.04); }
-  .verified-badge svg { width: 1.35em; height: 1.35em; flex: 0 0 auto; fill: currentColor; }
+  .verified-badge { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 0.45rem; border: 1px solid rgba(17, 185, 129, 0.28); border-radius: 999px; padding: 0.52rem 0.84rem; background: rgba(236, 253, 245, 0.72); color: #07966f; font-size: clamp(0.86rem, 1.55vw, 1rem); font-weight: 900; line-height: 1; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 8px 20px rgba(15, 23, 42, 0.04); }
+  .verified-badge svg { width: 1.25em; height: 1.25em; flex: 0 0 auto; fill: currentColor; }
+  .verified-badge--warning { border-color: rgba(217, 119, 6, 0.3); background: rgba(254, 243, 199, 0.72); color: #b45309; }
   .verified-badge--mobile { display: none; width: fit-content; margin-top: 0.85rem; }
   .cvr-badge { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--color-border); border-radius: 999px; padding: 0.45rem 0.7rem; background: var(--color-surface-strong); color: var(--color-primary); font-weight: 900; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06); }
   .cvr-badge span { color: var(--color-muted); font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; }
