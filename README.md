@@ -1,5 +1,17 @@
 # Indeklima Guiden
 
+
+
+## for aircondition firma:
+
+scrape følgende:
+- https://kmo.dk/dk/kmo-godkendte-virksomheder/?sort=navn_asc&tab=entities&query=vvs
+- https://koeleteknik.dk/find-koelefirma/?utm_source=chatgpt.com#resultat
+- google maps
+- trustpilot
+
+
+
 Astro site for Danish guides, articles, calculators, and SEO/AEO content about aircondition, varmepumper, and indoor climate.
 
 ## Commands

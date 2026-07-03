@@ -285,6 +285,47 @@ const parseOpeningHours = (value: string | null) => {
     .sort((a, b) => (openingDayOrder.get(a.day.toLocaleLowerCase('da-DK')) ?? 99) - (openingDayOrder.get(b.day.toLocaleLowerCase('da-DK')) ?? 99));
 };
 const openingHours = parseOpeningHours(company?.opening_hours ?? null);
+const copenhagenNowParts = new Intl.DateTimeFormat('da-DK', {
+  timeZone: 'Europe/Copenhagen',
+  weekday: 'long',
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23',
+}).formatToParts(new Date());
+const currentOpeningDay = copenhagenNowParts.find((part) => part.type === 'weekday')?.value ?? '';
+const currentOpeningTime = copenhagenNowParts.reduce((time, part) => {
+  if (part.type === 'hour') return { ...time, hour: Number(part.value) };
+  if (part.type === 'minute') return { ...time, minute: Number(part.value) };
+  return time;
+}, { hour: 0, minute: 0 });
+const currentOpeningMinutes = currentOpeningTime.hour * 60 + currentOpeningTime.minute;
+const parseOpeningTime = (value: string) => {
+  const match = value.trim().match(/^(\d{1,2})(?:[.:](\d{2}))?$/);
+
+  if (!match) return null;
+
+  const hour = Number(match[1]);
+  const minute = Number(match[2] ?? '0');
+
+  return Number.isFinite(hour) && Number.isFinite(minute) ? hour * 60 + minute : null;
+};
+const isOpenAtCurrentTime = (hours: string) => {
+  if (/lukket/i.test(hours)) return false;
+
+  return hours.split(',').some((range) => {
+    const [startValue, endValue] = range.split(/[–-]/).map((item) => item.trim());
+    const start = startValue ? parseOpeningTime(startValue) : null;
+    const end = endValue ? parseOpeningTime(endValue) : null;
+
+    if (start === null || end === null) return false;
+
+    return end < start
+      ? currentOpeningMinutes >= start || currentOpeningMinutes <= end
+      : currentOpeningMinutes >= start && currentOpeningMinutes <= end;
+  });
+};
+const currentOpeningHours = openingHours.find((row) => row.day.toLocaleLowerCase('da-DK') === currentOpeningDay.toLocaleLowerCase('da-DK')) ?? null;
+const isCompanyOpenNow = currentOpeningHours ? isOpenAtCurrentTime(currentOpeningHours.hours) : null;
 ---
 
 <BaseLayout title={title} description={description} path={`/varmepumpe-installatoer/${citySlug}/${companySlug}/`}>
@@ -404,10 +445,12 @@ const openingHours = parseOpeningHours(company?.opening_hours ?? null);
 
           {openingHours.length > 0 && (
             <section class="opening-hours" aria-labelledby="opening-hours-heading">
-              <h3 id="opening-hours-heading">Åbningstider</h3>
+              <div class="opening-hours__header">
+                <h3 id="opening-hours-heading">Åbningstider</h3>
+              </div>
               <dl>
                 {openingHours.map((row) => (
-                  <div>
+                  <div class:list={{ 'is-current-day': row.day === currentOpeningHours?.day, 'is-open-now': row.day === currentOpeningHours?.day && isCompanyOpenNow === true, 'is-closed-now': row.day === currentOpeningHours?.day && isCompanyOpenNow === false }}>
                     <dt>{row.day}</dt>
                     <dd>{row.hours}</dd>
                   </div>
@@ -554,11 +597,15 @@ const openingHours = parseOpeningHours(company?.opening_hours ?? null);
   .info-grid dt { color: var(--color-muted); font-weight: 900; }
   .info-grid dd { margin: 0; color: var(--color-primary); font-weight: 800; overflow-wrap: anywhere; }
   .opening-hours { margin-top: 1.25rem; border-top: 1px solid var(--color-border); padding-top: 1.15rem; }
-  .opening-hours h3 { margin: 0 0 0.85rem; color: var(--color-primary); font-size: 1.18rem; }
+  .opening-hours__header { display: flex; flex-wrap: wrap; gap: 0.65rem; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; }
+  .opening-hours h3 { margin: 0; color: var(--color-primary); font-size: 1.18rem; }
   .opening-hours dl { display: grid; gap: 0.6rem; margin: 0; }
   .opening-hours div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 1rem; }
   .opening-hours dt { color: var(--color-muted); font-weight: 900; }
   .opening-hours dd { margin: 0; color: var(--color-primary); font-weight: 800; }
+  .opening-hours div.is-current-day dt, .opening-hours div.is-current-day dd { color: var(--color-primary); }
+  .opening-hours div.is-open-now dt, .opening-hours div.is-open-now dd { color: #047857; }
+  .opening-hours div.is-closed-now dt, .opening-hours div.is-closed-now dd { color: #b91c1c; }
   .verified-badge { display: inline-flex; align-items: center; gap: 0.4rem; width: fit-content; border: 1px solid rgba(17, 185, 129, 0.28); border-radius: 999px; padding: 0.38rem 0.65rem; background: rgba(236, 253, 245, 0.72); color: #07966f; font-size: 0.92rem; font-weight: 900; line-height: 1; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 8px 20px rgba(15, 23, 42, 0.04); }
   .verified-badge svg { width: 1.1em; height: 1.1em; flex: 0 0 auto; fill: currentColor; }
   .verified-badge--warning { border-color: rgba(217, 119, 6, 0.3); background: rgba(254, 243, 199, 0.72); color: #b45309; }
