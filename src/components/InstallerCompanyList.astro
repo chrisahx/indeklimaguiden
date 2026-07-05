@@ -37,52 +37,73 @@ const companyLabel = companies.length === 1 ? 'virksomhed' : 'virksomheder';
 
 {companies.length > 0 ? (
   <>
-    <div class="surface company-filters" data-company-filters>
-      <div class="filter-field filter-field--search">
-        <input id="company-search" type="search" placeholder="Søg på installatørnavn" autocomplete="off" aria-label="Søg efter installatør" data-company-search />
+    <details class="surface company-controls" open data-company-controls>
+      <summary>
+        <span>Filtre og sortering</span>
+        <em>{companies.length} {companyLabel}</em>
+      </summary>
+
+      <div class="company-controls__body" data-company-filters>
+        <section class="control-group" aria-labelledby="company-filter-heading">
+          <div class="control-group__heading">
+            <h3 id="company-filter-heading">Filtrer</h3>
+            <p>Søg og indsnævr listen lokalt.</p>
+          </div>
+
+          <div class="control-grid control-grid--filters">
+            <div class="filter-field filter-field--search">
+              <input id="company-search" type="search" placeholder="Søg på installatørnavn" autocomplete="off" aria-label="Søg efter installatør" data-company-search />
+            </div>
+
+            <label class="filter-check">
+              <input type="checkbox" data-company-verified />
+              <span>Kun verificerede</span>
+            </label>
+
+            <div class="filter-field">
+              <select id="google-rating-filter" aria-label="Google rating" data-google-rating-filter>
+                <option value="">Alle Google ratings</option>
+                <option value="4.5">4,5+</option>
+                <option value="4">4,0+</option>
+                <option value="3.5">3,5+</option>
+              </select>
+            </div>
+
+            <div class="filter-field">
+              <select id="trustpilot-rating-filter" aria-label="Trustpilot rating" data-trustpilot-rating-filter>
+                <option value="">Alle Trustpilot ratings</option>
+                <option value="4.5">4,5+</option>
+                <option value="4">4,0+</option>
+                <option value="3.5">3,5+</option>
+              </select>
+            </div>
+
+            <button class="filter-reset" type="button" data-company-filter-reset>Nulstil filtre</button>
+          </div>
+        </section>
+
+        <section class="control-group control-group--sort" aria-labelledby="company-sort-heading">
+          <div class="control-group__heading">
+            <h3 id="company-sort-heading">Sorter</h3>
+            <p>Ændrer rækkefølgen og genindlæser siden.</p>
+          </div>
+
+          <form class="control-grid control-grid--sort" method="get" data-company-sort-form>
+            <div class="filter-field">
+              <select id="company-sort" name="sort" aria-label="Sorter efter" data-company-sort-select>
+                {installerSortOptions.map((option) => <option value={option.value} selected={option.value === sortBy}>{option.label}</option>)}
+              </select>
+            </div>
+
+            <div class="filter-field">
+              <select id="company-sort-direction" name="direction" aria-label="Sorteringsretning" data-company-sort-select>
+                {installerSortDirections.map((option) => <option value={option.value} selected={option.value === sortDirection}>{option.label}</option>)}
+              </select>
+            </div>
+          </form>
+        </section>
       </div>
-
-      <label class="filter-check">
-        <input type="checkbox" data-company-verified />
-        <span>Kun verificerede</span>
-      </label>
-
-      <div class="filter-field">
-        <select id="google-rating-filter" aria-label="Google rating" data-google-rating-filter>
-          <option value="">Alle Google ratings</option>
-          <option value="4.5">4,5+</option>
-          <option value="4">4,0+</option>
-          <option value="3.5">3,5+</option>
-        </select>
-      </div>
-
-      <div class="filter-field">
-        <select id="trustpilot-rating-filter" aria-label="Trustpilot rating" data-trustpilot-rating-filter>
-          <option value="">Alle Trustpilot ratings</option>
-          <option value="4.5">4,5+</option>
-          <option value="4">4,0+</option>
-          <option value="3.5">3,5+</option>
-        </select>
-      </div>
-
-      <form class="sort-controls" method="get" data-company-sort-form>
-        <div class="filter-field">
-          <select id="company-sort" name="sort" aria-label="Sorter efter" data-company-sort-select>
-            {installerSortOptions.map((option) => <option value={option.value} selected={option.value === sortBy}>{option.label}</option>)}
-          </select>
-        </div>
-
-        <div class="filter-field">
-          <select id="company-sort-direction" name="direction" aria-label="Sorteringsretning" data-company-sort-select>
-            {installerSortDirections.map((option) => <option value={option.value} selected={option.value === sortDirection}>{option.label}</option>)}
-          </select>
-        </div>
-
-        <button class="filter-reset" type="submit">Sorter</button>
-      </form>
-
-      <button class="filter-reset" type="button" data-company-filter-reset>Nulstil filtre</button>
-    </div>
+    </details>
 
     <p class="filter-count" aria-live="polite" data-company-filter-count>Viser {companies.length} af {companies.length} {companyLabel}</p>
 
@@ -149,6 +170,7 @@ const companyLabel = companies.length === 1 ? 'virksomhed' : 'virksomheder';
     const resetButton = filterRoot.querySelector('[data-company-filter-reset]');
     const sortForm = filterRoot.querySelector('[data-company-sort-form]');
     const sortSelects = filterRoot.querySelectorAll('[data-company-sort-select]');
+    const controlsDetails = document.querySelector('[data-company-controls]');
     const countElement = document.querySelector('[data-company-filter-count]');
     const emptyElement = document.querySelector('[data-company-filter-empty]');
     const cards = [...document.querySelectorAll('[data-company-card]')];
@@ -211,17 +233,31 @@ const companyLabel = companies.length === 1 ? 'virksomhed' : 'virksomheder';
         if (sortForm instanceof HTMLFormElement) sortForm.requestSubmit();
       });
     });
+
+    if (controlsDetails instanceof HTMLDetailsElement && window.matchMedia('(max-width: 760px)').matches) {
+      controlsDetails.open = false;
+    }
   }
 </script>
 
 <style>
   .section-heading { margin-bottom: 1.5rem; }
   .section-heading h2 { margin-top: 0.8rem; }
-  .company-filters { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1rem; padding: clamp(1rem, 2vw, 1.25rem); }
-  .company-filters > .filter-field { flex: 1 1 190px; }
-  .company-filters > .filter-field--search { flex-basis: 260px; }
-  .sort-controls { display: flex; flex: 2 1 420px; flex-wrap: wrap; gap: 0.75rem; align-items: center; min-width: 0; }
-  .sort-controls .filter-field { flex: 1 1 150px; }
+  .company-controls { margin-bottom: 1rem; padding: clamp(1rem, 2vw, 1.25rem); }
+  .company-controls summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: var(--color-primary); font-size: clamp(1.05rem, 2vw, 1.18rem); font-weight: 950; cursor: pointer; list-style: none; }
+  .company-controls summary::-webkit-details-marker { display: none; }
+  .company-controls summary::after { content: ''; width: 0.75rem; height: 0.75rem; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-0.18rem); transition: transform 160ms ease; }
+  .company-controls[open] summary::after { transform: rotate(225deg) translateY(-0.18rem); }
+  .company-controls summary em { color: var(--color-muted); font-size: 0.92rem; font-style: normal; font-weight: 900; }
+  .company-controls__body { display: grid; gap: 1.25rem; margin-top: 1.15rem; }
+  .control-group { display: grid; gap: 0.85rem; }
+  .control-group--sort { border-top: 1px solid var(--color-border); padding-top: 1.15rem; }
+  .control-group__heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+  .control-group__heading h3 { margin: 0; color: var(--color-primary); font-size: 1rem; }
+  .control-group__heading p { margin: 0; color: var(--color-muted); font-size: 0.92rem; font-weight: 800; }
+  .control-grid { display: grid; gap: 0.85rem; align-items: center; }
+  .control-grid--filters { grid-template-columns: minmax(240px, 1.25fr) auto minmax(190px, 0.8fr) minmax(200px, 0.8fr) auto; }
+  .control-grid--sort { grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr); max-width: 620px; }
   .filter-field label { display: block; margin-bottom: 0.45rem; color: var(--color-primary); font-weight: 900; }
   .filter-field input, .filter-field select { width: 100%; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface-strong); color: var(--color-primary); font: inherit; font-weight: 800; outline: 0; padding: 0.78rem 1rem; transition: border-color 160ms ease, box-shadow 160ms ease; }
   .filter-field input:focus, .filter-field select:focus { border-color: var(--color-accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 18%, transparent); }
@@ -250,6 +286,7 @@ const companyLabel = companies.length === 1 ? 'virksomhed' : 'virksomheder';
   .notice { padding: 1.25rem; }
   .notice strong { color: var(--color-primary); }
   .notice p { margin: 0.5rem 0 0; color: var(--color-muted); }
-  @media (max-width: 760px) { .company-card { grid-template-columns: 1fr; } .actions { min-width: 0; } .company-title-row .verified-badge--desktop { display: none; } .verified-badge--mobile { display: inline-flex; } }
-  @media (max-width: 560px) { .company-filters, .sort-controls { display: grid; grid-template-columns: 1fr; } .filter-field input, .filter-field select, .filter-check, .filter-reset { width: 100%; border-radius: 1rem; } }
+  @media (max-width: 1180px) { .control-grid--filters { grid-template-columns: 1fr 1fr; } .filter-field--search { grid-column: 1 / -1; } }
+  @media (max-width: 760px) { .company-card { grid-template-columns: 1fr; } .actions { min-width: 0; } .company-title-row .verified-badge--desktop { display: none; } .verified-badge--mobile { display: inline-flex; } .control-group__heading { display: block; } .control-group__heading p { margin-top: 0.2rem; } }
+  @media (max-width: 560px) { .control-grid--filters, .control-grid--sort { grid-template-columns: 1fr; max-width: none; } .filter-field input, .filter-field select, .filter-check, .filter-reset { width: 100%; border-radius: 1rem; } .company-controls summary { align-items: flex-start; } }
 </style>
