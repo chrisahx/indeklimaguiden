@@ -584,10 +584,29 @@ Use a tone that is:
 * practical
 * trustworthy
 * conversational
+* personal and human-written
 * aimed at Danish homeowners
 * direct but not pushy
 
 Write to the reader using "du".
+
+Make posts feel more personal than a generic article summary. Write as if Indeklima Guiden is talking directly to one homeowner about a recognizable situation in their home.
+
+Prefer openings that feel lived-in and specific, for example:
+
+```text
+Kender du det, når soveværelset stadig føles varmt længe efter solnedgang?
+```
+
+```text
+Hvis du har siddet og kigget på aircondition i den her uge, er størrelsen nok et af de første spørgsmål der dukker op.
+```
+
+```text
+Mange opdager først problemet, når rummet enten aldrig bliver køligt nok eller anlægget tænder og slukker hele tiden.
+```
+
+Avoid openings that sound like neutral SEO intros, article excerpts, or generic advice columns.
 
 Avoid:
 
@@ -636,12 +655,49 @@ Avoid very long posts unless the format clearly benefits from it.
 
 Every post should include at least one engagement element.
 
+Use Facebook-native engagement that feels natural and easy to answer. The preferred engagement style is an experience-based comment prompt, not multiple choice.
+
+Good engagement patterns:
+
+* Ask whether the reader experiences the problem at home.
+* Ask where or when it happens.
+* Ask readers to comment with their specific room, situation, symptom, or dilemma.
+* Ask readers to share the practical detail that makes advice more personal, such as room size, window direction, basement humidity, bedroom heat, noise concern, or electricity worry.
+* Use "Kommenter..." or "Skriv gerne..." when it feels natural.
+* Invite short, low-effort answers, not long explanations.
+
+Good prompt styles:
+
+```text
+Oplever du også, at soveværelset holder på varmen om aftenen? Skriv gerne hvilket rum der er værst hos dig.
+```
+
+```text
+Sker det også hjemme hos dig, at vinduerne dugger om morgenen? Kommenter gerne om det især er i soveværelse, stue eller køkken.
+```
+
+```text
+Er du i tvivl om størrelsen på anlægget? Skriv rummets størrelse i kommentaren, så kan andre også sammenligne deres situation.
+```
+
+```text
+Hvad oplever du mest lige nu: varme, fugt, støj eller tung luft? Skriv det gerne i kommentaren.
+```
+
+```text
+Har du prøvet at købe en løsning, der viste sig at være for lille eller for stor? Del gerne erfaringen kort.
+```
+
+Use A/B/C/D questions sparingly. They can be useful occasionally, but they must not be the default engagement mechanic and should not appear more than 1-2 times in a 10-post batch.
+
 Use low-friction engagement, such as:
 
-* A/B/C/D question
 * "Oplever du det mest i soveværelset eller stuen?"
+* "Sker det også hjemme hos dig?"
 * myth/fact question
 * "Har du også...?"
+* "Kommenter hvad du oplever"
+* "Skriv hvilket rum det gælder hos dig"
 * saveable checklist
 * comparison question
 
@@ -656,12 +712,9 @@ Hvad tænker du om indeklimaets betydning for den generelle boligkomfort?
 Good:
 
 ```text
-Hvad oplever du mest derhjemme?
+Oplever du også, at ét rum er markant sværere at køle end resten af boligen?
 
-A) Dug på vinduerne
-B) Tør luft
-C) For varmt soveværelse
-D) Indelukket luft
+Skriv gerne hvilket rum det er hos dig, og om det især handler om sol, store vinduer eller dårlig luftcirkulation.
 ```
 
 ## Link strategy
@@ -782,7 +835,7 @@ List short source notes for human review.
 **Source type:** [Article or Calculator]  
 **Page URL:** [URL without UTM]  
 **Tracked URL:** [URL with UTM]  
-**Engagement mechanic:** [A/B/C/D question, myth/fact, saveable checklist, etc.]
+**Engagement mechanic:** [experience-based comment prompt, myth/fact, saveable checklist, comparison question, etc.]
 
 ### Post text - comment-link version
 
@@ -860,7 +913,9 @@ Check all of the following:
 
 * Every post includes an engagement mechanism.
 * Questions are easy to answer.
-* At least some posts use A/B/C/D, myth/fact, or saveable checklist formats.
+* Most posts use natural experience-based comment prompts such as "Oplever du...", "Sker det også hos dig...", or "Kommenter hvad du oplever...".
+* A/B/C/D prompts are used sparingly, if at all, and never more than 1-2 times in the 10-post batch.
+* Engagement prompts feel personal and relevant to the specific post, not pasted-on.
 
 ### Emoji checks
 

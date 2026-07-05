@@ -4,6 +4,8 @@ export const prerender = false;
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import InstallerCompanyList from '../../components/InstallerCompanyList.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Prisma } from '../../../prisma/generated/client/client';
+import { parseInstallerSort } from '../../lib/installerSort';
 import { getPrisma } from '../../lib/prisma';
 import { slugifyCity } from '../../lib/slugs';
 
@@ -26,9 +28,34 @@ interface CompanyRow {
 }
 
 const citySlug = Astro.params.city ?? '';
+const sortState = parseInstallerSort(Astro.url.searchParams);
 let cityName = '';
 let companies: CompanyRow[] = [];
 let dbError = '';
+
+const orderBy = (() => {
+  if (sortState.sortBy === 'google-rating') {
+    return sortState.sortDirection === 'asc'
+      ? Prisma.sql`google.rating asc nulls last, companies.name asc, companies.id asc`
+      : Prisma.sql`google.rating desc nulls last, companies.name asc, companies.id asc`;
+  }
+
+  if (sortState.sortBy === 'trustpilot-rating') {
+    return sortState.sortDirection === 'asc'
+      ? Prisma.sql`trustpilot.rating asc nulls last, companies.name asc, companies.id asc`
+      : Prisma.sql`trustpilot.rating desc nulls last, companies.name asc, companies.id asc`;
+  }
+
+  if (sortState.sortBy === 'city') {
+    return sortState.sortDirection === 'desc'
+      ? Prisma.sql`lower(trim(company_locations.city)) desc, companies.name asc, companies.id asc`
+      : Prisma.sql`lower(trim(company_locations.city)) asc, companies.name asc, companies.id asc`;
+  }
+
+  return sortState.sortDirection === 'desc'
+    ? Prisma.sql`companies.name desc, companies.id asc`
+    : Prisma.sql`companies.name asc, companies.id asc`;
+})();
 
 try {
   const prisma = getPrisma();
@@ -69,7 +96,7 @@ try {
     left join company_sources trustpilot
       on trustpilot.company_id = companies.id and trustpilot.source = 'trustpilot'
     where lower(trim(company_locations.city)) = lower(trim(${cityName}))
-    order by companies.name asc
+    order by ${orderBy}
   `;
 
   companies = rows;
@@ -109,6 +136,8 @@ const companiesWithDetailPath = companies.map((company) => ({
         heading={`Installatører i ${cityName}`}
         emptyTitle={`Ingen installatører fundet i ${cityName}.`}
         emptyText="Kontrollér importerede data, og sørg for at virksomhederne har en by."
+        sortBy={sortState.sortBy}
+        sortDirection={sortState.sortDirection}
       />
     )}
   </section>
