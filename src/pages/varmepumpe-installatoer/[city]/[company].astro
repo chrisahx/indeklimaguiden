@@ -642,7 +642,7 @@ const isCompanyOpenNow = currentOpeningHours ? isOpenAtCurrentTime(currentOpenin
 </style>
 
 <script>
-  import L from 'leaflet';
+  import * as L from 'leaflet';
 
   const mapElement = document.querySelector<HTMLElement>('[data-company-map]');
   const companyDataCard = document.querySelector<HTMLElement>('[data-company-data-card]');

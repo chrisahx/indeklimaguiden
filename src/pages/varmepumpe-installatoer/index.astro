@@ -3,6 +3,7 @@ export const prerender = false;
 
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { installerRegions } from '../../lib/installerRegions';
 import { getPrisma } from '../../lib/prisma';
 import { slugifyCity } from '../../lib/slugs';
 
@@ -12,11 +13,18 @@ interface CityRow {
   postal_codes: string[] | null;
 }
 
+interface PostalCodeRow {
+  postal_code: string;
+  company_count: number;
+}
+
 let cities: Array<{ name: string; slug: string; companyCount: number; postalCodes: string[] }> = [];
+let regions = installerRegions.map((region) => ({ ...region, companyCount: 0 }));
 let dbError = '';
 
 try {
-  const rows = await getPrisma().$queryRaw<CityRow[]>`
+  const prisma = getPrisma();
+  const rows = await prisma.$queryRaw<CityRow[]>`
     select
       min(trim(company_locations.city)) as city_name,
       count(*)::int as company_count,
@@ -35,6 +43,25 @@ try {
       postalCodes: row.postal_codes ?? [],
     }))
     .filter((city) => city.slug);
+
+  const postalCodeRows = await prisma.$queryRaw<PostalCodeRow[]>`
+    select
+      trim(company_locations.postal_code) as postal_code,
+      count(*)::int as company_count
+    from company_locations
+    join companies on companies.id = company_locations.company_id
+    where trim(company_locations.postal_code) ~ '^[0-9]{4}$'
+    group by trim(company_locations.postal_code)
+  `;
+
+  regions = installerRegions.map((region) => ({
+    ...region,
+    companyCount: postalCodeRows.reduce((sum, row) => {
+      const postalCode = Number.parseInt(row.postal_code, 10);
+      if (postalCode < region.minPostalCode || postalCode > region.maxPostalCode) return sum;
+      return sum + row.company_count;
+    }, 0),
+  }));
 } catch (error) {
   dbError = error instanceof Error ? error.message : 'Kunne ikke hente byer fra databasen.';
 }
@@ -102,7 +129,24 @@ const citySearchJson = JSON.stringify(citySearchData).replace(/</g, '\\u003c');
       </div>
     )}
 
-    <div class="section-heading">
+    <div class="section-heading section-heading--spaced">
+      <span class="pill">Regioner</span>
+      <h2>Vælg region</h2>
+      <p>Få et regionalt overblik baseret på installatørernes postnumre.</p>
+    </div>
+
+    {dbError ? null : (
+      <div class="region-grid">
+        {regions.map((region) => (
+          <a class="surface region-card" href={`/varmepumpe-installatoer/region/${region.slug}/`}>
+            <span>{region.name}</span>
+            <strong>{region.companyCount} {region.companyCount === 1 ? 'installatør' : 'installatører'}</strong>
+          </a>
+        ))}
+      </div>
+    )}
+
+    <div class="section-heading section-heading--spaced">
       <span class="pill">Byer</span>
       <h2>Vælg by</h2>
       <p>Listen opdateres automatisk ud fra installatørerne i databasen.</p>
@@ -304,8 +348,14 @@ const citySearchJson = JSON.stringify(citySearchData).replace(/</g, '\\u003c');
   :global(.city-combobox__empty) { padding: 1rem; color: var(--color-muted); font-weight: 800; }
   .city-combobox__hint { margin: 0.55rem 0 0; color: var(--color-muted); font-size: 0.9rem; }
   .section-heading { margin-bottom: 1.5rem; }
+  .section-heading--spaced { margin-top: 2.25rem; }
   .section-heading h2 { margin-top: 0.8rem; }
   .section-heading p { max-width: 720px; color: var(--color-muted); font-size: 1.08rem; }
+  .region-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .region-card { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem 1.1rem; color: var(--color-primary); text-decoration: none; transition: border-color 160ms ease, transform 160ms ease; }
+  .region-card:hover { border-color: var(--color-accent); color: var(--color-primary); transform: translateY(-2px); }
+  .region-card span { font-weight: 900; }
+  .region-card strong { color: var(--color-muted); font-size: 0.92rem; white-space: nowrap; }
   .city-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
   .city-card { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem 1.1rem; color: var(--color-primary); text-decoration: none; transition: border-color 160ms ease, transform 160ms ease; }
   .city-card:hover { border-color: var(--color-accent); color: var(--color-primary); transform: translateY(-2px); }
@@ -314,6 +364,6 @@ const citySearchJson = JSON.stringify(citySearchData).replace(/</g, '\\u003c');
   .notice { padding: 1.25rem; }
   .notice strong { color: var(--color-primary); }
   .notice p { margin: 0.5rem 0 0; color: var(--color-muted); }
-  @media (max-width: 860px) { .directory-hero, .city-search, .city-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 860px) { .directory-hero, .city-search, .city-grid, .region-grid { grid-template-columns: 1fr; } }
   @media (max-width: 560px) { .city-combobox__control { border-radius: 1rem; } .city-combobox__control span { display: none; } :global(.city-combobox__option) { flex-direction: column; align-items: flex-start; gap: 0.35rem; } }
 </style>

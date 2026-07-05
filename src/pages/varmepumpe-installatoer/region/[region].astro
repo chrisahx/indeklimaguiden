@@ -1,0 +1,116 @@
+---
+export const prerender = false;
+
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import InstallerCompanyList from '../../../components/InstallerCompanyList.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { installerRegions } from '../../../lib/installerRegions';
+import { getPrisma } from '../../../lib/prisma';
+import { slugifyCity } from '../../../lib/slugs';
+
+interface CompanyRow {
+  id: string;
+  slug: string;
+  name: string;
+  cvr: string | null;
+  is_verified: boolean;
+  address: string | null;
+  city: string;
+  google_rating: string | null;
+  google_review_count: number | null;
+  trustpilot_rating: string | null;
+  trustpilot_review_count: number | null;
+}
+
+const regionSlug = Astro.params.region ?? '';
+const region = installerRegions.find((item) => item.slug === regionSlug);
+
+if (!region) {
+  return new Response('Regionen blev ikke fundet.', { status: 404 });
+}
+
+let companies: CompanyRow[] = [];
+let dbError = '';
+
+try {
+  const rows = await getPrisma().$queryRaw<CompanyRow[]>`
+    select
+      companies.id,
+      companies.slug,
+      companies.name,
+      companies.cvr,
+      companies.is_verified,
+      company_locations.address,
+      trim(company_locations.city) as city,
+      google.rating::text as google_rating,
+      google.review_count as google_review_count,
+      trustpilot.rating::text as trustpilot_rating,
+      trustpilot.review_count as trustpilot_review_count
+    from companies
+    join company_locations on company_locations.company_id = companies.id
+    left join company_sources google
+      on google.company_id = companies.id and google.source = 'google'
+    left join company_sources trustpilot
+      on trustpilot.company_id = companies.id and trustpilot.source = 'trustpilot'
+    where
+      trim(company_locations.postal_code) ~ '^[0-9]{4}$'
+      and trim(company_locations.postal_code)::int between ${region.minPostalCode} and ${region.maxPostalCode}
+    order by companies.name asc
+  `;
+
+  companies = rows;
+} catch (error) {
+  dbError = error instanceof Error ? error.message : 'Kunne ikke hente installatører fra databasen.';
+}
+
+const title = `Varmepumpe installatører i ${region.name}`;
+const description = `Find varmepumpe installatører i ${region.name}. Se lokale virksomheder, CVR og offentligt indsamlede anmeldelsesdata.`;
+const companiesWithDetailPath = companies.map((company) => ({
+  ...company,
+  detailPath: `/varmepumpe-installatoer/${slugifyCity(company.city)}/${company.slug}/`,
+}));
+---
+
+<BaseLayout title={title} description={description} path={`/varmepumpe-installatoer/region/${region.slug}/`}>
+  <section class="section container region-hero">
+    <Breadcrumbs items={[{ name: 'Forside', url: '/' }, { name: 'Varmepumpe installatører', url: '/varmepumpe-installatoer/' }, { name: region.name, url: `/varmepumpe-installatoer/region/${region.slug}/` }]} />
+    <span class="pill">Regional oversigt</span>
+    <h1>Varmepumpe installatører i {region.name}</h1>
+    <p>
+      Sammenlign installatører i regionen baseret på postnumre fra {region.minPostalCode} til {region.maxPostalCode}. Brug oversigten som startpunkt, og åbn virksomhedssiden for kontaktoplysninger og mere data.
+    </p>
+  </section>
+
+  <section class="container listing-section">
+    {dbError ? (
+      <div class="surface notice" role="alert">
+        <strong>Databaseforbindelsen mangler eller fejlede.</strong>
+        <p>{dbError}</p>
+      </div>
+    ) : (
+      <InstallerCompanyList
+        companies={companiesWithDetailPath}
+        heading={`Installatører i ${region.name}`}
+        emptyTitle={`Ingen installatører fundet i ${region.name}.`}
+        emptyText="Kontrollér importerede data, og sørg for at virksomhederne har et gyldigt postnummer."
+      />
+    )}
+  </section>
+
+  <section class="container disclosure surface">
+    <h2>Om data i oversigten</h2>
+    <p>Data er indsamlet fra offentligt tilgængelige kilder og kan ændre sig. Kontakt altid virksomheden direkte for at bekræfte ydelser, priser, certificeringer og tilgængelighed.</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .region-hero { padding-bottom: clamp(2rem, 4vw, 3rem); }
+  .region-hero p { max-width: 820px; color: var(--color-muted); font-size: clamp(1.08rem, 2vw, 1.26rem); }
+  .listing-section { padding-bottom: clamp(2rem, 5vw, 4rem); }
+  .notice { padding: 1.25rem; }
+  .notice strong { color: var(--color-primary); }
+  .notice p { margin: 0.5rem 0 0; color: var(--color-muted); }
+  .disclosure { margin-bottom: clamp(3.5rem, 7vw, 7rem); padding: 1.25rem; }
+  .disclosure h2 { margin: 0 0 0.75rem; font-size: 1.35rem; }
+  .disclosure p { margin: 0; color: var(--color-muted); }
+</style>

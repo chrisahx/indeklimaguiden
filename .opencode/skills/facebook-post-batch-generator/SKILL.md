@@ -157,15 +157,30 @@ Use the article `slug` when constructing URLs.
 
 If the route cannot be determined confidently, use the safest likely structure and add a review note in the generated markdown.
 
-## Calculator CTA post
+## Calculator CTA posts
 
-Exactly 1 of the 10 weekly posts must be a CTA for one relevant calculator in:
+Exactly 2 of the 10 weekly posts must promote relevant calculators in:
 
 ```text
 src/pages/beregnere
 ```
 
-This calculator CTA replaces one normal article post. The remaining 9 posts should still primarily promote article content.
+These calculator CTA posts replace normal article posts. The remaining 8 posts should still primarily promote article content.
+
+Each calculator promotion must be packaged as genuinely useful Facebook content, not as a bare "try our calculator" ad. Build the post around a practical problem, article insight, news angle, seasonal situation, price example, checklist, or comparison, then use the calculator as the natural next step.
+
+Good packaging patterns:
+
+* Take a concrete point from a related article and let the calculator help the reader apply it to their own home.
+* Use a timely news or seasonal angle, then point to the calculator for a quick personal estimate.
+* Use a mini checklist or comparison post, then let the calculator help the reader narrow the decision.
+* Use a price or electricity-use example, then invite the reader to calculate their own rough estimate.
+
+Bad packaging patterns:
+
+* A thin post that only says "brug vores beregner".
+* A generic sales CTA with no useful context.
+* Reusing the same calculator because it is convenient rather than because it fits the week.
 
 Use the calculator CTA when it naturally fits the weekly theme, season, or adjacent article cluster. Prefer a calculator that gives the reader an immediate, useful result rather than a generic sales prompt.
 
@@ -199,7 +214,7 @@ Good calculator CTA use cases:
 * buying decision angle: `/beregnere/mobil-aircondition-eller-split-aircondition/` or `/beregnere/aircondition-varmepumpe-stoerrelse/`
 * heating/electricity angle: `/beregnere/kan-varmepumpe-betale-sig/` or `/beregnere/varmepumpe-vs-elradiator/`
 
-The calculator CTA post should:
+The calculator CTA posts should:
 
 * clearly say what the reader can calculate or compare
 * ask the reader to try the calculator as the next step
@@ -207,11 +222,13 @@ The calculator CTA post should:
 * use cautious language such as "vejledende estimat", "første pejlemærke" or "hurtigt overblik"
 * still include a simple engagement mechanic
 
-The calculator CTA post may use any suitable weekly slot. Good default slots are:
+The 2 calculator CTA posts may use any suitable weekly slots. Good default slots are:
 
 * Wednesday 17:00 Checklist/guide
 * Thursday 17:00 Price/comparison
 * Friday 17:00 Roundup/soft CTA
+
+Avoid placing both calculator CTA posts back-to-back unless the user asks for a heavy calculator-focused week.
 
 ## UTM tracking
 
@@ -268,6 +285,8 @@ Use these files to understand:
 
 Avoid using the same 2-3 articles repeatedly across multiple runs.
 
+For calculator rotation, identify which calculator routes were promoted in the immediately previous posting week if a previous weekly file exists. Do not promote the same calculator in the new batch that was promoted last week, unless there is a strong seasonal/news reason and no better calculator fits. If you make an exception, state it in the editorial note.
+
 Important:
 
 * It is allowed to reuse the same broad topic over time.
@@ -275,14 +294,15 @@ Important:
 * It is allowed to use the same hook style across different batches.
 * Do not use the same hook twice inside the same 10-post batch.
 * Avoid using the same articles from the previous 2-3 generated batches unless there are not enough suitable alternatives.
+* Do not use the same calculator route twice in the same weekly batch.
 
 ## Batch content strategy
 
 Generate exactly 10 posts.
 
-Exactly 1 post must be a calculator CTA post that links to a relevant calculator under `/beregnere/`.
+Exactly 2 posts must be calculator CTA posts that link to relevant calculators under `/beregnere/`.
 
-Exactly 9 posts should link to articles, unless the user explicitly asks for more calculator posts.
+Exactly 8 posts should link to articles, unless the user explicitly asks for more calculator posts.
 
 The batch should have coherence. It is okay for the 10 posts to focus on only 2-3 broader themes or article clusters, as long as the individual posts use different angles.
 
@@ -326,7 +346,7 @@ Friday 17:00     Roundup/soft CTA
 
 The core pillars are:
 
-Calculator CTA can be used as a post type under the most relevant pillar, usually `Checklist/guide`, `Price/comparison`, `Pain/saveable`, or `Roundup/soft CTA`. For UTM content, use `calculator` as the pillar segment unless another pillar is more precise and still clear.
+Calculator CTA can be used as a post type under the most relevant pillar, usually `Checklist/guide`, `Price/comparison`, `Pain/saveable`, `News/tip`, or `Roundup/soft CTA`. For UTM content, use `calculator` as the pillar segment unless another pillar is more precise and still clear.
 
 ### Pain
 
@@ -796,15 +816,17 @@ Check all of the following:
 * No duplicate hooks inside the 10-post batch.
 * No duplicate post text.
 * No overuse of the same article.
-* The calculator CTA does not repeat the same calculator from the latest batch unless it is the best seasonal fit.
+* The 2 calculator CTA posts do not use the same calculator route as each other.
+* Neither calculator CTA repeats a calculator promoted in the immediately previous posting week unless it is the best seasonal/news fit and the exception is explained.
+* Calculator CTA posts do not repeat the same calculator from the latest batch unless it is the best seasonal fit.
 * No obvious repetition from the latest 10 existing Facebook post files.
 * No same 2-3 articles repeated from the previous 2-3 batches unless unavoidable.
 
 ### Schedule checks
 
 * Exactly 10 posts.
-* Exactly 1 post is a calculator CTA post.
-* Exactly 9 posts link to articles unless the user explicitly requested otherwise.
+* Exactly 2 posts are calculator CTA posts.
+* Exactly 8 posts link to articles unless the user explicitly requested otherwise.
 * Monday-Friday only.
 * Times are 10:00 and 17:00.
 * Filename matches the posting week Monday.
@@ -821,7 +843,9 @@ Check all of the following:
 * Every tracked URL includes `utm_source=facebook`.
 * Every tracked URL includes `utm_content=<day>_<time>_<pillar>`.
 * Article URLs use the discovered Astro article URL structure.
-* The calculator CTA URL points to an individual route under `/beregnere/`, not the calculator index, unless no individual calculator fits.
+* Each calculator CTA URL points to an individual route under `/beregnere/`, not the calculator index, unless no individual calculator fits.
+* The 2 calculator CTA posts use two different individual calculator routes.
+* Neither calculator CTA repeats a calculator promoted in the immediately previous posting week unless the editorial note explains why.
 * Links are correct and point to Indeklima Guiden.
 
 ### Credibility checks
@@ -859,7 +883,7 @@ After creating the markdown file, respond with:
 * the file path
 * a short summary of the weekly theme
 * which article clusters were used
-* which calculator CTA was included
+* which calculator CTAs were included
 * any warnings or review notes
 * confirmation that no existing file was overwritten
 
