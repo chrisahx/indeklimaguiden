@@ -417,7 +417,12 @@ const companyJsonLd = company ? {
           <h2>Kontakt</h2>
           <div class="contact-actions">
             {companyWebsiteUrl && <a class="button" href={companyWebsiteUrl} rel="nofollow noopener" target="_blank">Besøg website</a>}
-            {company.phone && <a class="button secondary" href={`tel:${company.phone.replace(/\s+/g, '')}`}>{company.phone}</a>}
+            {company.phone && (
+              <div class="phone-reveal" data-phone-reveal>
+                <button class="button secondary" type="button" hidden data-phone-reveal-button>Vis telefonnummer</button>
+                <a class="button secondary" href={`tel:${company.phone.replace(/\s+/g, '')}`} data-phone-link>{company.phone}</a>
+              </div>
+            )}
             {company.email && <a class="button secondary" href={`mailto:${company.email}`}>Send mail</a>}
           </div>
         </aside>
@@ -646,6 +651,9 @@ const companyJsonLd = company ? {
   .contact-card h2 { margin: 0 0 1rem; font-size: 1.35rem; }
   .contact-actions { display: grid; gap: 0.65rem; }
   .contact-actions .button { width: 100%; padding: 0.75rem 1rem; }
+  .phone-reveal { display: grid; gap: 0.65rem; }
+  .phone-reveal [hidden] { display: none !important; }
+  .phone-reveal button.button { cursor: pointer; font-family: inherit; font-size: inherit; font-weight: 800; }
   .location-media-section { padding-bottom: clamp(1.25rem, 4vw, 2.5rem); }
   .location-media-card { padding: clamp(0.75rem, 2vw, 1rem); }
   .location-media-card__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
@@ -733,6 +741,22 @@ const companyJsonLd = company ? {
   const reviewsCard = document.querySelector<HTMLElement>('[data-reviews-card]');
   const reviewTabButtons = document.querySelectorAll('[data-review-tab]');
   const reviewPanels = document.querySelectorAll('[data-review-panel]');
+
+  document.querySelectorAll<HTMLElement>('[data-phone-reveal]').forEach((phoneReveal) => {
+    const revealButton = phoneReveal.querySelector<HTMLButtonElement>('[data-phone-reveal-button]');
+    const phoneLink = phoneReveal.querySelector<HTMLAnchorElement>('[data-phone-link]');
+
+    if (!revealButton || !phoneLink) return;
+
+    phoneLink.hidden = true;
+    revealButton.hidden = false;
+
+    revealButton.addEventListener('click', () => {
+      revealButton.hidden = true;
+      phoneLink.hidden = false;
+      phoneLink.focus();
+    });
+  });
 
   if (mapElement) {
     const latitude = Number(mapElement.dataset.lat);
