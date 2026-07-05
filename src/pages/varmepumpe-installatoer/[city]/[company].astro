@@ -4,9 +4,13 @@ export const prerender = false;
 import 'leaflet/dist/leaflet.css';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import CompanyRatingBadge from '../../../components/CompanyRatingBadge.astro';
+import FAQ from '../../../components/FAQ.astro';
+import JsonLd from '../../../components/JsonLd.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getPrisma } from '../../../lib/prisma';
+import { absoluteUrl } from '../../../lib/seo';
 import { slugifyCity } from '../../../lib/slugs';
+import { breadcrumbsJsonLd, faqJsonLd } from '../../../lib/structured-data';
 
 interface CityRow {
   city_name: string;
@@ -182,7 +186,7 @@ try {
 
 const title = company ? `${company.name} - varmepumpe installatør i ${cityName}` : 'Varmepumpe installatør';
 const description = company
-  ? `Se kontaktoplysninger, adresse, CVR og anmeldelsesdata for ${company.name} i ${cityName}.`
+  ? `Se kontaktoplysninger, adresse, CVR, åbningstider og anmeldelsesdata for ${company.name}, varmepumpe installatør i ${cityName}.`
   : 'Se kontaktoplysninger og anmeldelsesdata for en varmepumpe installatør.';
 const formatAddress = (row: CompanyRow | null) => {
   if (!row) return '';
@@ -326,11 +330,69 @@ const isOpenAtCurrentTime = (hours: string) => {
 };
 const currentOpeningHours = openingHours.find((row) => row.day.toLocaleLowerCase('da-DK') === currentOpeningDay.toLocaleLowerCase('da-DK')) ?? null;
 const isCompanyOpenNow = currentOpeningHours ? isOpenAtCurrentTime(currentOpeningHours.hours) : null;
+const detailPath = `/varmepumpe-installatoer/${citySlug}/${companySlug}/`;
+const addDirectoryUtm = (url: string) => {
+  try {
+    const trackedUrl = new URL(url);
+    trackedUrl.searchParams.set('utm_source', 'indeklimaguiden.dk');
+    trackedUrl.searchParams.set('utm_medium', 'referral');
+    trackedUrl.searchParams.set('utm_campaign', 'varmepumpe_directory');
+    return trackedUrl.toString();
+  } catch {
+    return url;
+  }
+};
+const companyWebsiteUrl = company?.website ? addDirectoryUtm(company.website) : null;
+const breadcrumbItems = [{ name: 'Forside', url: '/' }, { name: 'Varmepumpe installatører', url: '/varmepumpe-installatoer/' }, { name: cityName || 'By', url: `/varmepumpe-installatoer/${citySlug}/` }, { name: company?.name || 'Virksomhed', url: detailPath }];
+const faqItems = company ? [
+  {
+    question: `Hvordan kontakter jeg ${company.name}?`,
+    answer: `Brug kontaktoplysningerne på profilen til at kontakte ${company.name}. Hvis website, telefon eller mail mangler, bør du kontrollere oplysningerne via virksomhedens egne kanaler eller CVR.`,
+  },
+  {
+    question: `Er ${company.name} en verificeret installatør?`,
+    answer: company.is_verified ? `${company.name} er markeret som verificeret i oversigten. Bekræft stadig ydelser, certificeringer og tilgængelighed direkte hos virksomheden.` : `${company.name} er ikke markeret som verificeret i oversigten. Bekræft derfor altid erfaring, certificeringer og ydelser direkte hos virksomheden.`,
+  },
+  {
+    question: `Hvad bør jeg spørge ${company.name} om før installation?`,
+    answer: 'Spørg om samlet pris, varmepumpetype, montage, elarbejde, garanti, serviceaftale, tidsplan og dokumentation for relevante autorisationer eller certificeringer.',
+  },
+] : [];
+const companyJsonLd = company ? {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: company.name,
+  description,
+  url: company.website || absoluteUrl(detailPath),
+  mainEntityOfPage: absoluteUrl(detailPath),
+  telephone: company.phone || undefined,
+  email: company.email || undefined,
+  image: googlePhotos[0]?.url,
+  identifier: company.cvr ? { '@type': 'PropertyValue', propertyID: 'CVR', value: company.cvr } : undefined,
+  address: fullAddress ? {
+    '@type': 'PostalAddress',
+    streetAddress: company.address || undefined,
+    postalCode: company.postal_code || undefined,
+    addressLocality: company.city,
+    addressCountry: company.country || 'DK',
+  } : undefined,
+  geo: hasMapCoordinates ? {
+    '@type': 'GeoCoordinates',
+    latitude,
+    longitude,
+  } : undefined,
+  areaServed: cityName ? { '@type': 'City', name: cityName } : undefined,
+  sameAs: [company.google_source_url, company.trustpilot_source_url].filter(Boolean),
+} : null;
 ---
 
-<BaseLayout title={title} description={description} path={`/varmepumpe-installatoer/${citySlug}/${companySlug}/`}>
+<BaseLayout title={title} description={description} path={detailPath}>
+  <JsonLd data={breadcrumbsJsonLd(breadcrumbItems)} />
+  {faqItems.length > 0 && <JsonLd data={faqJsonLd(faqItems)} />}
+  {companyJsonLd && <JsonLd data={companyJsonLd} />}
+
   <section class="section container company-hero">
-    <Breadcrumbs items={[{ name: 'Forside', url: '/' }, { name: 'Varmepumpe installatører', url: '/varmepumpe-installatoer/' }, { name: cityName || 'By', url: `/varmepumpe-installatoer/${citySlug}/` }, { name: company?.name || 'Virksomhed', url: `/varmepumpe-installatoer/${citySlug}/${companySlug}/` }]} />
+    <Breadcrumbs items={breadcrumbItems} />
 
     {dbError ? (
       <div class="surface notice" role="alert">
@@ -343,7 +405,7 @@ const isCompanyOpenNow = currentOpeningHours ? isOpenAtCurrentTime(currentOpenin
           <span class="pill">Virksomhedsprofil</span>
           <h1>{company.name}</h1>
           <p>
-            Se offentligt indsamlede oplysninger om {company.name}, herunder kontaktdata, adresse, CVR og anmeldelsesdata fra Google og Trustpilot.
+            Se offentligt indsamlede oplysninger om {company.name} i {cityName}, herunder kontaktdata, adresse, CVR, åbningstider og anmeldelsesdata fra Google og Trustpilot.
           </p>
           <div class="ratings">
             <CompanyRatingBadge source="google" rating={company.google_rating} reviewCount={company.google_review_count} />
@@ -354,7 +416,7 @@ const isCompanyOpenNow = currentOpeningHours ? isOpenAtCurrentTime(currentOpenin
         <aside class="surface contact-card" aria-label="Kontaktoplysninger">
           <h2>Kontakt</h2>
           <div class="contact-actions">
-            {company.website && <a class="button" href={company.website} rel="nofollow noopener" target="_blank">Besøg website</a>}
+            {companyWebsiteUrl && <a class="button" href={companyWebsiteUrl} rel="nofollow noopener" target="_blank">Besøg website</a>}
             {company.phone && <a class="button secondary" href={`tel:${company.phone.replace(/\s+/g, '')}`}>{company.phone}</a>}
             {company.email && <a class="button secondary" href={`mailto:${company.email}`}>Send mail</a>}
           </div>
@@ -365,6 +427,16 @@ const isCompanyOpenNow = currentOpeningHours ? isOpenAtCurrentTime(currentOpenin
 
   {company && !dbError && (
     <>
+      <section class="container answer-section">
+        <div class="surface answer-card">
+          <span class="pill">Kort svar</span>
+          <h2>Før du kontakter {company.name}</h2>
+          <p>
+            Brug profilen som et første overblik, og bekræft altid pris, ydelser, certificeringer, garanti og tilgængelighed direkte hos {company.name}, før du bestiller installation af varmepumpe.
+          </p>
+        </div>
+      </section>
+
       {(hasMapCoordinates || googlePhotos.length > 0) && (
         <section class:list={['container', 'location-media-section', { 'location-media-section--split': hasMapCoordinates && googlePhotos.length > 0 }]} aria-label="Kort og fotos">
           <div class="surface location-media-card">
@@ -551,6 +623,11 @@ const isCompanyOpenNow = currentOpeningHours ? isOpenAtCurrentTime(currentOpenin
       <section class="container disclosure surface">
         <h2>Om data i profilen</h2>
         <p>Data er indsamlet fra offentligt tilgængelige kilder og kan ændre sig. Kontakt altid virksomheden direkte for at bekræfte ydelser, priser, certificeringer og tilgængelighed.</p>
+        <p><a href={`/varmepumpe-installatoer/${citySlug}/`}>Se flere varmepumpe installatører i {cityName}</a>, eller gå tilbage til <a href="/varmepumpe-installatoer/">oversigten over installatører i Danmark</a>.</p>
+      </section>
+
+      <section class="container faq-section">
+        <FAQ items={faqItems} />
       </section>
     </>
   )}
@@ -560,6 +637,10 @@ const isCompanyOpenNow = currentOpeningHours ? isOpenAtCurrentTime(currentOpenin
   .company-hero { padding-bottom: clamp(2rem, 4vw, 3rem); }
   .company-hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 0.34fr); gap: clamp(1.25rem, 4vw, 2.5rem); align-items: start; }
   .company-hero p { max-width: 820px; color: var(--color-muted); font-size: clamp(1.08rem, 2vw, 1.26rem); }
+  .answer-section { padding-bottom: clamp(1.5rem, 4vw, 3rem); }
+  .answer-card { padding: clamp(1.1rem, 3vw, 1.6rem); }
+  .answer-card h2 { margin: 0.8rem 0 0.65rem; }
+  .answer-card p { max-width: 860px; color: var(--color-muted); font-size: 1.06rem; }
   .ratings { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem; }
   .contact-card { padding: clamp(1rem, 2vw, 1.35rem); }
   .contact-card h2 { margin: 0 0 1rem; font-size: 1.35rem; }
@@ -637,6 +718,9 @@ const isCompanyOpenNow = currentOpeningHours ? isOpenAtCurrentTime(currentOpenin
   .disclosure { margin-bottom: clamp(3.5rem, 7vw, 7rem); padding: 1.25rem; }
   .disclosure h2 { margin: 0 0 0.75rem; font-size: 1.35rem; }
   .disclosure p { margin: 0; color: var(--color-muted); }
+  .disclosure p + p { margin-top: 0.75rem; }
+  .disclosure a { color: var(--color-primary); font-weight: 900; }
+  .faq-section { padding-bottom: clamp(3.5rem, 7vw, 7rem); }
   @media (max-width: 860px) { .company-hero__grid, .location-media-card__grid--split, .detail-section { grid-template-columns: 1fr; } .reviews-card { height: auto !important; } .review-panel { max-height: 520px; } .photo-carousel__viewport { height: 320px; } }
   @media (max-width: 560px) { .info-grid div, .opening-hours div { grid-template-columns: 1fr; gap: 0.25rem; } .review-tabs { border-radius: 1rem; flex-direction: column; } .review-tab { border-radius: 0.75rem; } .review-item__header { display: grid; } }
 </style>

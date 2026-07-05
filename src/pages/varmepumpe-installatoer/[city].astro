@@ -2,12 +2,16 @@
 export const prerender = false;
 
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FAQ from '../../components/FAQ.astro';
 import InstallerCompanyList from '../../components/InstallerCompanyList.astro';
+import JsonLd from '../../components/JsonLd.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { Prisma } from '../../../prisma/generated/client/client';
 import { parseInstallerSort } from '../../lib/installerSort';
 import { getPrisma } from '../../lib/prisma';
+import { absoluteUrl } from '../../lib/seo';
 import { slugifyCity } from '../../lib/slugs';
+import { breadcrumbsJsonLd, faqJsonLd } from '../../lib/structured-data';
 
 interface CityRow {
   city_name: string;
@@ -20,6 +24,7 @@ interface CompanyRow {
   cvr: string | null;
   is_verified: boolean;
   address: string | null;
+  postal_code: string | null;
   city: string;
   google_rating: string | null;
   google_review_count: number | null;
@@ -84,6 +89,7 @@ try {
       companies.cvr,
       companies.is_verified,
       company_locations.address,
+      company_locations.postal_code,
       trim(company_locations.city) as city,
       google.rating::text as google_rating,
       google.review_count as google_review_count,
@@ -106,22 +112,63 @@ try {
 
 const title = cityName ? `Varmepumpe installatører i ${cityName}` : 'Varmepumpe installatører';
 const description = cityName
-  ? `Find varmepumpe installatører i ${cityName}. Se lokale virksomheder, CVR og offentligt indsamlede anmeldelsesdata.`
+  ? `Find ${companies.length} varmepumpe installatører i ${cityName}. Sammenlign lokale virksomheder, CVR, adresser og offentligt indsamlede anmeldelsesdata.`
   : 'Find lokale varmepumpe installatører, CVR og anmeldelsesdata.';
 const companiesWithDetailPath = companies.map((company) => ({
   ...company,
   detailPath: `/varmepumpe-installatoer/${citySlug}/${company.slug}/`,
 }));
+const breadcrumbItems = [{ name: 'Forside', url: '/' }, { name: 'Varmepumpe installatører', url: '/varmepumpe-installatoer/' }, { name: cityName || 'By', url: `/varmepumpe-installatoer/${citySlug}/` }];
+const faqItems = cityName ? [
+  {
+    question: `Hvordan finder jeg en varmepumpe installatør i ${cityName}?`,
+    answer: `Brug listen til at sammenligne varmepumpe installatører i ${cityName} på adresse, CVR, verificering og anmeldelsesdata. Åbn en virksomhedsprofil for flere kontaktoplysninger.`,
+  },
+  {
+    question: `Hvad koster installation af varmepumpe i ${cityName}?`,
+    answer: 'Prisen afhænger af bolig, varmepumpetype, montage, elarbejde og service. Indhent altid konkrete tilbud fra flere installatører, så du kan sammenligne samme opgavegrundlag.',
+  },
+  {
+    question: `Kan jeg stole på anmeldelsesdata for installatører i ${cityName}?`,
+    answer: 'Anmeldelsesdata er indsamlet fra offentligt tilgængelige kilder og kan ændre sig. Brug det som et første signal, og bekræft altid oplysninger direkte hos virksomheden.',
+  },
+] : [];
+const companyItemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: cityName ? `Varmepumpe installatører i ${cityName}` : 'Varmepumpe installatører',
+  itemListElement: companiesWithDetailPath.slice(0, 100).map((company, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: company.name,
+    url: absoluteUrl(company.detailPath),
+  })),
+};
+const noindex = Astro.url.searchParams.has('sort') || Astro.url.searchParams.has('direction');
 ---
 
-<BaseLayout title={title} description={description} path={`/varmepumpe-installatoer/${citySlug}/`}>
+<BaseLayout title={title} description={description} path={`/varmepumpe-installatoer/${citySlug}/`} noindex={noindex}>
+  <JsonLd data={breadcrumbsJsonLd(breadcrumbItems)} />
+  {faqItems.length > 0 && <JsonLd data={faqJsonLd(faqItems)} />}
+  {companiesWithDetailPath.length > 0 && <JsonLd data={companyItemListJsonLd} />}
+
   <section class="section container city-hero">
-    <Breadcrumbs items={[{ name: 'Forside', url: '/' }, { name: 'Varmepumpe installatører', url: '/varmepumpe-installatoer/' }, { name: cityName || 'By', url: `/varmepumpe-installatoer/${citySlug}/` }]} />
+    <Breadcrumbs items={breadcrumbItems} />
     <span class="pill">Lokal oversigt</span>
     <h1>{cityName ? `Varmepumpe installatører i ${cityName}` : 'Varmepumpe installatører'}</h1>
     <p>
-      Sammenlign lokale installatører, adresser og anmeldelsesdata. Brug oversigten som startpunkt, og åbn virksomhedssiden for kontaktoplysninger og mere data.
+      Sammenlign {companies.length} lokale installatører, adresser, CVR og anmeldelsesdata. Brug oversigten som startpunkt, og åbn virksomhedssiden for kontaktoplysninger og mere data.
     </p>
+  </section>
+
+  <section class="container answer-section">
+    <div class="surface answer-card">
+      <span class="pill">Kort svar</span>
+      <h2>Sådan vælger du installatør i {cityName}</h2>
+      <p>
+        Vælg 2-3 relevante varmepumpe installatører i {cityName}, og bed dem bekræfte erfaring med din varmepumpetype, samlet pris, leveringstid, garanti og serviceaftale, før du accepterer et tilbud.
+      </p>
+    </div>
   </section>
 
   <section class="container listing-section">
@@ -145,12 +192,23 @@ const companiesWithDetailPath = companies.map((company) => ({
   <section class="container disclosure surface">
     <h2>Om data i oversigten</h2>
     <p>Data er indsamlet fra offentligt tilgængelige kilder og kan ændre sig. Kontakt altid virksomheden direkte for at bekræfte ydelser, priser, certificeringer og tilgængelighed.</p>
+    <p><a href="/varmepumpe-installatoer/">Se også alle varmepumpe installatører i Danmark</a>, hvis du vil sammenligne med nærliggende byer.</p>
   </section>
+
+  {faqItems.length > 0 && (
+    <section class="container faq-section">
+      <FAQ items={faqItems} />
+    </section>
+  )}
 </BaseLayout>
 
 <style>
   .city-hero { padding-bottom: clamp(2rem, 4vw, 3rem); }
   .city-hero p { max-width: 820px; color: var(--color-muted); font-size: clamp(1.08rem, 2vw, 1.26rem); }
+  .answer-section { padding-bottom: clamp(1.5rem, 4vw, 3rem); }
+  .answer-card { padding: clamp(1.1rem, 3vw, 1.6rem); }
+  .answer-card h2 { margin: 0.8rem 0 0.65rem; }
+  .answer-card p { max-width: 860px; color: var(--color-muted); font-size: 1.06rem; }
   .listing-section { padding-bottom: clamp(2rem, 5vw, 4rem); }
   .notice { padding: 1.25rem; }
   .notice strong { color: var(--color-primary); }
@@ -158,4 +216,7 @@ const companiesWithDetailPath = companies.map((company) => ({
   .disclosure { margin-bottom: clamp(3.5rem, 7vw, 7rem); padding: 1.25rem; }
   .disclosure h2 { margin: 0 0 0.75rem; font-size: 1.35rem; }
   .disclosure p { margin: 0; color: var(--color-muted); }
+  .disclosure p + p { margin-top: 0.75rem; }
+  .disclosure a { color: var(--color-primary); font-weight: 900; }
+  .faq-section { padding-bottom: clamp(3.5rem, 7vw, 7rem); }
 </style>

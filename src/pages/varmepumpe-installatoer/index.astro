@@ -2,10 +2,14 @@
 export const prerender = false;
 
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FAQ from '../../components/FAQ.astro';
+import JsonLd from '../../components/JsonLd.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { installerRegions } from '../../lib/installerRegions';
 import { getPrisma } from '../../lib/prisma';
+import { absoluteUrl } from '../../lib/seo';
 import { slugifyCity } from '../../lib/slugs';
+import { breadcrumbsJsonLd, faqJsonLd } from '../../lib/structured-data';
 
 interface CityRow {
   city_name: string;
@@ -74,6 +78,32 @@ const citySearchData = cities.map((city) => ({
   postalCodes: city.postalCodes,
 }));
 const citySearchJson = JSON.stringify(citySearchData).replace(/</g, '\\u003c');
+const breadcrumbItems = [{ name: 'Forside', url: '/' }, { name: 'Varmepumpe installatører', url: '/varmepumpe-installatoer/' }];
+const faqItems = [
+  {
+    question: 'Hvordan finder jeg en varmepumpe installatør nær mig?',
+    answer: 'Søg efter din by eller dit postnummer, og åbn den lokale oversigt. Her kan du sammenligne virksomheder, adresser, CVR og offentligt indsamlede anmeldelsesdata.',
+  },
+  {
+    question: 'Hvad bør jeg tjekke, før jeg vælger installatør?',
+    answer: 'Tjek CVR, adresse, kontaktoplysninger, anmeldelser og om virksomheden kan bekræfte erfaring med den type varmepumpe, du skal have installeret.',
+  },
+  {
+    question: 'Er installatørdata altid opdateret?',
+    answer: 'Data kan ændre sig, fordi oversigten bygger på offentligt tilgængelige kilder. Kontakt altid virksomheden direkte for at bekræfte ydelser, pris, certificeringer og tilgængelighed.',
+  },
+];
+const cityItemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Varmepumpe installatører efter by i Danmark',
+  itemListElement: cities.slice(0, 100).map((city, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: `Varmepumpe installatører i ${city.name}`,
+    url: absoluteUrl(`/varmepumpe-installatoer/${city.slug}/`),
+  })),
+};
 ---
 
 <BaseLayout
@@ -81,9 +111,13 @@ const citySearchJson = JSON.stringify(citySearchData).replace(/</g, '\\u003c');
   description="Find lokale varmepumpe installatører i Danmark. Vælg en by og se virksomheder, kontaktoplysninger og offentligt indsamlede anmeldelsesdata."
   path="/varmepumpe-installatoer/"
 >
+  <JsonLd data={breadcrumbsJsonLd(breadcrumbItems)} />
+  <JsonLd data={faqJsonLd(faqItems)} />
+  {cities.length > 0 && <JsonLd data={cityItemListJsonLd} />}
+
   <section class="section container directory-hero">
     <div>
-      <Breadcrumbs items={[{ name: 'Forside', url: '/' }, { name: 'Varmepumpe installatører', url: '/varmepumpe-installatoer/' }]} />
+      <Breadcrumbs items={breadcrumbItems} />
       <span class="pill">Installatørregister</span>
       <h1>Find varmepumpe installatører nær dig</h1>
       <p>
@@ -94,6 +128,16 @@ const citySearchJson = JSON.stringify(citySearchData).replace(/</g, '\\u003c');
       <strong>{totalCompanies}</strong>
       <span>installatører fordelt på {cities.length} byer</span>
     </aside>
+  </section>
+
+  <section class="container answer-section">
+    <div class="surface answer-card">
+      <span class="pill">Kort svar</span>
+      <h2>Sådan bruger du oversigten</h2>
+      <p>
+        Start med at vælge by eller region. Sammenlign derefter lokale varmepumpe installatører på adresse, CVR, verificeringsstatus og anmeldelsesdata, før du kontakter de mest relevante virksomheder direkte.
+      </p>
+    </div>
   </section>
 
   <section class="container city-section">
@@ -172,6 +216,15 @@ const citySearchJson = JSON.stringify(citySearchData).replace(/</g, '\\u003c');
         <p>Importer scrapedata til PostgreSQL, og sørg for at virksomhederne har en by.</p>
       </div>
     )}
+  </section>
+
+  <section class="container guide-section">
+    <div class="surface guide-card">
+      <h2>Hvad bør du spørge en installatør om?</h2>
+      <p>Bed altid om en konkret vurdering af boligen, samlet pris, forventet strømforbrug, garanti, serviceaftale og dokumentation for autorisation eller relevante certificeringer.</p>
+      <p>Hvis du sammenligner flere tilbud, så sørg for at de dækker samme varmepumpetype, montage, rørføring, elarbejde, bortskaffelse og eventuel service.</p>
+    </div>
+    <FAQ items={faqItems} />
   </section>
 </BaseLayout>
 
@@ -326,6 +379,12 @@ const citySearchJson = JSON.stringify(citySearchData).replace(/</g, '\\u003c');
   .stats-card strong { display: block; color: var(--color-primary); font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1; letter-spacing: -0.06em; }
   .stats-card span { display: block; margin-top: 0.65rem; color: var(--color-muted); font-weight: 800; }
   .city-section { padding-bottom: clamp(3.5rem, 7vw, 7rem); }
+  .answer-section { padding-bottom: clamp(1.5rem, 4vw, 3rem); }
+  .answer-card, .guide-card { padding: clamp(1.1rem, 3vw, 1.6rem); }
+  .answer-card h2, .guide-card h2 { margin: 0.8rem 0 0.65rem; }
+  .answer-card p, .guide-card p { max-width: 860px; color: var(--color-muted); font-size: 1.06rem; }
+  .guide-section { padding-bottom: clamp(3.5rem, 7vw, 7rem); }
+  .guide-card p:last-child { margin-bottom: 0; }
   .city-search { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(320px, 1fr); gap: clamp(1rem, 3vw, 2rem); align-items: center; margin-bottom: 2rem; padding: clamp(1.1rem, 3vw, 1.6rem); }
   .city-search__content h2 { margin: 0.8rem 0 0.55rem; font-size: clamp(1.8rem, 3vw, 2.6rem); }
   .city-search__content p { margin: 0; color: var(--color-muted); font-size: 1.05rem; }
