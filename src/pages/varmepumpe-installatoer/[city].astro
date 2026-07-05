@@ -110,8 +110,7 @@ const description = cityName
           <>
             <div class="surface company-filters" data-company-filters>
               <div class="filter-field filter-field--search">
-                <label for="company-search">Søg efter installatør</label>
-                <input id="company-search" type="search" placeholder="Fx installatørens navn" autocomplete="off" data-company-search />
+                <input id="company-search" type="search" placeholder="Søg på installatørnavn" autocomplete="off" aria-label="Søg efter installatør" data-company-search />
               </div>
 
               <label class="filter-check">
@@ -120,8 +119,7 @@ const description = cityName
               </label>
 
               <div class="filter-field">
-                <label class="sr-only" for="google-rating-filter">Google rating</label>
-                <select id="google-rating-filter" data-google-rating-filter>
+                <select id="google-rating-filter" aria-label="Google rating" data-google-rating-filter>
                   <option value="">Alle Google ratings</option>
                   <option value="4.5">4,5+</option>
                   <option value="4">4,0+</option>
@@ -130,8 +128,7 @@ const description = cityName
               </div>
 
               <div class="filter-field">
-                <label class="sr-only" for="trustpilot-rating-filter">Trustpilot rating</label>
-                <select id="trustpilot-rating-filter" data-trustpilot-rating-filter>
+                <select id="trustpilot-rating-filter" aria-label="Trustpilot rating" data-trustpilot-rating-filter>
                   <option value="">Alle Trustpilot ratings</option>
                   <option value="4.5">4,5+</option>
                   <option value="4">4,0+</option>
