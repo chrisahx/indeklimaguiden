@@ -116,7 +116,7 @@ async def collect_company_candidate_urls(
     if await looks_like_place_profile(page):
         return [page.url]
 
-    await page.goto(maps_search_url(query, scraper.config.language), wait_until="networkidle", timeout=scraper.config.navigation_timeout_ms)
+    await page.goto(maps_search_url(query, scraper.config.language), wait_until="domcontentloaded", timeout=scraper.config.navigation_timeout_ms)
     await scraper.accept_cookies(page)
     await page.wait_for_timeout(2_000)
     if await looks_like_place_profile(page):
