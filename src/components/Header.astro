@@ -273,7 +273,12 @@ const navGroups = [
   .menu-icon::after { transform: translateY(4px); }
 
   .mobile-menu {
-    padding-bottom: 1rem;
+    max-height: calc(100dvh - 72px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-block: 0.75rem 1rem;
+    scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
   }
 
   .mobile-menu[hidden] {
@@ -316,7 +321,11 @@ const navGroups = [
   .mobile-group-links {
     display: grid;
     gap: 0.35rem;
+    max-height: min(58dvh, 30rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 0 0.65rem 0.75rem;
+    -webkit-overflow-scrolling: touch;
   }
 
   .mobile-group-links[hidden] {
