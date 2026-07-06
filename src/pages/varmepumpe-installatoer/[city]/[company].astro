@@ -1,0 +1,849 @@
+---
+export const prerender = false;
+
+import 'leaflet/dist/leaflet.css';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import CompanyRatingBadge from '../../../components/CompanyRatingBadge.astro';
+import FAQ from '../../../components/FAQ.astro';
+import JsonLd from '../../../components/JsonLd.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getPrisma } from '../../../lib/prisma';
+import { absoluteUrl } from '../../../lib/seo';
+import { slugifyCity } from '../../../lib/slugs';
+import { breadcrumbsJsonLd, faqJsonLd } from '../../../lib/structured-data';
+
+interface CityRow {
+  city_name: string;
+}
+
+interface CompanyRow {
+  id: string;
+  slug: string;
+  name: string;
+  website: string | null;
+  phone: string | null;
+  email: string | null;
+  cvr: string | null;
+  status: string;
+  is_verified: boolean;
+  is_claimed: boolean;
+  address: string | null;
+  postal_code: string | null;
+  city: string;
+  country: string;
+  latitude: string | null;
+  longitude: string | null;
+  opening_hours: string | null;
+  google_rating: string | null;
+  google_review_count: number | null;
+  google_source_url: string | null;
+  trustpilot_rating: string | null;
+  trustpilot_review_count: number | null;
+  trustpilot_source_url: string | null;
+}
+
+interface CompanyReviewRow {
+  source: 'google' | 'trustpilot';
+  source_url: string | null;
+  author: string | null;
+  title: string | null;
+  body: string | null;
+  rating: string | null;
+  rating_label: string | null;
+  reviewed_at_display: string | null;
+}
+
+interface CompanyPhotoRow {
+  url: string;
+  alt: string | null;
+  position: number;
+}
+
+interface OpeningHourRow {
+  day: string;
+  hours: string;
+}
+
+const citySlug = Astro.params.city ?? '';
+const companySlug = Astro.params.company ?? '';
+let cityName = '';
+let company: CompanyRow | null = null;
+let reviews: CompanyReviewRow[] = [];
+let googlePhotos: CompanyPhotoRow[] = [];
+let dbError = '';
+
+try {
+  const prisma = getPrisma();
+  const cityRows = await prisma.$queryRaw<CityRow[]>`
+    select min(trim(company_locations.city)) as city_name
+    from company_locations
+    join companies on companies.id = company_locations.company_id
+    where nullif(trim(company_locations.city), '') is not null
+    group by lower(trim(company_locations.city))
+    order by city_name asc
+  `;
+
+  const matchedCity = cityRows.find((row) => slugifyCity(row.city_name) === citySlug);
+
+  if (!matchedCity) {
+    return new Response('Byen blev ikke fundet.', { status: 404 });
+  }
+
+  cityName = matchedCity.city_name;
+
+  const rows = await prisma.$queryRaw<CompanyRow[]>`
+    select
+      companies.id,
+      companies.slug,
+      companies.name,
+      companies.website,
+      companies.phone,
+      companies.email,
+      companies.cvr,
+      companies.status,
+      companies.is_verified,
+      companies.is_claimed,
+      company_locations.address,
+      company_locations.postal_code,
+      trim(company_locations.city) as city,
+      company_locations.country,
+      company_locations.latitude::text as latitude,
+      company_locations.longitude::text as longitude,
+      company_locations.opening_hours::text as opening_hours,
+      google.rating::text as google_rating,
+      google.review_count as google_review_count,
+      google.source_url as google_source_url,
+      trustpilot.rating::text as trustpilot_rating,
+      trustpilot.review_count as trustpilot_review_count,
+      trustpilot.source_url as trustpilot_source_url
+    from companies
+    join company_locations on company_locations.company_id = companies.id
+    left join company_sources google
+      on google.company_id = companies.id and google.source = 'google'
+    left join company_sources trustpilot
+      on trustpilot.company_id = companies.id and trustpilot.source = 'trustpilot'
+    where companies.slug = ${companySlug}
+      and lower(trim(company_locations.city)) = lower(trim(${cityName}))
+    limit 1
+  `;
+
+  company = rows[0] ?? null;
+
+  if (!company) {
+    return new Response('Virksomheden blev ikke fundet.', { status: 404 });
+  }
+
+  reviews = await prisma.$queryRaw<CompanyReviewRow[]>`
+    select
+      source,
+      source_url,
+      author,
+      title,
+      body,
+      rating::text as rating,
+      rating_label,
+      reviewed_at_display
+    from (
+      select
+        company_reviews.source,
+        company_reviews.source_url,
+        company_reviews.author,
+        company_reviews.title,
+        company_reviews.body,
+        company_reviews.rating,
+        company_reviews.rating_label,
+        case
+          when company_reviews.reviewed_at is not null then to_char(company_reviews.reviewed_at at time zone 'Europe/Copenhagen', 'DD.MM.YYYY kl. HH24:MI')
+          when company_reviews.reviewed_at_label ~ '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}' then to_char(company_reviews.reviewed_at_label::timestamptz at time zone 'Europe/Copenhagen', 'DD.MM.YYYY kl. HH24:MI')
+          else company_reviews.reviewed_at_label
+        end as reviewed_at_display,
+        row_number() over (
+          partition by company_reviews.source
+          order by company_reviews.reviewed_at desc nulls last, company_reviews.created_at desc
+        ) as source_rank
+      from company_reviews
+      where company_reviews.company_id = ${company.id}
+        and company_reviews.source in ('google', 'trustpilot')
+    ) ranked_reviews
+    where source_rank <= 20
+    order by source asc, source_rank asc
+  `;
+
+  googlePhotos = await prisma.$queryRaw<CompanyPhotoRow[]>`
+    select
+      url,
+      alt,
+      position
+    from company_photos
+    where company_id = ${company.id}
+      and source = 'google'
+    order by position asc, created_at asc
+    limit 12
+  `;
+} catch (error) {
+  dbError = error instanceof Error ? error.message : 'Kunne ikke hente virksomheden fra databasen.';
+}
+
+const title = company ? `${company.name} - varmepumpe installatør i ${cityName}` : 'Varmepumpe installatør';
+const description = company
+  ? `Se kontaktoplysninger, adresse, CVR, åbningstider og anmeldelsesdata for ${company.name}, varmepumpe installatør i ${cityName}.`
+  : 'Se kontaktoplysninger og anmeldelsesdata for en varmepumpe installatør.';
+const formatAddress = (row: CompanyRow | null) => {
+  if (!row) return '';
+
+  const address = row.address?.replace(/^[^\p{L}\p{N}]+/u, '').trim() ?? '';
+  const lowerAddress = address.toLocaleLowerCase('da-DK');
+  const parts = [address];
+
+  if (row.postal_code && !lowerAddress.includes(row.postal_code.toLocaleLowerCase('da-DK'))) {
+    parts.push(row.postal_code);
+  }
+
+  if (row.city && !lowerAddress.includes(row.city.toLocaleLowerCase('da-DK'))) {
+    parts.push(row.city);
+  }
+
+  return parts.filter(Boolean).join(', ');
+};
+const fullAddress = formatAddress(company);
+const latitude = company?.latitude ? Number(company.latitude) : null;
+const longitude = company?.longitude ? Number(company.longitude) : null;
+const hasMapCoordinates = latitude !== null && longitude !== null && Number.isFinite(latitude) && Number.isFinite(longitude);
+const googleReviews = reviews.filter((review) => review.source === 'google');
+const trustpilotReviews = reviews.filter((review) => review.source === 'trustpilot');
+const getRatingValue = (rating: string | null) => {
+  const ratingNumber = Number(rating);
+  return Number.isFinite(ratingNumber) ? Math.max(0, Math.min(5, ratingNumber)) : null;
+};
+const openingDayLabels = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag', 'Søndag'];
+const openingDayOrder = new Map(openingDayLabels.map((day, index) => [day.toLocaleLowerCase('da-DK'), index]));
+const normalizeOpeningHoursText = (hours: string) => hours.replace(/\s+/g, ' ').trim();
+const addOpeningHoursText = (value: string, rows: OpeningHourRow[]) => {
+  value
+    .split(/[\uE14D\n;]+/u)
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .forEach((item) => {
+      const lowerItem = item.toLocaleLowerCase('da-DK');
+      const day = openingDayLabels.find((label) => lowerItem.startsWith(label.toLocaleLowerCase('da-DK')));
+
+      if (!day) return;
+
+      const hours = normalizeOpeningHoursText(item.slice(day.length));
+
+      if (hours) {
+        rows.push({ day, hours });
+      }
+    });
+};
+const collectOpeningHours = (value: unknown, rows: OpeningHourRow[]) => {
+  if (!value) return;
+
+  if (typeof value === 'string') {
+    addOpeningHoursText(value, rows);
+    return;
+  }
+
+  if (Array.isArray(value)) {
+    value.forEach((item) => collectOpeningHours(item, rows));
+    return;
+  }
+
+  if (typeof value === 'object') {
+    const objectValue = value as Record<string, unknown>;
+    const dayValue = objectValue.day ?? objectValue.weekday ?? objectValue.name;
+    const hoursValue = objectValue.hours ?? objectValue.time ?? objectValue.value;
+
+    if (typeof dayValue === 'string' && typeof hoursValue === 'string') {
+      const day = openingDayLabels.find((label) => label.toLocaleLowerCase('da-DK') === dayValue.toLocaleLowerCase('da-DK'));
+
+      if (day) {
+        rows.push({ day, hours: normalizeOpeningHoursText(hoursValue) });
+      }
+
+      return;
+    }
+
+    Object.entries(objectValue).forEach(([key, item]) => {
+      const day = openingDayLabels.find((label) => label.toLocaleLowerCase('da-DK') === key.toLocaleLowerCase('da-DK'));
+
+      if (day && typeof item === 'string') {
+        rows.push({ day, hours: normalizeOpeningHoursText(item) });
+      }
+    });
+  }
+};
+const parseOpeningHours = (value: string | null) => {
+  const rows: OpeningHourRow[] = [];
+
+  if (!value) return rows;
+
+  try {
+    collectOpeningHours(JSON.parse(value), rows);
+  } catch {
+    addOpeningHoursText(value, rows);
+  }
+
+  return rows
+    .filter((row, index, allRows) => allRows.findIndex((item) => item.day === row.day) === index)
+    .sort((a, b) => (openingDayOrder.get(a.day.toLocaleLowerCase('da-DK')) ?? 99) - (openingDayOrder.get(b.day.toLocaleLowerCase('da-DK')) ?? 99));
+};
+const openingHours = parseOpeningHours(company?.opening_hours ?? null);
+const copenhagenNowParts = new Intl.DateTimeFormat('da-DK', {
+  timeZone: 'Europe/Copenhagen',
+  weekday: 'long',
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23',
+}).formatToParts(new Date());
+const currentOpeningDay = copenhagenNowParts.find((part) => part.type === 'weekday')?.value ?? '';
+const currentOpeningTime = copenhagenNowParts.reduce((time, part) => {
+  if (part.type === 'hour') return { ...time, hour: Number(part.value) };
+  if (part.type === 'minute') return { ...time, minute: Number(part.value) };
+  return time;
+}, { hour: 0, minute: 0 });
+const currentOpeningMinutes = currentOpeningTime.hour * 60 + currentOpeningTime.minute;
+const parseOpeningTime = (value: string) => {
+  const match = value.trim().match(/^(\d{1,2})(?:[.:](\d{2}))?$/);
+
+  if (!match) return null;
+
+  const hour = Number(match[1]);
+  const minute = Number(match[2] ?? '0');
+
+  return Number.isFinite(hour) && Number.isFinite(minute) ? hour * 60 + minute : null;
+};
+const isOpenAtCurrentTime = (hours: string) => {
+  if (/lukket/i.test(hours)) return false;
+
+  return hours.split(',').some((range) => {
+    const [startValue, endValue] = range.split(/[–-]/).map((item) => item.trim());
+    const start = startValue ? parseOpeningTime(startValue) : null;
+    const end = endValue ? parseOpeningTime(endValue) : null;
+
+    if (start === null || end === null) return false;
+
+    return end < start
+      ? currentOpeningMinutes >= start || currentOpeningMinutes <= end
+      : currentOpeningMinutes >= start && currentOpeningMinutes <= end;
+  });
+};
+const currentOpeningHours = openingHours.find((row) => row.day.toLocaleLowerCase('da-DK') === currentOpeningDay.toLocaleLowerCase('da-DK')) ?? null;
+const isCompanyOpenNow = currentOpeningHours ? isOpenAtCurrentTime(currentOpeningHours.hours) : null;
+const detailPath = `/varmepumpe-installatoer/${citySlug}/${companySlug}/`;
+const addDirectoryUtm = (url: string) => {
+  try {
+    const trackedUrl = new URL(url);
+    trackedUrl.searchParams.set('utm_source', 'indeklimaguiden.dk');
+    trackedUrl.searchParams.set('utm_medium', 'referral');
+    trackedUrl.searchParams.set('utm_campaign', 'varmepumpe_directory');
+    return trackedUrl.toString();
+  } catch {
+    return url;
+  }
+};
+const companyWebsiteUrl = company?.website ? addDirectoryUtm(company.website) : null;
+const breadcrumbItems = [{ name: 'Forside', url: '/' }, { name: 'Varmepumpe installatører', url: '/varmepumpe-installatoer/' }, { name: cityName || 'By', url: `/varmepumpe-installatoer/${citySlug}/` }, { name: company?.name || 'Virksomhed', url: detailPath }];
+const faqItems = company ? [
+  {
+    question: `Hvordan kontakter jeg ${company.name}?`,
+    answer: `Brug kontaktoplysningerne på profilen til at kontakte ${company.name}. Hvis website, telefon eller mail mangler, bør du kontrollere oplysningerne via virksomhedens egne kanaler eller CVR.`,
+  },
+  {
+    question: `Er ${company.name} en verificeret installatør?`,
+    answer: company.is_verified ? `${company.name} er markeret som verificeret i oversigten. Bekræft stadig ydelser, certificeringer og tilgængelighed direkte hos virksomheden.` : `${company.name} er ikke markeret som verificeret i oversigten. Bekræft derfor altid erfaring, certificeringer og ydelser direkte hos virksomheden.`,
+  },
+  {
+    question: `Hvad bør jeg spørge ${company.name} om før installation?`,
+    answer: 'Spørg om samlet pris, varmepumpetype, montage, elarbejde, garanti, serviceaftale, tidsplan og dokumentation for relevante autorisationer eller certificeringer.',
+  },
+] : [];
+const companyJsonLd = company ? {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: company.name,
+  description,
+  url: company.website || absoluteUrl(detailPath),
+  mainEntityOfPage: absoluteUrl(detailPath),
+  telephone: company.phone || undefined,
+  email: company.email || undefined,
+  image: googlePhotos[0]?.url,
+  identifier: company.cvr ? { '@type': 'PropertyValue', propertyID: 'CVR', value: company.cvr } : undefined,
+  address: fullAddress ? {
+    '@type': 'PostalAddress',
+    streetAddress: company.address || undefined,
+    postalCode: company.postal_code || undefined,
+    addressLocality: company.city,
+    addressCountry: company.country || 'DK',
+  } : undefined,
+  geo: hasMapCoordinates ? {
+    '@type': 'GeoCoordinates',
+    latitude,
+    longitude,
+  } : undefined,
+  areaServed: cityName ? { '@type': 'City', name: cityName } : undefined,
+  sameAs: [company.google_source_url, company.trustpilot_source_url].filter(Boolean),
+} : null;
+---
+
+<BaseLayout title={title} description={description} path={detailPath}>
+  <JsonLd data={breadcrumbsJsonLd(breadcrumbItems)} />
+  {faqItems.length > 0 && <JsonLd data={faqJsonLd(faqItems)} />}
+  {companyJsonLd && <JsonLd data={companyJsonLd} />}
+
+  <section class="section container company-hero">
+    <Breadcrumbs items={breadcrumbItems} />
+
+    {dbError ? (
+      <div class="surface notice" role="alert">
+        <strong>Databaseforbindelsen mangler eller fejlede.</strong>
+        <p>{dbError}</p>
+      </div>
+    ) : company && (
+      <div class="company-hero__grid">
+        <div>
+          <span class="pill">Virksomhedsprofil</span>
+          <h1>{company.name}</h1>
+          <p>
+            Se offentligt indsamlede oplysninger om {company.name} i {cityName}, herunder kontaktdata, adresse, CVR, åbningstider og anmeldelsesdata fra Google og Trustpilot.
+          </p>
+          <div class="ratings">
+            <CompanyRatingBadge source="google" rating={company.google_rating} reviewCount={company.google_review_count} />
+            <CompanyRatingBadge source="trustpilot" rating={company.trustpilot_rating} reviewCount={company.trustpilot_review_count} />
+          </div>
+        </div>
+
+        <aside class="surface contact-card" aria-label="Kontaktoplysninger">
+          <h2>Kontakt</h2>
+          <div class="contact-actions">
+            {companyWebsiteUrl && <a class="button" href={companyWebsiteUrl} rel="nofollow noopener" target="_blank">Besøg website</a>}
+            {company.phone && (
+              <div class="phone-reveal" data-phone-reveal>
+                <button class="button secondary" type="button" hidden data-phone-reveal-button>Vis telefonnummer</button>
+                <a class="button secondary" href={`tel:${company.phone.replace(/\s+/g, '')}`} data-phone-link>{company.phone}</a>
+              </div>
+            )}
+            {company.email && <a class="button secondary" href={`mailto:${company.email}`}>Send mail</a>}
+          </div>
+        </aside>
+      </div>
+    )}
+  </section>
+
+  {company && !dbError && (
+    <>
+      <section class="container answer-section">
+        <div class="surface answer-card">
+          <span class="pill">Kort svar</span>
+          <h2>Før du kontakter {company.name}</h2>
+          <p>
+            Brug profilen som et første overblik, og bekræft altid pris, ydelser, certificeringer, garanti og tilgængelighed direkte hos {company.name}, før du bestiller installation af varmepumpe.
+          </p>
+        </div>
+      </section>
+
+      {(hasMapCoordinates || googlePhotos.length > 0) && (
+        <section class:list={['container', 'location-media-section', { 'location-media-section--split': hasMapCoordinates && googlePhotos.length > 0 }]} aria-label="Kort og fotos">
+          <div class="surface location-media-card">
+            <div class:list={['location-media-card__grid', { 'location-media-card__grid--split': hasMapCoordinates && googlePhotos.length > 0 }]}>
+              {hasMapCoordinates && (
+                <div
+                  class="company-map"
+                  id="company-map"
+                  data-company-map
+                  data-lat={String(latitude)}
+                  data-lng={String(longitude)}
+                  data-name={company.name}
+                  aria-label={`Kortplacering for ${company.name}`}
+                ></div>
+              )}
+
+              {googlePhotos.length > 0 && (
+                <aside class="photo-carousel location-media-card--photos" data-photo-carousel aria-label="Google Maps-fotos">
+                  <div class="photo-carousel__header">
+                    <div>
+                      <span class="photo-carousel__eyebrow">Google Maps</span>
+                      <h2>Fotos</h2>
+                    </div>
+                    {googlePhotos.length > 1 && <span class="photo-carousel__counter" data-carousel-counter>1 / {googlePhotos.length}</span>}
+                  </div>
+
+                  <div class="photo-carousel__viewport">
+                    {googlePhotos.map((photo, index) => (
+                      <figure class="photo-carousel__slide" data-carousel-slide hidden={index !== 0}>
+                        <img src={photo.url} alt={photo.alt || `${company.name} på Google Maps`} loading={index === 0 ? 'eager' : 'lazy'} />
+                      </figure>
+                    ))}
+                  </div>
+
+                  {googlePhotos.length > 1 && (
+                    <div class="photo-carousel__controls">
+                      <button type="button" aria-label="Forrige billede" data-carousel-prev>Forrige</button>
+                      <button type="button" aria-label="Næste billede" data-carousel-next>Næste</button>
+                    </div>
+                  )}
+                </aside>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section class="container detail-section">
+        <div class="surface info-card" data-company-data-card>
+          <h2>Virksomhedsdata</h2>
+          <dl class="info-grid">
+            <div><dt>Navn</dt><dd>{company.name}</dd></div>
+            <div><dt>Adresse</dt><dd>{fullAddress || 'Ikke oplyst'}</dd></div>
+            <div><dt>CVR</dt><dd>{company.cvr || 'Ikke oplyst'}</dd></div>
+            <div><dt>By</dt><dd>{company.city}</dd></div>
+            <div><dt>Land</dt><dd>{company.country}</dd></div>
+            <div>
+              <dt>Profil verificeret</dt>
+              <dd>
+                {company.is_verified ? (
+                  <span class="verified-badge">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M12 3.1 5.2 5.7v5.1c0 4.4 2.8 8.4 6.8 9.9 4-1.5 6.8-5.5 6.8-9.9V5.7L12 3.1Zm3.6 6.8-4.3 4.3-2.1-2.1 1.1-1.1 1 1 3.2-3.2 1.1 1.1Z" />
+                    </svg>
+                    Verificeret
+                  </span>
+                ) : (
+                  <span class="verified-badge verified-badge--warning">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M12 3.1 5.2 5.7v5.1c0 4.4 2.8 8.4 6.8 9.9 4-1.5 6.8-5.5 6.8-9.9V5.7L12 3.1Zm-.8 5.2h1.6v5.8h-1.6V8.3Zm0 7.2h1.6v1.7h-1.6v-1.7Z" />
+                    </svg>
+                    Ikke verificeret
+                  </span>
+                )}
+              </dd>
+            </div>
+          </dl>
+
+          {openingHours.length > 0 && (
+            <section class="opening-hours" aria-labelledby="opening-hours-heading">
+              <div class="opening-hours__header">
+                <h3 id="opening-hours-heading">Åbningstider</h3>
+              </div>
+              <dl>
+                {openingHours.map((row) => (
+                  <div class:list={{ 'is-current-day': row.day === currentOpeningHours?.day, 'is-open-now': row.day === currentOpeningHours?.day && isCompanyOpenNow === true, 'is-closed-now': row.day === currentOpeningHours?.day && isCompanyOpenNow === false }}>
+                    <dt>{row.day}</dt>
+                    <dd>{row.hours}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )}
+        </div>
+
+        <div class="surface info-card reviews-card" data-reviews-card>
+          <h2>Anmeldelsesdata</h2>
+
+          <div class="review-tabs" role="tablist" aria-label="Anmeldelseskilder">
+            <button class="review-tab is-active" type="button" role="tab" id="google-reviews-tab" aria-controls="google-reviews-panel" aria-selected="true" data-review-tab="google">Google anmeldelser</button>
+            <button class="review-tab" type="button" role="tab" id="trustpilot-reviews-tab" aria-controls="trustpilot-reviews-panel" aria-selected="false" data-review-tab="trustpilot">Trustpilot anmeldelser</button>
+          </div>
+
+          <div class="review-panel" role="tabpanel" id="google-reviews-panel" aria-labelledby="google-reviews-tab" data-review-panel="google">
+            <div class="review-panel__summary">
+              <CompanyRatingBadge source="google" rating={company.google_rating} reviewCount={company.google_review_count} />
+              {company.google_source_url && <a href={company.google_source_url} rel="nofollow noopener" target="_blank">Se Google-kilde</a>}
+            </div>
+
+            {googleReviews.length > 0 ? (
+              <div class="review-list" aria-label="Google anmeldelser">
+                {googleReviews.map((review) => {
+                  const ratingValue = getRatingValue(review.rating);
+
+                  return (
+                    <article class="review-item">
+                      <header class="review-item__header">
+                        <div>
+                          <h3>{review.author || 'Anonym anmelder'}</h3>
+                          {review.reviewed_at_display && <p>{review.reviewed_at_display}</p>}
+                        </div>
+                        {ratingValue !== null && (
+                          <span class="review-item__rating" aria-label={`${ratingValue.toFixed(1)} ud af 5 stjerner`}>
+                            <strong>{ratingValue.toFixed(1)}</strong>
+                            <span aria-hidden="true">
+                              {[1, 2, 3, 4, 5].map((star) => <span class={star <= Math.round(ratingValue) ? 'is-filled' : ''}>★</span>)}
+                            </span>
+                          </span>
+                        )}
+                      </header>
+                      {review.title && <strong class="review-item__title">{review.title}</strong>}
+                      {review.body && <p class="review-item__body">{review.body}</p>}
+                      {review.source_url && <a class="review-item__link" href={review.source_url} rel="nofollow noopener" target="_blank">Læs original anmeldelse</a>}
+                    </article>
+                  );
+                })}
+              </div>
+            ) : (
+              <p class="empty-reviews">Der er endnu ingen importerede Google-anmeldelser.</p>
+            )}
+          </div>
+
+          <div class="review-panel" role="tabpanel" id="trustpilot-reviews-panel" aria-labelledby="trustpilot-reviews-tab" data-review-panel="trustpilot" hidden>
+            <div class="review-panel__summary">
+              <CompanyRatingBadge source="trustpilot" rating={company.trustpilot_rating} reviewCount={company.trustpilot_review_count} />
+              {company.trustpilot_source_url && <a href={company.trustpilot_source_url} rel="nofollow noopener" target="_blank">Se Trustpilot-kilde</a>}
+            </div>
+
+            {trustpilotReviews.length > 0 ? (
+              <div class="review-list" aria-label="Trustpilot anmeldelser">
+                {trustpilotReviews.map((review) => {
+                  const ratingValue = getRatingValue(review.rating);
+
+                  return (
+                    <article class="review-item review-item--trustpilot">
+                      <header class="review-item__header">
+                        <div>
+                          <h3>{review.author || 'Anonym anmelder'}</h3>
+                          {review.reviewed_at_display && <p>{review.reviewed_at_display}</p>}
+                        </div>
+                        {ratingValue !== null && (
+                          <span class="review-item__rating" aria-label={`${ratingValue.toFixed(1)} ud af 5 stjerner`}>
+                            <strong>{ratingValue.toFixed(1)}</strong>
+                            <span aria-hidden="true">
+                              {[1, 2, 3, 4, 5].map((star) => <span class={star <= Math.round(ratingValue) ? 'is-filled' : ''}>★</span>)}
+                            </span>
+                          </span>
+                        )}
+                      </header>
+                      {review.title && <strong class="review-item__title">{review.title}</strong>}
+                      {review.body && <p class="review-item__body">{review.body}</p>}
+                      {review.source_url && <a class="review-item__link" href={review.source_url} rel="nofollow noopener" target="_blank">Læs original anmeldelse</a>}
+                    </article>
+                  );
+                })}
+              </div>
+            ) : (
+              <p class="empty-reviews">Der er endnu ingen importerede Trustpilot-anmeldelser.</p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section class="container disclosure surface">
+        <h2>Om data i profilen</h2>
+        <p>Data er indsamlet fra offentligt tilgængelige kilder og kan ændre sig. Kontakt altid virksomheden direkte for at bekræfte ydelser, priser, certificeringer og tilgængelighed.</p>
+        <p><a href={`/varmepumpe-installatoer/${citySlug}/`}>Se flere varmepumpe installatører i {cityName}</a>, eller gå tilbage til <a href="/varmepumpe-installatoer/">oversigten over installatører i Danmark</a>.</p>
+      </section>
+
+      <section class="container faq-section">
+        <FAQ items={faqItems} />
+      </section>
+    </>
+  )}
+</BaseLayout>
+
+<style>
+  .company-hero { padding-bottom: clamp(2rem, 4vw, 3rem); }
+  .company-hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 0.34fr); gap: clamp(1.25rem, 4vw, 2.5rem); align-items: start; }
+  .company-hero p { max-width: 820px; color: var(--color-muted); font-size: clamp(1.08rem, 2vw, 1.26rem); }
+  .answer-section { padding-bottom: clamp(1.5rem, 4vw, 3rem); }
+  .answer-card { padding: clamp(1.1rem, 3vw, 1.6rem); }
+  .answer-card h2 { margin: 0.8rem 0 0.65rem; }
+  .answer-card p { max-width: 860px; color: var(--color-muted); font-size: 1.06rem; }
+  .ratings { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem; }
+  .contact-card { padding: clamp(1rem, 2vw, 1.35rem); }
+  .contact-card h2 { margin: 0 0 1rem; font-size: 1.35rem; }
+  .contact-actions { display: grid; gap: 0.65rem; }
+  .contact-actions .button { width: 100%; padding: 0.75rem 1rem; }
+  .phone-reveal { display: grid; gap: 0.65rem; }
+  .phone-reveal [hidden] { display: none !important; }
+  .phone-reveal button.button { cursor: pointer; font-family: inherit; font-size: inherit; font-weight: 800; }
+  .location-media-section { padding-bottom: clamp(1.25rem, 4vw, 2.5rem); }
+  .location-media-card { padding: clamp(0.75rem, 2vw, 1rem); }
+  .location-media-card__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .location-media-card__grid--split { grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr); align-items: stretch; }
+  .location-media-card--photos { min-height: 100%; }
+  .company-map { min-height: clamp(360px, 38vw, 520px); overflow: hidden; border: 1px solid var(--color-border); border-radius: 1.35rem; background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface-strong)); z-index: 0; }
+  :global(.company-map__marker) { display: grid; place-items: center; width: 34px !important; height: 34px !important; margin-left: -17px !important; margin-top: -34px !important; border: 3px solid var(--color-surface-strong); border-radius: 999px 999px 999px 0; background: var(--color-primary); box-shadow: 0 14px 32px rgba(10, 52, 83, 0.28); transform: rotate(-45deg); }
+  :global(.company-map__marker::after) { width: 10px; height: 10px; border-radius: 999px; background: var(--color-surface-strong); content: ''; }
+  :global(.leaflet-popup-content-wrapper) { border-radius: 1rem; color: var(--color-primary); font-family: inherit; font-weight: 900; }
+  .photo-carousel { display: flex; flex-direction: column; min-width: 0; min-height: 0; border: 1px solid var(--color-border); border-radius: 1.35rem; background: color-mix(in srgb, var(--color-surface-strong) 86%, transparent); padding: clamp(0.85rem, 2vw, 1rem); }
+  .photo-carousel__header { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; margin-bottom: 0.85rem; }
+  .photo-carousel__eyebrow { color: var(--color-muted); font-size: 0.78rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
+  .photo-carousel h2 { margin: 0.15rem 0 0; color: var(--color-primary); font-size: clamp(1.35rem, 2vw, 1.75rem); }
+  .photo-carousel__counter { border: 1px solid var(--color-border); border-radius: 999px; color: var(--color-muted); flex: 0 0 auto; font-size: 0.82rem; font-weight: 900; padding: 0.35rem 0.65rem; }
+  .photo-carousel__viewport { position: relative; flex: 1 1 auto; min-height: 270px; overflow: hidden; border-radius: 1rem; background: color-mix(in srgb, var(--color-primary) 9%, var(--color-background)); }
+  .photo-carousel__slide { position: absolute; inset: 0; margin: 0; }
+  .photo-carousel__slide[hidden] { display: none; }
+  .photo-carousel__slide img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-carousel__controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.55rem; margin-top: 0.85rem; }
+  .photo-carousel__controls button { border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface-strong); color: var(--color-primary); cursor: pointer; font: inherit; font-weight: 900; padding: 0.65rem 0.8rem; transition: background 160ms ease, border-color 160ms ease, color 160ms ease; }
+  .photo-carousel__controls button:hover, .photo-carousel__controls button:focus-visible { border-color: color-mix(in srgb, var(--color-primary) 34%, var(--color-border)); background: var(--color-primary); color: var(--color-surface-strong); }
+  .photo-carousel__empty { display: grid; flex: 1 1 auto; align-content: center; gap: 0.45rem; min-height: 270px; border: 1px dashed var(--color-border); border-radius: 1rem; color: var(--color-muted); padding: 1rem; text-align: center; }
+  .photo-carousel__empty strong { color: var(--color-primary); }
+  .photo-carousel__empty p { margin: 0; }
+  .detail-section { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.75fr); gap: 1rem; align-items: stretch; padding-bottom: clamp(2rem, 5vw, 4rem); }
+  .info-card { padding: clamp(1rem, 2vw, 1.35rem); }
+  .info-card h2 { margin: 0 0 1rem; font-size: clamp(1.45rem, 2.6vw, 2rem); }
+  .info-grid { display: grid; gap: 0.75rem; margin: 0; }
+  .info-grid div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 1rem; border-top: 1px solid var(--color-border); padding-top: 0.75rem; }
+  .info-grid dt { color: var(--color-muted); font-weight: 900; }
+  .info-grid dd { margin: 0; color: var(--color-primary); font-weight: 800; overflow-wrap: anywhere; }
+  .opening-hours { margin-top: 1.25rem; border-top: 1px solid var(--color-border); padding-top: 1.15rem; }
+  .opening-hours__header { display: flex; flex-wrap: wrap; gap: 0.65rem; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; }
+  .opening-hours h3 { margin: 0; color: var(--color-primary); font-size: 1.18rem; }
+  .opening-hours dl { display: grid; gap: 0.6rem; margin: 0; }
+  .opening-hours div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 1rem; }
+  .opening-hours dt { color: var(--color-muted); font-weight: 900; }
+  .opening-hours dd { margin: 0; color: var(--color-primary); font-weight: 800; }
+  .opening-hours div.is-current-day dt, .opening-hours div.is-current-day dd { color: var(--color-primary); }
+  .opening-hours div.is-open-now dt, .opening-hours div.is-open-now dd { color: #047857; }
+  .opening-hours div.is-closed-now dt, .opening-hours div.is-closed-now dd { color: #b91c1c; }
+  .verified-badge { display: inline-flex; align-items: center; gap: 0.4rem; width: fit-content; border: 1px solid rgba(17, 185, 129, 0.28); border-radius: 999px; padding: 0.38rem 0.65rem; background: rgba(236, 253, 245, 0.72); color: #07966f; font-size: 0.92rem; font-weight: 900; line-height: 1; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 8px 20px rgba(15, 23, 42, 0.04); }
+  .verified-badge svg { width: 1.1em; height: 1.1em; flex: 0 0 auto; fill: currentColor; }
+  .verified-badge--warning { border-color: rgba(217, 119, 6, 0.3); background: rgba(254, 243, 199, 0.72); color: #b45309; }
+  .reviews-card { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+  .review-tabs { display: flex; gap: 0.25rem; border: 1px solid var(--color-border); border-radius: 999px; background: color-mix(in srgb, var(--color-surface-strong) 78%, var(--color-background)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72); margin-top: 0.2rem; padding: 0.25rem; }
+  .review-tab { flex: 1 1 0; border: 0; border-radius: 999px; background: transparent; color: var(--color-muted); cursor: pointer; font: inherit; font-size: 0.86rem; font-weight: 900; letter-spacing: -0.01em; padding: 0.58rem 0.8rem; transition: background 160ms ease, box-shadow 160ms ease, color 160ms ease, transform 160ms ease; }
+  .review-tab:hover, .review-tab:focus-visible { color: var(--color-primary); }
+  .review-tab:focus-visible { outline: 2px solid color-mix(in srgb, var(--color-primary) 34%, transparent); outline-offset: 2px; }
+  .review-tab.is-active { background: var(--color-primary); box-shadow: 0 10px 24px rgba(10, 52, 83, 0.16); color: var(--color-surface-strong); }
+  .review-panel { display: grid; gap: 1rem; min-height: 0; margin-top: 1rem; overflow-y: auto; padding-right: 0.35rem; scrollbar-color: color-mix(in srgb, var(--color-primary) 35%, transparent) transparent; }
+  .review-panel[hidden] { display: none; }
+  .review-panel__summary { display: grid; gap: 0.6rem; justify-items: start; }
+  .review-panel__summary a, .review-item__link { color: var(--color-primary); font-weight: 900; }
+  .review-list { display: grid; gap: 0.85rem; }
+  .review-item { display: grid; gap: 0.65rem; border: 1px solid var(--color-border); border-radius: 1rem; background: color-mix(in srgb, var(--color-surface-strong) 72%, transparent); padding: 0.9rem; }
+  .review-item__header { display: flex; justify-content: space-between; gap: 0.8rem; align-items: flex-start; }
+  .review-item h3 { margin: 0; color: var(--color-primary); font-size: 1rem; }
+  .review-item__header p, .review-item__body, .empty-reviews { margin: 0; color: var(--color-muted); }
+  .review-item__header p { font-size: 0.9rem; font-weight: 800; }
+  .review-item__rating { display: inline-flex; align-items: center; gap: 0.3rem; color: color-mix(in srgb, var(--color-muted) 34%, transparent); font-size: 0.78rem; white-space: nowrap; }
+  .review-item__rating strong { color: var(--color-primary); font-size: 0.95rem; }
+  .review-item__rating .is-filled { color: #fbbc04; }
+  .review-item--trustpilot .review-item__rating .is-filled { color: #00b67a; }
+  .review-item__title { color: var(--color-primary); font-size: 0.98rem; }
+  .review-item__body { line-height: 1.6; }
+  .notice { padding: 1.25rem; }
+  .notice strong { color: var(--color-primary); }
+  .notice p { margin: 0.5rem 0 0; color: var(--color-muted); }
+  .disclosure { margin-bottom: clamp(3.5rem, 7vw, 7rem); padding: 1.25rem; }
+  .disclosure h2 { margin: 0 0 0.75rem; font-size: 1.35rem; }
+  .disclosure p { margin: 0; color: var(--color-muted); }
+  .disclosure p + p { margin-top: 0.75rem; }
+  .disclosure a { color: var(--color-primary); font-weight: 900; }
+  .faq-section { padding-bottom: clamp(3.5rem, 7vw, 7rem); }
+  @media (max-width: 860px) { .company-hero__grid, .location-media-card__grid--split, .detail-section { grid-template-columns: 1fr; } .reviews-card { height: auto !important; } .review-panel { max-height: 520px; } .photo-carousel__viewport { height: 320px; } }
+  @media (max-width: 560px) { .info-grid div, .opening-hours div { grid-template-columns: 1fr; gap: 0.25rem; } .review-tabs { border-radius: 1rem; flex-direction: column; } .review-tab { border-radius: 0.75rem; } .review-item__header { display: grid; } }
+</style>
+
+<script>
+  import * as L from 'leaflet';
+
+  const mapElement = document.querySelector<HTMLElement>('[data-company-map]');
+  const companyDataCard = document.querySelector<HTMLElement>('[data-company-data-card]');
+  const reviewsCard = document.querySelector<HTMLElement>('[data-reviews-card]');
+  const reviewTabButtons = document.querySelectorAll('[data-review-tab]');
+  const reviewPanels = document.querySelectorAll('[data-review-panel]');
+
+  document.querySelectorAll<HTMLElement>('[data-phone-reveal]').forEach((phoneReveal) => {
+    const revealButton = phoneReveal.querySelector<HTMLButtonElement>('[data-phone-reveal-button]');
+    const phoneLink = phoneReveal.querySelector<HTMLAnchorElement>('[data-phone-link]');
+
+    if (!revealButton || !phoneLink) return;
+
+    phoneLink.hidden = true;
+    revealButton.hidden = false;
+
+    revealButton.addEventListener('click', () => {
+      revealButton.hidden = true;
+      phoneLink.hidden = false;
+      phoneLink.focus();
+    });
+  });
+
+  if (mapElement) {
+    const latitude = Number(mapElement.dataset.lat);
+    const longitude = Number(mapElement.dataset.lng);
+    const companyName = mapElement.dataset.name || 'Virksomhed';
+
+    if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+      const map = L.map(mapElement, { scrollWheelZoom: false }).setView([latitude, longitude], 14);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      const markerIcon = L.divIcon({
+        className: 'company-map__marker',
+        html: '',
+        iconSize: [34, 34],
+        iconAnchor: [17, 34],
+        popupAnchor: [0, -30],
+      });
+
+      L.marker([latitude, longitude], { icon: markerIcon }).addTo(map).bindPopup(companyName);
+
+      setTimeout(() => map.invalidateSize(), 150);
+    }
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-photo-carousel]').forEach((carousel) => {
+    const slides = Array.from(carousel.querySelectorAll<HTMLElement>('[data-carousel-slide]'));
+    const previousButton = carousel.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+    const nextButton = carousel.querySelector<HTMLButtonElement>('[data-carousel-next]');
+    const counter = carousel.querySelector<HTMLElement>('[data-carousel-counter]');
+    let activeIndex = 0;
+
+    const renderSlide = () => {
+      slides.forEach((slide, index) => {
+        slide.toggleAttribute('hidden', index !== activeIndex);
+      });
+
+      if (counter) {
+        counter.textContent = `${activeIndex + 1} / ${slides.length}`;
+      }
+    };
+
+    previousButton?.addEventListener('click', () => {
+      activeIndex = activeIndex === 0 ? slides.length - 1 : activeIndex - 1;
+      renderSlide();
+    });
+
+    nextButton?.addEventListener('click', () => {
+      activeIndex = activeIndex === slides.length - 1 ? 0 : activeIndex + 1;
+      renderSlide();
+    });
+  });
+
+  const syncReviewCardHeight = () => {
+    if (!companyDataCard || !reviewsCard || window.matchMedia('(max-width: 860px)').matches) {
+      if (reviewsCard) reviewsCard.style.height = '';
+      return;
+    }
+
+    reviewsCard.style.height = `${companyDataCard.offsetHeight}px`;
+  };
+
+  syncReviewCardHeight();
+
+  if (companyDataCard && 'ResizeObserver' in window) {
+    new ResizeObserver(syncReviewCardHeight).observe(companyDataCard);
+  }
+
+  window.addEventListener('resize', syncReviewCardHeight);
+
+  reviewTabButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const selectedTab = button.getAttribute('data-review-tab');
+
+      reviewTabButtons.forEach((tabButton) => {
+        const isSelected = tabButton.getAttribute('data-review-tab') === selectedTab;
+        tabButton.classList.toggle('is-active', isSelected);
+        tabButton.setAttribute('aria-selected', String(isSelected));
+      });
+
+      reviewPanels.forEach((panel) => {
+        panel.toggleAttribute('hidden', panel.getAttribute('data-review-panel') !== selectedTab);
+      });
+
+      syncReviewCardHeight();
+    });
+  });
+</script>

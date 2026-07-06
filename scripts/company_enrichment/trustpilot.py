@@ -64,9 +64,8 @@ async def parse_trustpilot_profile(page: Page, domain: str, profile_url: str) ->
         "p[data-rating-typography]",
         "span[data-rating-typography]",
         "[class*='trustscore']",
-        "body",
     ])
-    rating_value = extract_first_decimal(rating)
+    rating_value = extract_trustpilot_rating(rating)
     review_count_text = await first_text(page, ["span:has-text('anmeldelser')", "span:has-text('reviews')", "body"])
     page_text = clean_text(await page.locator("body").inner_text(timeout=3_000))
     claimed_domain = normalize_domain(await first_attr(page, ["a[href^='http']"], "href"))
@@ -219,6 +218,17 @@ async def safe_attr(locator, attr: str) -> str:
 def extract_first_decimal(value: str) -> str:
     match = re.search(r"\d+(?:[,.]\d+)?", value or "")
     return match.group(0).replace(",", ".") if match else ""
+
+
+def extract_trustpilot_rating(value: str) -> str:
+    rating = extract_first_decimal(value)
+    if not rating:
+        return ""
+    try:
+        parsed = float(rating)
+    except ValueError:
+        return ""
+    return rating if 0 <= parsed <= 5 else ""
 
 
 def extract_review_count(value: str) -> str:

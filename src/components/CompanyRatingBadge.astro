@@ -1,0 +1,111 @@
+---
+import googleLogo from '../assets/images/google-logo.png';
+import trustpilotLogo from '../assets/images/trustpilot-logo.png';
+
+interface Props {
+  source: 'google' | 'trustpilot';
+  rating: string | number | null;
+  reviewCount?: number | null;
+}
+
+const { source, rating, reviewCount = null } = Astro.props;
+const ratingNumber = Number(rating);
+const hasRating = Number.isFinite(ratingNumber);
+const ratingValue = hasRating ? Math.max(0, Math.min(5, ratingNumber)) : 0;
+const filledStars = Math.round(ratingValue);
+const logo = source === 'google' ? googleLogo : trustpilotLogo;
+const label = source === 'google' ? 'Google' : 'Trustpilot';
+---
+
+{hasRating && (
+  <div class={`rating-badge rating-badge--${source}`} aria-label={`${label} rating ${ratingValue.toFixed(1)} ud af 5`}>
+    <img src={logo.src} alt="" width="22" height="22" loading="lazy" />
+    <div class="rating-badge__content">
+      <span class="rating-badge__label">{label}</span>
+      <span class="rating-badge__score">
+        <strong>{ratingValue.toFixed(1)}</strong>
+        <span class="rating-badge__stars" aria-hidden="true">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <span class={star <= filledStars ? 'is-filled' : ''}>★</span>
+          ))}
+        </span>
+        {reviewCount ? <em>({reviewCount})</em> : null}
+      </span>
+    </div>
+  </div>
+)}
+
+<style>
+  .rating-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface-strong);
+    padding: 0.45rem 0.7rem;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  }
+
+  .rating-badge img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    flex: 0 0 auto;
+  }
+
+  .rating-badge__content,
+  .rating-badge__score {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .rating-badge__label {
+    color: var(--color-muted);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .rating-badge__score strong {
+    color: var(--color-primary);
+    font-size: 0.98rem;
+  }
+
+  .rating-badge__score em {
+    color: var(--color-muted);
+    font-size: 0.86rem;
+    font-style: normal;
+    font-weight: 800;
+  }
+
+  .rating-badge__stars {
+    display: inline-flex;
+    gap: 0.05rem;
+    color: color-mix(in srgb, var(--color-muted) 28%, transparent);
+    font-size: 0.82rem;
+    letter-spacing: -0.02em;
+  }
+
+  .rating-badge__stars .is-filled {
+    color: #fbbc04;
+  }
+
+  .rating-badge--trustpilot .rating-badge__stars .is-filled {
+    color: #00b67a;
+  }
+
+  @media (max-width: 520px) {
+    .rating-badge {
+      width: 100%;
+      justify-content: flex-start;
+      border-radius: 1rem;
+    }
+
+    .rating-badge__content {
+      flex-wrap: wrap;
+    }
+  }
+</style>

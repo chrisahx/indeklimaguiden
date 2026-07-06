@@ -60,6 +60,8 @@ def upsert_base_company(companies: dict[str, dict[str, object]], input_company: 
     if isinstance(location, dict):
         if input_company.address and not location.get("address"):
             location["address"] = input_company.address
+        if input_company.postal_code and not location.get("postal_code"):
+            location["postal_code"] = input_company.postal_code
         if input_company.city and not location.get("city"):
             location["city"] = input_company.city
         location.setdefault("country", "Denmark")
