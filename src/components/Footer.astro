@@ -17,6 +17,10 @@ import { CATEGORIES, SITE } from '../lib/constants';
       {Object.values(CATEGORIES).map((category) => <a href={`/${category.slug}/`}>{category.name}</a>)}
       <a href="/beregnere/">Beregnere</a>
     </nav>
+    <nav aria-label="Vores guides">
+      <h2>Vores guides</h2>
+      <a href="https://kloakmesterguiden.dk/">Kloakmesterguiden</a>
+    </nav>
     <nav aria-label="Information">
       <h2>Information</h2>
       <a href="/om-os/">Om os</a>
@@ -42,7 +46,7 @@ import { CATEGORIES, SITE } from '../lib/constants';
 
   .footer-grid {
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
     gap: 2rem;
   }
 
