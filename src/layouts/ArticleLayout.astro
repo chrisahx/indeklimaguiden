@@ -9,7 +9,7 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import FAQ from '../components/FAQ.astro';
 import GoogleAd from '../components/GoogleAd.astro';
 import JsonLd from '../components/JsonLd.astro';
-import { ADSENSE_SLOTS } from '../lib/adsense';
+import { ADSENSE_ENABLED, ADSENSE_SLOTS } from '../lib/adsense';
 
 interface Props {
   article: Article;
@@ -25,13 +25,13 @@ const mobileAdSlotTwo = ADSENSE_SLOTS.articleMobile2;
 const bottomAdSlot = ADSENSE_SLOTS.articleBottom;
 const leftRailAdSlot = ADSENSE_SLOTS.articleLeftRail;
 const rightRailAdSlot = ADSENSE_SLOTS.articleRightRail;
-const showTopAd = import.meta.env.DEV || topAdSlot;
-const showInArticleAd = import.meta.env.DEV || inArticleAdSlot;
-const showMobileAdOne = import.meta.env.DEV || mobileAdSlotOne;
-const showMobileAdTwo = import.meta.env.DEV || mobileAdSlotTwo;
-const showBottomAd = import.meta.env.DEV || bottomAdSlot;
-const showLeftRailAd = import.meta.env.DEV || leftRailAdSlot;
-const showRightRailAd = import.meta.env.DEV || rightRailAdSlot;
+const showTopAd = ADSENSE_ENABLED && (import.meta.env.DEV || topAdSlot);
+const showInArticleAd = ADSENSE_ENABLED && (import.meta.env.DEV || inArticleAdSlot);
+const showMobileAdOne = ADSENSE_ENABLED && (import.meta.env.DEV || mobileAdSlotOne);
+const showMobileAdTwo = ADSENSE_ENABLED && (import.meta.env.DEV || mobileAdSlotTwo);
+const showBottomAd = ADSENSE_ENABLED && (import.meta.env.DEV || bottomAdSlot);
+const showLeftRailAd = ADSENSE_ENABLED && (import.meta.env.DEV || leftRailAdSlot);
+const showRightRailAd = ADSENSE_ENABLED && (import.meta.env.DEV || rightRailAdSlot);
 const breadcrumbs = [
   { name: 'Forside', url: '/' },
   { name: category.name, url: `/${category.slug}/` },

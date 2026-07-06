@@ -6,7 +6,7 @@ interface Props {
   fullWidthResponsive?: boolean;
 }
 
-import { ADSENSE_CLIENT } from '../lib/adsense';
+import { ADSENSE_CLIENT, ADSENSE_ENABLED } from '../lib/adsense';
 
 const {
   slotId,
@@ -15,7 +15,7 @@ const {
   fullWidthResponsive = true,
 } = Astro.props;
 const client = ADSENSE_CLIENT;
-const shouldRenderAd = import.meta.env.PROD && Boolean(client && slotId);
+const shouldRenderAd = ADSENSE_ENABLED && import.meta.env.PROD && Boolean(client && slotId);
 const shouldRenderPlaceholder = import.meta.env.DEV;
 ---
 

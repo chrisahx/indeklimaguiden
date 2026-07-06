@@ -2,7 +2,7 @@
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import JsonLd from "../components/JsonLd.astro";
-import { ADSENSE_CLIENT } from "../lib/adsense";
+import { ADSENSE_CLIENT, ADSENSE_ENABLED } from "../lib/adsense";
 import { SITE } from "../lib/constants";
 import { absoluteUrl, titleWithBrand, type SeoProps } from "../lib/seo";
 import { organizationJsonLd, websiteJsonLd } from "../lib/structured-data";
@@ -22,7 +22,7 @@ const {
 const pageTitle = titleWithBrand(title);
 const canonical = absoluteUrl(path);
 const imageUrl = absoluteUrl(image);
-const adsenseClient = import.meta.env.PROD ? ADSENSE_CLIENT : undefined;
+const adsenseClient = ADSENSE_ENABLED && import.meta.env.PROD ? ADSENSE_CLIENT : undefined;
 const gaMeasurementId = import.meta.env.PROD ? SITE.gaMeasurementId : undefined;
 ---
 
