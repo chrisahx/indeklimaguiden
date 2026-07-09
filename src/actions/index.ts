@@ -32,12 +32,12 @@ export const server = {
       }
 
       try {
-        const emailCount = await sendInstallerLeadEmails(leadInput, installers);
+        const emailResult = await sendInstallerLeadEmails(leadInput, installers);
         const lead = await storeInstallerLead(leadInput, installers, 'sent');
         console.info('[installer-lead] Lead submitted', {
           leadId: lead.id,
           postalCode: input.postalCode,
-          emailCount,
+          emailResult,
           installers: installers.map((installer) => ({ id: installer.id, email: installer.email, verified: installer.isVerified })),
         });
 

@@ -100,6 +100,7 @@ export async function storeInstallerLead(
         postalCode: installer.postalCode,
         city: installer.city,
         postalDistance: installer.postalDistance,
+        isSamePostalCode: installer.postalDistance === 0,
       })) as Prisma.InputJsonValue,
       emailStatus,
       errorMessage,
