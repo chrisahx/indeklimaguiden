@@ -1,6 +1,7 @@
 ---
 import ArticleCard from '../components/ArticleCard.astro';
 import CategoryCard from '../components/CategoryCard.astro';
+import InstallerFinderSection from '../components/InstallerFinderSection.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { articleUrl, getArticles } from '../lib/articles';
 import { CATEGORIES } from '../lib/constants';
@@ -45,6 +46,16 @@ const editorialPrinciples = [
       </p>
     </div>
   </section>
+
+  <InstallerFinderSection
+    categorySlug="varmepumpe"
+    title="Find en varmepumpe-installatør nær dig"
+    description="Få professionel installation af din varmepumpe. Find lokale installatører i hele Danmark, eller lad os kontakte tre virksomheder for dig — helt uforpligtende."
+    primaryButtonText="Find installatør nær dig"
+    primaryButtonHref="/varmepumpe-installatoer"
+    secondaryButtonText="Lad os kontakte 3 installatører for dig"
+    secondaryButtonHref="/kontakt-om-varmepumpe-installatoer"
+  />
 
   <section class="section container featured-section">
     <div class="section-heading">
