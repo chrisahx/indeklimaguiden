@@ -148,3 +148,22 @@ model CompanyEditRequest {
 
   @@map("company_edit_requests")
 }
+
+model InstallerLead {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fullName          String   @map("full_name") @db.Text
+  streetAddress     String   @map("street_address") @db.Text
+  postalCode        String   @map("postal_code") @db.Text
+  city              String   @db.Text
+  email             String   @db.Text
+  phone             String   @db.Text
+  needType          String   @map("need_type") @db.Text
+  message           String   @db.Text
+  selectedCompanies Json     @map("selected_companies")
+  emailStatus       String   @default("pending") @map("email_status") @db.Text
+  errorMessage      String?  @map("error_message") @db.Text
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([postalCode], map: "installer_leads_postal_code_idx")
+  @@map("installer_leads")
+}

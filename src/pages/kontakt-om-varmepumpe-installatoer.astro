@@ -1,0 +1,226 @@
+---
+export const prerender = false;
+
+import { actions, isInputError } from 'astro:actions';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import FAQ from '../components/FAQ.astro';
+import JsonLd from '../components/JsonLd.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { breadcrumbsJsonLd, faqJsonLd } from '../lib/structured-data';
+
+const result = Astro.getActionResult(actions.submitInstallerLead);
+const inputErrors = isInputError(result?.error) ? result.error.fields : {};
+const generalError = result?.error && !isInputError(result.error) ? result.error.message : '';
+const success = result && !result.error ? result.data : undefined;
+
+const breadcrumbItems = [
+  { name: 'Forside', url: '/' },
+  { name: 'Varmepumpe installatører', url: '/varmepumpe-installatoer/' },
+  { name: 'Kontakt 3 installatører', url: '/kontakt-om-varmepumpe-installatoer/' },
+];
+
+const faqItems = [
+  {
+    question: 'Hvordan finder I varmepumpe-installatører nær mig?',
+    answer: 'Vi bruger det postnummer, du indtaster i formularen, og matcher dig med op til 3 virksomheder i databasen. Installatører i samme postnummer prioriteres først, derefter nærliggende postnumre.',
+  },
+  {
+    question: 'Koster det noget at sende en forespørgsel?',
+    answer: 'Nej. Det er gratis og uforpligtende at sende en forespørgsel via Indeklima Guiden.',
+  },
+  {
+    question: 'Sender I mine oplysninger til alle installatører?',
+    answer: 'Nej. Din forespørgsel sendes kun til op til 3 relevante installatører, som matcher dit område bedst muligt.',
+  },
+  {
+    question: 'Kan jeg bruge formularen til en eksisterende varmepumpe?',
+    answer: 'Ja. Vælg om du søger en ny varmepumpe, hjælp til en eksisterende løsning, service, fejlretning eller om du endnu er usikker.',
+  },
+];
+---
+
+<BaseLayout
+  title="Få 3 lokale varmepumpe installatører til at kontakte dig"
+  description="Udfyld én formular og lad Indeklima Guiden matche dig med op til 3 relevante varmepumpe-installatører nær dit postnummer. Gratis og uforpligtende."
+  path="/kontakt-om-varmepumpe-installatoer/"
+>
+  <JsonLd data={breadcrumbsJsonLd(breadcrumbItems)} />
+  <JsonLd data={faqJsonLd(faqItems)} />
+
+  <section class="section container lead-hero">
+    <div class="lead-copy">
+      <Breadcrumbs items={breadcrumbItems} />
+      <span class="pill">Gratis og uforpligtende</span>
+      <h1>Få kontakt til 3 varmepumpe-installatører nær dig</h1>
+      <p class="hero-text">
+        Fortæl kort hvad du har brug for, så matcher vi din forespørgsel med op til 3 relevante installatører i dit område. Vi prioriterer verificerede virksomheder og vælger nærliggende postnumre, hvis der ikke er nok helt lokalt.
+      </p>
+      <div class="trust-grid" aria-label="Fordele ved formularen">
+        <div><strong>1 formular</strong><span>Du slipper for at kontakte flere virksomheder manuelt.</span></div>
+        <div><strong>Lokalt match</strong><span>Installatører vælges ud fra postnummer og nærhed.</span></div>
+        <div><strong>Relevant opgave</strong><span>De får din beskrivelse, så dialogen starter konkret.</span></div>
+      </div>
+    </div>
+
+    <aside class="surface form-card" aria-label="Formular til installatørkontakt">
+      <div class="form-heading">
+        <span>Start her</span>
+        <h2>Beskriv din varmepumpe-opgave</h2>
+        <p>Felterne bruges kun til at matche og sende din forespørgsel videre til relevante installatører.</p>
+      </div>
+
+      {success && (
+        <div class="notice success" role="status">
+          <strong>Tak. Din forespørgsel er sendt.</strong>
+          <p>Vi har sendt den videre til {success.installerCount} relevante {success.installerCount === 1 ? 'installatør' : 'installatører'}.</p>
+        </div>
+      )}
+
+      {generalError && (
+        <div class="notice error" role="alert">
+          <strong>Der opstod en fejl</strong>
+          <p>{generalError}</p>
+        </div>
+      )}
+
+      <form method="POST" action={actions.submitInstallerLead} novalidate>
+        <label>
+          Fulde navn
+          <input type="text" name="fullName" autocomplete="name" required />
+          {inputErrors.fullName && <small>{inputErrors.fullName.join(' ')}</small>}
+        </label>
+
+        <label>
+          Vej og nummer
+          <input type="text" name="streetAddress" autocomplete="street-address" placeholder="Eksempel: Hovedgaden 12" required />
+          {inputErrors.streetAddress && <small>{inputErrors.streetAddress.join(' ')}</small>}
+        </label>
+
+        <div class="field-row postal-row">
+          <label>
+            Postnummer
+            <input type="text" name="postalCode" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="8000" required />
+            {inputErrors.postalCode && <small>{inputErrors.postalCode.join(' ')}</small>}
+          </label>
+
+          <label>
+            By
+            <input type="text" name="city" autocomplete="address-level2" placeholder="Aarhus C" required />
+            {inputErrors.city && <small>{inputErrors.city.join(' ')}</small>}
+          </label>
+        </div>
+
+        <div class="field-row">
+          <label>
+            E-mail
+            <input type="email" name="email" autocomplete="email" required />
+            {inputErrors.email && <small>{inputErrors.email.join(' ')}</small>}
+          </label>
+
+          <label>
+            Telefon
+            <input type="tel" name="phone" autocomplete="tel" inputmode="tel" required />
+            {inputErrors.phone && <small>{inputErrors.phone.join(' ')}</small>}
+          </label>
+        </div>
+
+        <label>
+          Hvad har du brug for hjælp til?
+          <select name="needType" required>
+            <option value="new_heat_pump">Jeg leder efter en ny varmepumpe</option>
+            <option value="existing_heat_pump">Jeg har brug for hjælp til en eksisterende varmepumpe</option>
+            <option value="service_or_error">Service eller fejl på varmepumpe</option>
+            <option value="unsure">Jeg er ikke sikker endnu</option>
+          </select>
+          {inputErrors.needType && <small>{inputErrors.needType.join(' ')}</small>}
+        </label>
+
+        <label>
+          Beskriv kort opgaven eller problemet
+          <textarea name="message" rows="5" placeholder="Skriv fx boligtype, nuværende løsning, symptomer, ønsket varmepumpetype eller hvornår du ønsker hjælp." required></textarea>
+          {inputErrors.message && <small>{inputErrors.message.join(' ')}</small>}
+        </label>
+
+        <label class="consent">
+          <input type="checkbox" name="consent" required />
+          <span>Jeg accepterer, at Indeklima Guiden må dele min forespørgsel med op til 3 relevante installatører.</span>
+        </label>
+        {inputErrors.consent && <small class="standalone-error">{inputErrors.consent.join(' ')}</small>}
+
+        <button class="button" type="submit">Lad os kontakte 3 installatører for dig</button>
+      </form>
+    </aside>
+  </section>
+
+  <section class="section container process-section">
+    <div class="section-heading">
+      <span class="pill">Sådan fungerer det</span>
+      <h2>Fra formular til relevante installatører</h2>
+      <p>Processen er bygget til at gøre det nemmere at sammenligne hjælp til varmepumpe uden at kontakte mange virksomheder manuelt.</p>
+    </div>
+    <div class="process-grid">
+      <article class="surface process-card"><span>01</span><h3>Du beskriver opgaven</h3><p>Fortæl om du skal bruge ny varmepumpe, service eller hjælp til en eksisterende løsning.</p></article>
+      <article class="surface process-card"><span>02</span><h3>Vi matcher lokalt</h3><p>Systemet finder op til 3 installatører tæt på dit postnummer og prioriterer verificerede virksomheder.</p></article>
+      <article class="surface process-card"><span>03</span><h3>Installatører kontakter dig</h3><p>De modtager dine oplysninger og kan kontakte dig direkte med relevante spørgsmål eller tilbud.</p></article>
+    </div>
+  </section>
+
+  <section class="section container seo-section">
+    <div class="surface seo-card">
+      <h2>Før du vælger varmepumpe-installatør</h2>
+      <p>
+        Sammenlign gerne flere tilbud på samme grundlag: varmepumpetype, montage, rørføring, elarbejde, placering, støj, garanti og service. Læs også vores guides om <a href="/varmepumper/installation-af-varmepumpe/">installation af varmepumpe</a>, <a href="/varmepumper/hvad-koster-en-varmepumpe/">pris på varmepumpe</a> og <a href="/varmepumper/hvilken-varmepumpe-skal-jeg-vaelge/">valg af varmepumpe</a>.
+      </p>
+      <a class="button secondary" href="/varmepumpe-installatoer/">Se også installatørregisteret</a>
+    </div>
+  </section>
+
+  <section class="section reading faq-wrap">
+    <FAQ items={faqItems} />
+  </section>
+</BaseLayout>
+
+<style>
+  .lead-hero { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(360px, 0.72fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; padding-top: clamp(3rem, 6vw, 5rem); }
+  .lead-copy { position: sticky; top: 1.5rem; }
+  .lead-copy h1 { margin-top: 1rem; max-width: 880px; }
+  .hero-text { max-width: 760px; color: var(--color-muted); font-size: clamp(1.08rem, 2vw, 1.28rem); }
+  .trust-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.9rem; margin-top: 2rem; }
+  .trust-grid div { border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1rem; background: rgba(255, 255, 255, 0.68); }
+  .trust-grid strong, .trust-grid span { display: block; }
+  .trust-grid strong { color: var(--color-primary); font-size: 1.05rem; }
+  .trust-grid span { margin-top: 0.25rem; color: var(--color-muted); font-size: 0.94rem; }
+  .form-card { padding: clamp(1.1rem, 3vw, 1.6rem); background: linear-gradient(180deg, #fff, rgba(255,255,255,0.88)); }
+  .form-heading span { color: var(--color-accent-dark); font-size: 0.78rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
+  .form-heading h2 { margin: 0.35rem 0 0.5rem; font-size: clamp(1.6rem, 3vw, 2.2rem); }
+  .form-heading p { color: var(--color-muted); }
+  form { display: grid; gap: 1rem; margin-top: 1.25rem; }
+  label { display: grid; gap: 0.38rem; color: var(--color-primary); font-weight: 800; }
+  input, select, textarea { width: 100%; border: 1px solid var(--color-border-strong); border-radius: 0.95rem; padding: 0.82rem 0.9rem; background: #fff; color: var(--color-text); font: inherit; font-weight: 500; }
+  textarea { resize: vertical; }
+  input:focus, select:focus, textarea:focus { outline: 3px solid rgba(7, 155, 211, 0.18); border-color: var(--color-accent); }
+  small, .standalone-error { color: #a33a22; font-weight: 750; }
+  .field-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.85rem; }
+  .consent { grid-template-columns: auto 1fr; align-items: start; gap: 0.65rem; color: var(--color-muted); font-size: 0.95rem; font-weight: 650; }
+  .consent input { width: 1.1rem; height: 1.1rem; margin-top: 0.22rem; }
+  button.button { cursor: pointer; font: inherit; }
+  .notice { border-radius: var(--radius-md); padding: 0.9rem 1rem; }
+  .notice p { margin: 0.25rem 0 0; }
+  .notice.success { border: 1px solid rgba(79, 143, 31, 0.35); background: var(--color-leaf-soft); color: var(--color-primary); }
+  .notice.error { border: 1px solid rgba(163, 58, 34, 0.35); background: #fff0eb; color: #7a2817; }
+  .section-heading { margin-bottom: 1.5rem; }
+  .section-heading h2 { margin-top: 0.75rem; }
+  .section-heading p { max-width: 740px; color: var(--color-muted); font-size: 1.08rem; }
+  .process-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .process-card { padding: 1.25rem; }
+  .process-card span { display: inline-grid; width: 2.5rem; height: 2.5rem; place-items: center; border-radius: 999px; background: var(--color-accent-soft); color: var(--color-accent-dark); font-weight: 900; }
+  .process-card h3 { margin-top: 1rem; }
+  .process-card p { color: var(--color-muted); }
+  .seo-section { padding-top: 0; }
+  .seo-card { padding: clamp(1.35rem, 3vw, 2rem); background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(228,247,253,0.8)); }
+  .seo-card h2 { margin-top: 0; }
+  .seo-card p { max-width: 900px; color: var(--color-muted); font-size: 1.08rem; }
+  .faq-wrap { padding-top: 0; }
+  @media (max-width: 980px) { .lead-hero { grid-template-columns: 1fr; } .lead-copy { position: static; } .trust-grid, .process-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 620px) { .field-row { grid-template-columns: 1fr; } .lead-hero { padding-top: 2rem; } }
+</style>
