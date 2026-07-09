@@ -34,6 +34,8 @@ const navGroups = [
     ],
   },
 ];
+
+const installerLink = { label: 'Varmepumpe installatører', href: '/varmepumpe-installatoer/' };
 ---
 
 <header class="site-header">
@@ -57,6 +59,7 @@ const navGroups = [
           </div>
         </div>
       ))}
+      <a class="nav-link" href={installerLink.href}>{installerLink.label}</a>
     </nav>
 
     <button class="mobile-menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-button>
@@ -66,6 +69,7 @@ const navGroups = [
   </div>
 
   <nav id="mobile-menu" class="mobile-menu container" aria-label="Mobil navigation" hidden data-mobile-menu>
+    <a class="mobile-direct-link" href={installerLink.href}>{installerLink.label}</a>
     {navGroups.map((group, index) => (
       <section class="mobile-group">
         <button class="mobile-group-trigger" type="button" aria-expanded={index === 0 ? 'true' : 'false'} aria-controls={`mobile-group-${index}`} data-mobile-group-trigger>
@@ -184,6 +188,7 @@ const navGroups = [
   }
 
   .nav-trigger,
+  .nav-link,
   .mobile-menu-button,
   .mobile-group-trigger,
   .mobile-menu a {
@@ -200,8 +205,16 @@ const navGroups = [
     transition: background 160ms ease, color 160ms ease;
   }
 
+  .nav-link {
+    border-radius: 999px;
+    padding: 0.58rem 0.86rem;
+    transition: background 160ms ease, color 160ms ease;
+  }
+
   .nav-trigger:hover,
   .nav-trigger:focus-visible,
+  .nav-link:hover,
+  .nav-link:focus-visible,
   .nav-group:focus-within .nav-trigger,
   .nav-group:hover .nav-trigger {
     background: linear-gradient(135deg, var(--color-accent-soft), var(--color-leaf-soft));
@@ -291,6 +304,17 @@ const navGroups = [
     border-radius: var(--radius-lg);
     background: rgba(255, 255, 255, 0.82);
     box-shadow: var(--shadow-soft);
+  }
+
+  .mobile-direct-link {
+    display: block;
+    margin-bottom: 0.7rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--color-accent-soft), var(--color-leaf-soft));
+    box-shadow: var(--shadow-soft);
+    font-weight: 900;
   }
 
   .mobile-group + .mobile-group {
