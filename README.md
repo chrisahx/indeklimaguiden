@@ -1,6 +1,19 @@
 # Indeklima Guiden
 
 
+## TODO
+
+- lav landing page om til at søge efter varmepumpe installatør.
+- lave en 3 tilbuds formular med følgende logik:
+  - indtast fulde navn, email addresse, telefon nummer, problem
+  - søg efter 3 installatører i nærheden og prioriter verificeret installatør
+  - der skal være noget i forhold til at ikke altid vælge de samme installatører
+
+CTA knapper på forsiden:
+[ Find installatør nær dig ]   [ Bliv kontaktet af 3 installatører ]
+
+
+
 
 ## for aircondition firma:
 
