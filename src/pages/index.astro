@@ -14,6 +14,8 @@ const latestArticles = (nonFeaturedArticles.length > 0 ? nonFeaturedArticles : a
 const topicLinks = [
   ['Mobil aircondition', '/aircondition/'],
   ['Luft til luft-varmepumpe', '/varmepumper/'],
+  ['Find varmepumpe nær mig', '/varmepumpe-installatoer/'],
+  ['Find varmepumpe installatør nær mig', '/kontakt-om-varmepumpe-installatoer/'],
   ['Luftfugtighed', '/indeklima/optimal-luftfugtighed-i-hjemmet/'],
   ['Strømforbrug', '/aircondition/'],
   ['Støjniveau', '/aircondition/'],
@@ -33,29 +35,59 @@ const editorialPrinciples = [
 ---
 
 <BaseLayout
-  title="Indeklima Guiden | Guides, anmeldelser og købshjælp til bedre indeklima"
-  description="Danske guides og anmeldelser om aircondition, varmepumper, luftfugtighed, ventilation og bedre indeklima. Få praktisk købshjælp til produkter og løsninger i hjemmet."
+  title="Find varmepumpe og installatør nær dig | Indeklima Guiden"
+  description="Find varmepumpe, sammenlign lokale varmepumpe-installatører nær dig og læs danske guides om priser, installation, strømforbrug, aircondition og bedre indeklima."
   path="/"
 >
   <section class="editorial-intro">
     <div class="container intro-copy">
       <span class="pill">Dansk guide- og reviewsite</span>
-      <h1>Guides, anmeldelser og praktisk købshjælp til bedre indeklima.</h1>
+      <h1>Find varmepumpe, installatør og praktisk købshjælp til bedre indeklima.</h1>
       <p>
-        Indeklima Guiden hjælper danske boligejere og lejere med at vælge bedre løsninger til køling, varme, fugt og luftkvalitet. Her finder du praktiske guides, prissammenligninger, anmeldelser og forklaringer om <a href="/aircondition/">aircondition</a>, <a href="/varmepumper/">varmepumper</a> og <a href="/indeklima/">sundere indeklima</a>.
+        Indeklima Guiden hjælper danske boligejere og lejere med at finde den rigtige varmepumpe, forstå installationen og vælge bedre løsninger til køling, varme, fugt og luftkvalitet. Her finder du praktiske guides, prissammenligninger, anmeldelser og lokale oversigter over <a href="/varmepumpe-installatoer/">varmepumpe-installatører nær dig</a>.
       </p>
     </div>
   </section>
 
   <InstallerFinderSection
     categorySlug="varmepumpe"
-    title="Find og sammenlign varmepumpe-installatører nær dig"
-    description="Søg blandt over 1.200 varmepumpe-installatører i Danmark, og sammenlign lokale virksomheder, CVR, kontaktoplysninger og offentligt indsamlede anmeldelser. Vil du gøre det nemmere, kan du udfylde én formular, så sender vi din forespørgsel til op til 3 relevante installatører tæt på dig."
-    primaryButtonText="Find installatør nær dig"
+    title="Find varmepumpe-installatør nær dig"
+    description="Søger du efter find varmepumpe nær mig eller find varmepumpe installatør nær mig? Start med vores landsdækkende oversigt over lokale installatører, CVR, kontaktoplysninger og offentligt indsamlede anmeldelser. Vil du gøre det nemmere, kan du udfylde én formular, så sender vi din forespørgsel til op til 3 relevante installatører tæt på dig."
+    primaryButtonText="Find varmepumpe nær mig"
     primaryButtonHref="/varmepumpe-installatoer"
     secondaryButtonText="Lad os kontakte 3 installatører for dig"
     secondaryButtonHref="/kontakt-om-varmepumpe-installatoer"
   />
+
+  <section class="section container local-search-section">
+    <div class="section-heading">
+      <span class="pill">Lokalt match</span>
+      <h2>Find varmepumpe-installatør i dit område</h2>
+      <p>
+        Når du søger efter en varmepumpe-installatør nær dig, kan du enten bruge vores oversigt til selv at sammenligne lokale virksomheder, Google- og Trustpilot-anmeldelser og kontakte installatørerne direkte, eller du kan lade Indeklima Guiden sende din forespørgsel videre til op til 3 relevante installatører tæt på dig.
+      </p>
+    </div>
+    <div class="local-search-grid">
+      <article class="surface local-search-card">
+        <span>Find selv</span>
+        <strong>Sammenlign og kontakt installatører selv</strong>
+        <p>Vælg by eller region, se lokale virksomheder, kontaktoplysninger og anmeldelsessignaler fra blandt andet Google og Trustpilot.</p>
+        <a href="/varmepumpe-installatoer/">Find installatører</a>
+      </article>
+      <article class="surface local-search-card">
+        <span>Få os til at finde</span>
+        <strong>Lad os sende din forespørgsel videre</strong>
+        <p>Udfyld én formular, så matcher Indeklima Guiden dig med op til 3 relevante varmepumpe-installatører nær dit postnummer.</p>
+        <a href="/kontakt-om-varmepumpe-installatoer/">Send forespørgsel</a>
+      </article>
+      <article class="surface local-search-card">
+        <span>Bliv klogere</span>
+        <strong>Vælg den rigtige varmepumpe først</strong>
+        <p>Læs om typer, boligbehov, støj, strømforbrug og økonomi, før du indhenter tilbud.</p>
+        <a href="/guides/varmepumper/">Læs varmepumpe-guides</a>
+      </article>
+    </div>
+  </section>
 
   <section class="section container featured-section">
     <div class="section-heading">
@@ -150,6 +182,7 @@ const editorialPrinciples = [
   .editorial-intro h1 { max-width: 980px; margin: 0.85rem auto 1rem; font-size: clamp(2.65rem, 6vw, 5.35rem); }
   .editorial-intro p { max-width: 860px; margin-inline: auto; color: var(--color-muted); font-size: clamp(1.08rem, 2vw, 1.32rem); }
   .featured-section { padding-top: clamp(2.5rem, 5vw, 4rem); }
+  .local-search-section { padding-top: clamp(2.75rem, 5vw, 4.5rem); }
   .section-heading { margin-bottom: 1.5rem; }
   .section-heading h2 { margin-top: 0.8rem; }
   .section-heading p { max-width: 760px; color: var(--color-muted); font-size: 1.1rem; }
@@ -165,6 +198,14 @@ const editorialPrinciples = [
   .read-link:hover { color: var(--color-accent-dark); }
   .ad-slot { display: grid; min-height: 92px; place-items: center; border: 1px dashed var(--color-border-strong); border-radius: var(--radius-lg); background: rgba(255, 255, 255, 0.46); color: var(--color-muted); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
   .ad-slot.compact { min-height: 76px; }
+  .local-search-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .local-search-card { display: flex; min-height: 100%; flex-direction: column; padding: 1.15rem; color: var(--color-primary); transition: border-color 160ms ease, transform 160ms ease; }
+  .local-search-card:hover { border-color: var(--color-accent); color: var(--color-primary); transform: translateY(-2px); }
+  .local-search-card span { width: fit-content; border-radius: 999px; padding: 0.22rem 0.6rem; background: var(--color-accent-soft); color: var(--color-primary); font-size: 0.76rem; font-weight: 900; }
+  .local-search-card strong { display: block; margin-top: 0.85rem; font-size: 1.08rem; }
+  .local-search-card p { margin: 0.55rem 0 1rem; color: var(--color-muted); }
+  .local-search-card a { width: fit-content; margin-top: auto; border-radius: 999px; padding: 0.55rem 0.85rem; background: var(--color-primary); color: var(--color-background); font-size: 0.88rem; font-weight: 900; text-decoration: none; transition: background 160ms ease, transform 160ms ease; }
+  .local-search-card a:hover { background: var(--color-accent-dark); color: var(--color-background); transform: translateY(-1px); }
   .topics-section { padding-top: clamp(2.75rem, 5vw, 4.5rem); }
   .topic-list { display: flex; flex-wrap: wrap; gap: 0.75rem; }
   .topic-list a { border: 1px solid var(--color-border); border-radius: 999px; padding: 0.7rem 1rem; background: rgba(255, 255, 255, 0.72); color: var(--color-primary); font-weight: 800; text-decoration: none; transition: border-color 160ms ease, transform 160ms ease, background 160ms ease; }
@@ -175,6 +216,6 @@ const editorialPrinciples = [
   .method-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; padding-top: 3.15rem; }
   .method-card { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; }
   .method-card span { width: 0.7rem; height: 0.7rem; border-radius: 999px; background: var(--color-leaf); box-shadow: 0 0 0 6px rgba(112, 182, 44, 0.15); }
-  @media (max-width: 860px) { .featured-grid, .method { grid-template-columns: 1fr; } .split-heading { display: block; } .method-grid { padding-top: 0; } }
+  @media (max-width: 860px) { .featured-grid, .local-search-grid, .method { grid-template-columns: 1fr; } .split-heading { display: block; } .method-grid { padding-top: 0; } }
   @media (max-width: 560px) { .method-grid { grid-template-columns: 1fr; } }
 </style>
