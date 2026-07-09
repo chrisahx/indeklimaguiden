@@ -1,0 +1,116 @@
+---
+interface Props {
+  categorySlug?: string;
+  title: string;
+  description: string;
+  primaryButtonText: string;
+  primaryButtonHref: string;
+  secondaryButtonText: string;
+  secondaryButtonHref: string;
+}
+
+const {
+  categorySlug = 'default',
+  title,
+  description,
+  primaryButtonText,
+  primaryButtonHref,
+  secondaryButtonText,
+  secondaryButtonHref,
+} = Astro.props;
+---
+
+<section class="installer-finder">
+  <div class="container">
+    <div class="installer-card" data-variant={categorySlug}>
+      <span class="pill">Få professionel hjælp</span>
+      <h2>{title}</h2>
+      <p>{description}</p>
+      <div class="button-group">
+        <a class="button" href={primaryButtonHref}>{primaryButtonText}</a>
+        <a class="button secondary" href={secondaryButtonHref}>{secondaryButtonText}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .installer-finder {
+    padding: clamp(2rem, 4vw, 3.5rem) 0 0;
+  }
+
+  .installer-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border);
+    padding: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3rem);
+    text-align: center;
+    background:
+      radial-gradient(ellipse 90% 60% at 20% 10%, rgba(7, 155, 211, 0.09), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 80% 90%, rgba(112, 182, 44, 0.08), transparent 70%),
+      linear-gradient(145deg, #fffdf9, #fff 42%, rgba(228, 247, 253, 0.6) 80%);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .installer-card[data-variant="varmepumpe"] {
+    background:
+      radial-gradient(ellipse 90% 60% at 10% 15%, rgba(217, 164, 95, 0.12), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 90% 85%, rgba(7, 155, 211, 0.07), transparent 70%),
+      linear-gradient(145deg, #fffdf9, #fff 42%, rgba(251, 239, 216, 0.55) 80%);
+  }
+
+  .installer-card::after {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    pointer-events: none;
+    content: '';
+    background:
+      radial-gradient(18rem 8rem at 5% 90%, rgba(7, 155, 211, 0.06), transparent 70%),
+      radial-gradient(16rem 7rem at 95% 10%, rgba(112, 182, 44, 0.06), transparent 70%);
+  }
+
+  .installer-card .pill {
+    position: relative;
+    z-index: 1;
+  }
+
+  .installer-card h2 {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 1.25rem auto 1rem;
+    font-size: clamp(1.65rem, 3.2vw, 2.45rem);
+  }
+
+  .installer-card p {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto 2rem;
+    color: var(--color-muted);
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+  }
+
+  .button-group {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    justify-content: center;
+  }
+
+  .button-group .button {
+    min-width: 200px;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 560px) {
+    .button-group .button {
+      min-width: 0;
+      width: 100%;
+    }
+  }
+</style>
