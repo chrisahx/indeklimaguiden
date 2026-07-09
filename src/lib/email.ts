@@ -305,7 +305,7 @@ export async function sendInstallerLeadEmails(input: InstallerLeadInput, install
         from,
         to: installer.email,
         replyTo: input.email,
-        subject: `Ny kundeforespørgsel om varmepumpe fra ${input.postalCode}`,
+        subject: `Ny kundeforespørgsel om varmepumpe fra ${input.postalCode} til ${installer.name}`,
         text: leadEmailText(input, installer),
         html: leadEmailHtml(input, installer),
       }),
