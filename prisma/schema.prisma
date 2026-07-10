@@ -18,6 +18,7 @@ model Company {
   status        String           @default("pending") @db.Text
   isVerified    Boolean          @default(false) @map("is_verified")
   isClaimed     Boolean          @default(false) @map("is_claimed")
+  claimEmailSent Boolean         @default(false) @map("claim_email_sent")
   claimedByUserId String?        @map("claimed_by_user_id") @db.Uuid
   claimedAt     DateTime?        @map("claimed_at") @db.Timestamptz(6)
   claimEmail    String?          @map("claim_email") @db.Text
