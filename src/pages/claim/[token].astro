@@ -12,7 +12,7 @@ const inputErrors = isInputError(result?.error) ? result.error.fields : {};
 const generalError = result?.error && !isInputError(result.error) ? result.error.message : '';
 const success = result && !result.error ? result.data : undefined;
 const company = claimToken?.company;
-const address = company?.location ? [company.location.address, company.location.postalCode, company.location.city].filter(Boolean).join(', ') : '';
+const address = company?.location?.address ?? '';
 ---
 
 <BaseLayout title="Claim virksomhedsside" description="Claim jeres virksomhedsside hos Indeklima Guiden." path={`/claim/${token}/`} noindex>
@@ -39,7 +39,7 @@ const address = company?.location ? [company.location.address, company.location.
       </div>
     ) : (
       <div class="surface claim-card">
-        <h1>Claim {company?.name}</h1>
+        <h1>{company?.name}</h1>
         <p class="lead">Bekræft, at I må administrere virksomhedssiden hos Indeklima Guiden.</p>
 
         <dl class="company-summary">
@@ -73,7 +73,7 @@ const address = company?.location ? [company.location.address, company.location.
 
           <label class="checkbox-label">
             <input type="checkbox" name="marketingConsent" value="true" />
-            <span>Ja tak, Indeklima Guiden må sende nyheder, tips og markedsføring til virksomheden.</span>
+            <span>Ja tak, jeg vil modtage nyheder, tilbud og information om kundehenvendelser, profilfremhævelse og partnerløsninger fra Indeklimaguiden via e-mail. Jeg kan altid afmelde mig igen.</span>
           </label>
 
           <button class="button" type="submit">Claim virksomhedsside</button>
