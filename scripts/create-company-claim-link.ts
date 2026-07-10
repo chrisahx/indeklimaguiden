@@ -9,18 +9,24 @@ function argValue(name: string) {
   return process.argv[index + 1];
 }
 
-function siteUrl() {
+function siteUrl(useProduction = false) {
+  if (useProduction) return 'https://indeklimaguiden.dk';
+
   return process.env.SITE_URL || process.env.PUBLIC_SITE_URL || 'http://localhost:4321';
 }
 
 async function main() {
   const companyId = argValue('--company-id');
   const emailArg = argValue('--email');
+  const databaseUrl = argValue('--database');
   const shouldSend = process.argv.includes('--send');
+  const useProduction = process.argv.includes('--prod');
 
   if (!companyId) {
-    throw new Error('Usage: tsx scripts/create-company-claim-link.ts --company-id <id> [--email firma@example.dk] [--send]');
+    throw new Error('Usage: tsx scripts/create-company-claim-link.ts --company-id <id> [--email firma@example.dk] [--database <connection-string>] [--send] [--prod]');
   }
+
+  if (databaseUrl) process.env.DATABASE_URL = databaseUrl;
 
   const prisma = getPrisma();
   const company = await prisma.company.findUnique({
@@ -34,7 +40,7 @@ async function main() {
   if (!email) throw new Error(`Company ${company.name} does not have an email. Pass --email.`);
 
   const { token, claimToken } = await createCompanyClaimToken(company.id, email);
-  const claimUrl = new URL(`/claim/${token}/`, siteUrl()).toString();
+  const claimUrl = new URL(`/claim/${token}/`, siteUrl(useProduction)).toString();
 
   if (shouldSend) {
     await sendCompanyClaimInviteEmail({

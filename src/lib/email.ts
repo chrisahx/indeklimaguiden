@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import type { InstallerLeadInput, MatchedInstaller } from './installer-leads';
 
 function env(name: string) {
-  return import.meta.env[name] ?? process.env[name];
+  return import.meta.env?.[name] ?? process.env[name];
 }
 
 function envBoolean(name: string, fallback = false) {
@@ -326,7 +326,7 @@ function formatDanishTimeWithSeconds(date: Date) {
   }).format(date);
 }
 
-function companyEmailShell(title: string, intro: string, body: string) {
+function companyEmailShell(title: string, intro: string, body: string, signoff = '<strong style="color:#07304f;">Indeklima Guiden</strong>') {
   return `<!doctype html>
 <html lang="da">
   <head>
@@ -349,7 +349,7 @@ function companyEmailShell(title: string, intro: string, body: string) {
             <tr>
               <td style="padding:28px 30px 30px;">
                 ${body}
-                <p style="margin:24px 0 0; color:#64717a; font-size:13px;">Venlig hilsen<br /><strong style="color:#07304f;">Indeklima Guiden</strong></p>
+                <p style="margin:24px 0 0; color:#64717a; font-size:13px;">Venlig hilsen<br />${signoff}</p>
               </td>
             </tr>
           </table>
@@ -361,30 +361,58 @@ function companyEmailShell(title: string, intro: string, body: string) {
 }
 
 function claimInviteText(input: CompanyClaimInviteInput) {
-  return `Claim jeres virksomhedsside hos Indeklima Guiden
+  return `Jeres virksomhed er nu med på Indeklima Guiden
 
-Hej ${input.companyName},
+Hej ${input.companyName}
 
-Vi har oprettet en virksomhedsside for jer hos Indeklima Guiden. Brug linket herunder til at claim siden og bekræfte, at I må administrere oplysningerne.
+Jeg har oprettet Indeklima Guiden - en ny platform, som skal gøre det lettere for boligejere at finde varmepumpeinstallatører i deres nærområde.
 
+Som en del af platformen har jeg oprettet et landsdækkende register over varmepumpeinstallatører, og ${input.companyName} har allerede fået sin egen virksomhedsside.
+
+Forbrugerne kan blandt andet:
+
+søge efter installatører i deres område
+sammenligne virksomheder og finde relevante kontaktoplysninger
+sende én forespørgsel til op til tre lokale installatører
+
+I kender måske tilbudsløsningen fra eksempelvis varmepumpe.dk eller 3byggetilbud. Forskellen er, at jeg har valgt at gøre løsningen gratis for installatørerne.
+
+Det betyder, at når en boligejer sender en forespørgsel, finder systemet relevante installatører i nærheden og sender kundeoplysningerne direkte videre - uden betaling for leadet.
+
+Jeg har bygget Indeklima Guiden, fordi jeg synes, der manglede en bedre måde for forbrugerne at finde lokale installatører på - samtidig med at installatørerne får en gratis kanal til synlighed og nye kundehenvendelser.
+
+I kan nu bekræfte og administrere jeres virksomhedsside, så I selv kan gennemgå og opdatere virksomhedens oplysninger.
+
+Bekræft og administrér virksomhedssiden:
 ${input.claimUrl}
 
-Linket udløber ${formatDanishDateTime(input.expiresAt)}.
-
-Hvis I ikke forventede denne mail, kan I se bort fra den.
+Har I spørgsmål, er I altid velkomne til at skrive til info@indeklimaguiden.dk.
 
 Venlig hilsen
+Christian
 Indeklima Guiden
 `;
 }
 
 function claimInviteHtml(input: CompanyClaimInviteInput) {
   return companyEmailShell(
-    'Claim jeres virksomhedsside',
-    `Hej ${input.companyName}, brug linket til at bekræfte og administrere jeres side.`,
-    `<p style="margin:0 0 18px; color:#64717a; font-size:15px;">Vi har oprettet en virksomhedsside for <strong style="color:#07304f;">${escapeHtml(input.companyName)}</strong>. Klik på knappen herunder for at claim siden. I skal acceptere vilkår for brug, og I kan frivilligt give samtykke til marketing.</p>
-    <p style="margin:0 0 20px;"><a href="${escapeHtml(input.claimUrl)}" style="display:inline-block; border-radius:999px; padding:12px 18px; background:#70b62c; color:#ffffff; font-weight:850; text-decoration:none;">Claim virksomhedsside</a></p>
-    <div style="border:1px solid #dce6df; border-radius:16px; padding:16px; background:#fbfaf6; color:#64717a; font-size:14px;">Linket udløber <strong style="color:#183044;">${escapeHtml(formatDanishDateTime(input.expiresAt))}</strong>. Hvis knappen ikke virker, kan I kopiere dette link:<br /><a href="${escapeHtml(input.claimUrl)}" style="color:#006f9e; word-break:break-all;">${escapeHtml(input.claimUrl)}</a></div>`,
+    'Jeres virksomhed er nu med på Indeklima Guiden',
+    `Hej ${input.companyName}`,
+    `<p style="margin:0 0 16px; color:#64717a; font-size:15px;">Jeg har oprettet <a href="https://indeklimaguiden.dk" style="color:#006f9e; font-weight:700;">Indeklima Guiden</a> - en ny platform, som skal gøre det lettere for boligejere at finde varmepumpeinstallatører i deres nærområde.</p>
+    <p style="margin:0 0 16px; color:#64717a; font-size:15px;">Som en del af platformen har jeg oprettet et landsdækkende register over varmepumpeinstallatører, og <strong style="color:#07304f;">${escapeHtml(input.companyName)}</strong> har allerede fået sin egen virksomhedsside.</p>
+    <p style="margin:0 0 10px; color:#64717a; font-size:15px;">Forbrugerne kan blandt andet:</p>
+    <ul style="margin:0 0 16px; padding-left:20px; color:#64717a; font-size:15px;">
+      <li>søge efter installatører i deres område</li>
+      <li>sammenligne virksomheder og finde relevante kontaktoplysninger</li>
+      <li>sende én forespørgsel til op til tre lokale installatører</li>
+    </ul>
+    <p style="margin:0 0 16px; color:#64717a; font-size:15px;">I kender måske tilbudsløsningen fra eksempelvis varmepumpe.dk eller 3byggetilbud. Forskellen er, at jeg har valgt at gøre løsningen gratis for installatørerne.</p>
+    <p style="margin:0 0 16px; color:#64717a; font-size:15px;">Det betyder, at når en boligejer sender en forespørgsel, finder systemet relevante installatører i nærheden og sender kundeoplysningerne direkte videre - uden betaling for leadet.</p>
+    <p style="margin:0 0 16px; color:#64717a; font-size:15px;">Jeg har bygget Indeklima Guiden, fordi jeg synes, der manglede en bedre måde for forbrugerne at finde lokale installatører på - samtidig med at installatørerne får en gratis kanal til synlighed og nye kundehenvendelser.</p>
+    <p style="margin:0 0 20px; color:#64717a; font-size:15px;">I kan nu bekræfte og administrere jeres virksomhedsside, så I selv kan gennemgå og opdatere virksomhedens oplysninger.</p>
+    <p style="margin:0 0 20px;"><a href="${escapeHtml(input.claimUrl)}" style="display:inline-block; border-radius:999px; padding:12px 18px; background:#70b62c; color:#ffffff; font-weight:850; text-decoration:none;">Bekræft og administrér virksomhedssiden</a></p>
+    <p style="margin:0; color:#64717a; font-size:15px;">Har I spørgsmål, er I altid velkomne til at skrive til <a href="mailto:info@indeklimaguiden.dk" style="color:#006f9e;">info@indeklimaguiden.dk</a>.</p>`,
+    'Christian<br /><strong style="color:#07304f;">Indeklima Guiden</strong>',
   );
 }
 
@@ -501,7 +529,7 @@ export async function sendCompanyClaimInviteEmail(input: CompanyClaimInviteInput
   await transporter.sendMail({
     from,
     to: input.email,
-    subject: `Claim virksomhedssiden for ${input.companyName}`,
+    subject: 'Jeres virksomhed er nu med på Indeklima Guiden',
     text: claimInviteText(input),
     html: claimInviteHtml(input),
   });
