@@ -1,5 +1,5 @@
-import nodemailer from 'nodemailer';
-import type { InstallerLeadInput, MatchedInstaller } from './installer-leads';
+import nodemailer from "nodemailer";
+import type { InstallerLeadInput, MatchedInstaller } from "./installer-leads";
 
 function env(name: string) {
   return import.meta.env?.[name] ?? process.env[name];
@@ -8,32 +8,32 @@ function env(name: string) {
 function envBoolean(name: string, fallback = false) {
   const value = env(name);
   if (value === undefined) return fallback;
-  return ['1', 'true', 'yes', 'on'].includes(String(value).toLowerCase());
+  return ["1", "true", "yes", "on"].includes(String(value).toLowerCase());
 }
 
 function needTypeLabel(value: string) {
   const labels: Record<string, string> = {
-    new_heat_pump: 'Ny varmepumpe',
-    existing_heat_pump: 'Hjælp til eksisterende varmepumpe',
-    service_or_error: 'Service eller fejl',
-    unsure: 'Ikke sikker endnu',
+    new_heat_pump: "Ny varmepumpe",
+    existing_heat_pump: "Hjælp til eksisterende varmepumpe",
+    service_or_error: "Service eller fejl",
+    unsure: "Ikke sikker endnu",
   };
 
   return labels[value] ?? value;
 }
 
 function getTransporter() {
-  const host = env('SMTP_HOST');
-  const port = Number.parseInt(env('SMTP_PORT') ?? '587', 10);
-  const user = env('SMTP_USER');
-  const pass = env('SMTP_PASS');
+  const host = env("SMTP_HOST");
+  const port = Number.parseInt(env("SMTP_PORT") ?? "587", 10);
+  const user = env("SMTP_USER");
+  const pass = env("SMTP_PASS");
 
-  if (!host) throw new Error('SMTP_HOST is not configured.');
+  if (!host) throw new Error("SMTP_HOST is not configured.");
 
   return nodemailer.createTransport({
     host,
     port,
-    secure: envBoolean('SMTP_SECURE'),
+    secure: envBoolean("SMTP_SECURE"),
     auth: user && pass ? { user, pass } : undefined,
   });
 }
@@ -87,20 +87,20 @@ Indeklima Guiden
 
 function escapeHtml(value: string) {
   return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 function multilineHtml(value: string) {
-  return escapeHtml(value).replace(/\n/g, '<br />');
+  return escapeHtml(value).replace(/\n/g, "<br />");
 }
 
 function leadEmailHtml(input: InstallerLeadInput, installer: MatchedInstaller) {
   const customerEmail = encodeURIComponent(input.email);
-  const customerPhone = input.phone.replace(/[^+\d]/g, '');
+  const customerPhone = input.phone.replace(/[^+\d]/g, "");
 
   return `<!doctype html>
 <html lang="da">
@@ -180,7 +180,10 @@ function leadEmailHtml(input: InstallerLeadInput, installer: MatchedInstaller) {
 </html>`;
 }
 
-function customerConfirmationText(input: InstallerLeadInput, installerCount: number) {
+function customerConfirmationText(
+  input: InstallerLeadInput,
+  installerCount: number,
+) {
   return `Tak for din forespørgsel til Indeklima Guiden
 
 Hej ${input.fullName},
@@ -218,7 +221,10 @@ Indeklima Guiden
 `;
 }
 
-function customerConfirmationHtml(input: InstallerLeadInput, installerCount: number) {
+function customerConfirmationHtml(
+  input: InstallerLeadInput,
+  installerCount: number,
+) {
   return `<!doctype html>
 <html lang="da">
   <head>
@@ -310,23 +316,28 @@ interface CompanyClaimCompletedInput extends CompanyEmailInput {
 }
 
 function formatDanishDateTime(date: Date) {
-  return new Intl.DateTimeFormat('da-DK', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-    timeZone: 'Europe/Copenhagen',
+  return new Intl.DateTimeFormat("da-DK", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Europe/Copenhagen",
   }).format(date);
 }
 
 function formatDanishTimeWithSeconds(date: Date) {
-  return new Intl.DateTimeFormat('da-DK', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    timeZone: 'Europe/Copenhagen',
+  return new Intl.DateTimeFormat("da-DK", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZone: "Europe/Copenhagen",
   }).format(date);
 }
 
-function companyEmailShell(title: string, intro: string, body: string, signoff = '<strong style="color:#07304f;">Indeklima Guiden</strong>') {
+function companyEmailShell(
+  title: string,
+  intro: string,
+  body: string,
+  signoff = '<strong style="color:#07304f;">Indeklima Guiden</strong>',
+) {
   return `<!doctype html>
 <html lang="da">
   <head>
@@ -365,19 +376,19 @@ function claimInviteText(input: CompanyClaimInviteInput) {
 
 Hej ${input.companyName}
 
-Jeg har oprettet Indeklima Guiden - en ny platform, som skal gøre det lettere for boligejere at finde varmepumpeinstallatører i deres nærområde.
+Jeg har oprettet Indeklima Guiden - en ny hjemmeside, som skal gøre det lettere for boligejere at finde varmepumpeinstallatører i deres nærområde.
 
-Som en del af platformen har jeg oprettet et landsdækkende register over varmepumpeinstallatører, og ${input.companyName} har allerede fået sin egen virksomhedsside.
+Som en del af hjemmesiden har jeg oprettet et landsdækkende register over varmepumpeinstallatører, og ${input.companyName} har allerede fået sin egen virksomhedsside.
 
 Forbrugerne kan blandt andet:
 
 søge efter installatører i deres område
 sammenligne virksomheder og finde relevante kontaktoplysninger
-sende én forespørgsel til op til tre lokale installatører
+sende én forespørgsel på en opgave, til tre lokale installatører
 
 I kender måske tilbudsløsningen fra eksempelvis varmepumpe.dk eller 3byggetilbud. Forskellen er, at jeg har valgt at gøre løsningen gratis for installatørerne.
 
-Det betyder, at når en boligejer sender en forespørgsel, finder systemet relevante installatører i nærheden og sender kundeoplysningerne direkte videre - uden betaling for leadet.
+Det betyder, at når en boligejer sender en forespørgsel, finder systemet relevante installatører i nærheden og sender kundeoplysningerne direkte videre til jer - uden betaling.
 
 Jeg har bygget Indeklima Guiden, fordi jeg synes, der manglede en bedre måde for forbrugerne at finde lokale installatører på - samtidig med at installatørerne får en gratis kanal til synlighed og nye kundehenvendelser.
 
@@ -461,7 +472,7 @@ Indeklima Guiden
 
 function loginCodeHtml(input: CompanyLoginCodeInput) {
   return companyEmailShell(
-    'Din login-kode',
+    "Din login-kode",
     `Hej ${input.companyName}, brug koden herunder til at logge ind.`,
     `<p style="margin:0 0 18px; color:#64717a; font-size:15px;">Indtast koden på login-siden for at få adgang til jeres virksomhedsområde.</p>
     <div style="margin:0 0 18px; border:1px solid #dce6df; border-radius:18px; padding:22px; background:#fbfaf6; text-align:center;">
@@ -489,7 +500,7 @@ Indeklima Guiden
 
 function claimCompletedHtml(input: CompanyClaimCompletedInput) {
   return companyEmailShell(
-    'Jeres virksomhedsside er claimet',
+    "Jeres virksomhedsside er claimet",
     `Hej ${input.companyName}, jeres claim er gennemført.`,
     `<p style="margin:0 0 18px; color:#64717a; font-size:15px;">Virksomhedssiden for <strong style="color:#07304f;">${escapeHtml(input.companyName)}</strong> er nu claimet med e-mailadressen <strong style="color:#07304f;">${escapeHtml(input.email)}</strong>.</p>
     <p style="margin:0 0 20px;"><a href="${escapeHtml(input.dashboardUrl)}" style="display:inline-block; border-radius:999px; padding:12px 18px; background:#006f9e; color:#ffffff; font-weight:850; text-decoration:none;">Gå til virksomhedsområde</a></p>
@@ -502,9 +513,13 @@ function errorMessage(error: unknown) {
   return String(error);
 }
 
-export async function sendInstallerLeadEmails(input: InstallerLeadInput, installers: MatchedInstaller[]) {
+export async function sendInstallerLeadEmails(
+  input: InstallerLeadInput,
+  installers: MatchedInstaller[],
+) {
   const transporter = getTransporter();
-  const from = env('SMTP_FROM') || 'Indeklima Guiden <leads@indeklimaguiden.dk>';
+  const from =
+    env("SMTP_FROM") || "Indeklima Guiden <leads@indeklimaguiden.dk>";
 
   const results = await Promise.allSettled(
     installers.map((installer) =>
@@ -520,41 +535,62 @@ export async function sendInstallerLeadEmails(input: InstallerLeadInput, install
   );
 
   const failed = results.flatMap((result, index) => {
-    if (result.status === 'fulfilled') return [];
+    if (result.status === "fulfilled") return [];
     const installer = installers[index];
-    return [{ installerId: installer.id, installerEmail: installer.email, error: errorMessage(result.reason) }];
+    return [
+      {
+        installerId: installer.id,
+        installerEmail: installer.email,
+        error: errorMessage(result.reason),
+      },
+    ];
   });
 
   if (failed.length > 0) {
-    console.error('[installer-lead] SMTP send failures', failed);
-    throw new Error(`${failed.length} af ${installers.length} lead-mails kunne ikke sendes: ${failed.map((failure) => `${failure.installerEmail}: ${failure.error}`).join('; ')}`);
+    console.error("[installer-lead] SMTP send failures", failed);
+    throw new Error(
+      `${failed.length} af ${installers.length} lead-mails kunne ikke sendes: ${failed.map((failure) => `${failure.installerEmail}: ${failure.error}`).join("; ")}`,
+    );
   }
 
   try {
     await transporter.sendMail({
       from,
       to: input.email,
-      subject: 'Vi har modtaget din forespørgsel om varmepumpe',
+      subject: "Vi har modtaget din forespørgsel om varmepumpe",
       text: customerConfirmationText(input, installers.length),
       html: customerConfirmationHtml(input, installers.length),
     });
   } catch (error) {
     const message = errorMessage(error);
-    console.error('[installer-lead] Customer confirmation email failed', { customerEmail: input.email, error: message });
-    throw new Error(`Kundebekræftelsen kunne ikke sendes til ${input.email}: ${message}`);
+    console.error("[installer-lead] Customer confirmation email failed", {
+      customerEmail: input.email,
+      error: message,
+    });
+    throw new Error(
+      `Kundebekræftelsen kunne ikke sendes til ${input.email}: ${message}`,
+    );
   }
 
-  return { installerEmailCount: results.length, customerEmailCount: 1, totalEmailCount: results.length + 1 };
+  return {
+    installerEmailCount: results.length,
+    customerEmailCount: 1,
+    totalEmailCount: results.length + 1,
+  };
 }
 
-export async function sendCompanyClaimInviteEmail(input: CompanyClaimInviteInput) {
+export async function sendCompanyClaimInviteEmail(
+  input: CompanyClaimInviteInput,
+) {
   const transporter = getTransporter();
-  const from = env('SMTP_FROM') || 'Indeklima Guiden <leads@indeklimaguiden.dk>';
+  const from =
+    env("SMTP_FROM") || "Indeklima Guiden <leads@indeklimaguiden.dk>";
 
   await transporter.sendMail({
     from,
     to: input.email,
-    subject: 'Jeres virksomhed er nu med på Indeklima Guiden',
+    bcc: "info@indeklimaguiden.dk",
+    subject: "Jeres virksomhed er nu med på Indeklima Guiden",
     text: claimInviteText(input),
     html: claimInviteHtml(input),
   });
@@ -562,7 +598,8 @@ export async function sendCompanyClaimInviteEmail(input: CompanyClaimInviteInput
 
 export async function sendCompanyLoginCodeEmail(input: CompanyLoginCodeInput) {
   const transporter = getTransporter();
-  const from = env('SMTP_FROM') || 'Indeklima Guiden <leads@indeklimaguiden.dk>';
+  const from =
+    env("SMTP_FROM") || "Indeklima Guiden <leads@indeklimaguiden.dk>";
   const timestamp = formatDanishTimeWithSeconds(new Date());
 
   await transporter.sendMail({
@@ -574,9 +611,12 @@ export async function sendCompanyLoginCodeEmail(input: CompanyLoginCodeInput) {
   });
 }
 
-export async function sendCompanyClaimCompletedEmail(input: CompanyClaimCompletedInput) {
+export async function sendCompanyClaimCompletedEmail(
+  input: CompanyClaimCompletedInput,
+) {
   const transporter = getTransporter();
-  const from = env('SMTP_FROM') || 'Indeklima Guiden <leads@indeklimaguiden.dk>';
+  const from =
+    env("SMTP_FROM") || "Indeklima Guiden <leads@indeklimaguiden.dk>";
 
   await transporter.sendMail({
     from,

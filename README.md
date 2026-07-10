@@ -1,6 +1,26 @@
 # Indeklima Guiden
 
 
+## Claim Email:
+
+prod
+```ts
+npx tsx scripts/create-company-claim-link.ts --database "$PROD_DATABASE_URL" --site-url https://indeklimaguiden.dk --send --batch 10
+```
+
+dev
+```ts
+npx tsx scripts/create-company-claim-link.ts --site-url http://localhost:4321 --send --batch 10
+```
+
+
+
+
+Ja tak, jeg vil modtage nyheder, tilbud og information om kundehenvendelser, profilfremhævelse og partnerløsninger fra Indeklimaguiden via e-mail. Jeg kan altid afmelde mig igen
+
+Ja tak, jeg vil gerne modtage information om kundehenvendelser, profilfremhævelse, partnerløsninger, nyheder og tilbud fra Indeklimaguiden via e-mail. Jeg kan altid afmelde mig igen.
+
+
 ## TODO
 
 - lav landing page om til at søge efter varmepumpe installatør.
