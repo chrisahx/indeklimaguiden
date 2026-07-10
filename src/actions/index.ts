@@ -10,14 +10,32 @@ import {
   createMagicLoginCode,
   createSession,
   destroyCompanySession,
+  getCompanySession,
   LOGIN_CODE_MINUTES,
   normalizeCompanyEmail,
   setCompanySessionCookie,
   verifyMagicLoginCode,
 } from '../lib/company-auth';
 import { findNearestInstallers, storeInstallerLead } from '../lib/installer-leads';
+import { getPrisma } from '../lib/prisma';
 
 const requiredString = z.string().trim().min(1, 'Feltet skal udfyldes.');
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function cleanStreetAddress(address: string, postalCode: string, city: string) {
+  return address
+    .replace(new RegExp(`\\b${escapeRegExp(postalCode)}\\b`, 'giu'), '')
+    .replace(/\b\d{4}\b/g, '')
+    .replace(new RegExp(escapeRegExp(city), 'giu'), '')
+    .replace(/^[,\s]+|[,\s]+$/g, '')
+    .replace(/\s+,/g, ',')
+    .replace(/,{2,}/g, ',')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
 
 export const server = {
   submitInstallerLead: defineAction({
@@ -166,6 +184,78 @@ export const server = {
     handler: async (_input, context) => {
       await destroyCompanySession(context.cookies);
       return { loginUrl: '/company/login/' };
+    },
+  }),
+  updateClaimedCompany: defineAction({
+    accept: 'form',
+    input: z.object({
+      companyId: requiredString,
+      address: requiredString.min(3, 'Skriv venligst en adresse.'),
+      postalCode: requiredString.regex(/^\d{4}$/, 'Skriv venligst et gyldigt dansk postnummer på 4 cifre.'),
+      city: requiredString.min(2, 'Skriv venligst by.'),
+      email: z.string().trim().email('Skriv venligst en gyldig e-mailadresse.'),
+      phone: requiredString.min(8, 'Skriv venligst et gyldigt telefonnummer.'),
+      website: z.string().trim().url('Skriv venligst en gyldig URL, fx https://example.dk.'),
+      marketingConsent: z.coerce.boolean().optional().default(false),
+    }),
+    handler: async (input, context) => {
+      const session = await getCompanySession(context.cookies);
+
+      if (!session) {
+        throw new ActionError({
+          code: 'UNAUTHORIZED',
+          message: 'Du skal være logget ind for at opdatere virksomhedsoplysninger.',
+        });
+      }
+
+      const company = session.user.claimedCompanies.find((claimedCompany) => claimedCompany.id === input.companyId);
+
+      if (!company) {
+        throw new ActionError({
+          code: 'FORBIDDEN',
+          message: 'Du har ikke adgang til at opdatere denne virksomhed.',
+        });
+      }
+
+      const prisma = getPrisma();
+      const now = new Date();
+      const address = cleanStreetAddress(input.address, input.postalCode, input.city);
+
+      if (!address) {
+        throw new ActionError({
+          code: 'BAD_REQUEST',
+          message: 'Adressefeltet skal kun indeholde vejnavn og nummer.',
+        });
+      }
+
+      await prisma.$transaction([
+        prisma.company.update({
+          where: { id: input.companyId, claimedByUserId: session.userId, isClaimed: true },
+          data: {
+            email: normalizeCompanyEmail(input.email),
+            phone: input.phone,
+            website: input.website,
+            marketingConsent: input.marketingConsent,
+            marketingConsentAt: input.marketingConsent ? (company.marketingConsentAt ?? now) : null,
+          },
+        }),
+        prisma.companyLocation.upsert({
+          where: { companyId: input.companyId },
+          update: {
+            address,
+            postalCode: input.postalCode,
+            city: input.city,
+          },
+          create: {
+            companyId: input.companyId,
+            address,
+            postalCode: input.postalCode,
+            city: input.city,
+          },
+        }),
+      ]);
+
+      return { companyId: input.companyId, updated: true };
     },
   }),
 };

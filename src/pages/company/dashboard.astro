@@ -1,11 +1,15 @@
 ---
 export const prerender = false;
 
-import { actions } from 'astro:actions';
+import { actions, isInputError } from 'astro:actions';
 import AuthorizedLayout from '../../layouts/AuthorizedLayout.astro';
 import { getCompanySession } from '../../lib/company-auth';
 
 const logoutResult = Astro.getActionResult(actions.logoutCompanyUser);
+const updateResult = Astro.getActionResult(actions.updateClaimedCompany);
+const updateInputErrors = isInputError(updateResult?.error) ? updateResult.error.fields : {};
+const updateGeneralError = updateResult?.error && !isInputError(updateResult.error) ? updateResult.error.message : '';
+const updateSuccess = updateResult && !updateResult.error ? updateResult.data : undefined;
 
 if (logoutResult && !logoutResult.error) {
   return Astro.redirect('/company/login/');
@@ -19,7 +23,18 @@ if (!session) {
 
 const companies = session.user.claimedCompanies;
 const formatDate = (date: Date | null) => date ? new Intl.DateTimeFormat('da-DK', { dateStyle: 'medium', timeZone: 'Europe/Copenhagen' }).format(date) : 'Ikke registreret';
-const formatAddress = (company: typeof companies[number]) => [company.location?.address, company.location?.postalCode, company.location?.city].filter(Boolean).join(', ') || 'Ikke registreret';
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const cleanStreetAddress = (address = '', postalCode = '', city = '') => address
+  .replace(postalCode ? new RegExp(`\\b${escapeRegExp(postalCode)}\\b`, 'giu') : /$^/, '')
+  .replace(/\b\d{4}\b/g, '')
+  .replace(city ? new RegExp(escapeRegExp(city), 'giu') : /$^/, '')
+  .replace(/^[,\s]+|[,\s]+$/g, '')
+  .replace(/\s+,/g, ',')
+  .replace(/,{2,}/g, ',')
+  .replace(/\s{2,}/g, ' ')
+  .trim();
+const streetAddress = (company: typeof companies[number]) => cleanStreetAddress(company.location?.address ?? '', company.location?.postalCode ?? '', company.location?.city ?? '');
+const formatAddress = (company: typeof companies[number]) => [streetAddress(company), company.location?.postalCode, company.location?.city].filter(Boolean).join(', ') || 'Ikke registreret';
 ---
 
 <AuthorizedLayout title="Virksomhedsdashboard" description="Se jeres virksomhedsoplysninger hos Indeklima Guiden." path="/company/dashboard/">
@@ -36,25 +51,144 @@ const formatAddress = (company: typeof companies[number]) => [company.location?.
 
   <div class="company-grid">
     {companies.map((company) => (
-      <article class="surface company-panel">
+      <form class="surface company-panel" method="POST" action={actions.updateClaimedCompany} data-company-edit-form>
+        <input type="hidden" name="companyId" value={company.id} />
+
         <div class="company-panel__header">
           <h2>{company.name}</h2>
-          <span class="status-pill">Claimet</span>
+          <div class="company-actions">
+            <span class="status-pill">Claimet</span>
+            <button class="button secondary edit-button" type="button" data-edit-company>Rediger oplysninger</button>
+          </div>
         </div>
+
+        {updateSuccess?.companyId === company.id && (
+          <div class="notice success" role="status">
+            <strong>Oplysningerne er gemt.</strong>
+          </div>
+        )}
+
+        {updateGeneralError && (
+          <div class="notice error" role="alert">
+            <strong>Oplysningerne kunne ikke gemmes</strong>
+            <p>{updateGeneralError}</p>
+          </div>
+        )}
+
         <dl>
-          <div><dt>Adresse</dt><dd>{formatAddress(company)}</dd></div>
-          <div><dt>E-mail</dt><dd>{company.email || company.claimEmail || 'Ikke registreret'}</dd></div>
-          <div><dt>Telefon</dt><dd>{company.phone || 'Ikke registreret'}</dd></div>
-          <div><dt>Website</dt><dd>{company.website ? <a href={company.website}>{company.website}</a> : 'Ikke registreret'}</dd></div>
+          <div class="editable-field editable-field--wide">
+            <dt>Adresse</dt>
+            <dd>
+              <span data-view-value>{formatAddress(company)}</span>
+              <div class="edit-fields" data-edit-value>
+                <label>
+                  Adresse
+                  <input type="text" name="address" value={streetAddress(company)} required minlength="3" />
+                </label>
+                <div class="field-row">
+                  <label>
+                    Postnummer
+                    <input type="text" name="postalCode" value={company.location?.postalCode ?? ''} required pattern="[0-9]{4}" maxlength="4" inputmode="numeric" />
+                  </label>
+                  <label>
+                    By
+                    <input type="text" name="city" value={company.location?.city ?? ''} required minlength="2" />
+                  </label>
+                </div>
+                {updateInputErrors.address && <small>{updateInputErrors.address.join(' ')}</small>}
+                {updateInputErrors.postalCode && <small>{updateInputErrors.postalCode.join(' ')}</small>}
+                {updateInputErrors.city && <small>{updateInputErrors.city.join(' ')}</small>}
+              </div>
+            </dd>
+          </div>
+
+          <div class="editable-field">
+            <dt>E-mail</dt>
+            <dd>
+              <span data-view-value>{company.email || company.claimEmail || 'Ikke registreret'}</span>
+              <label class="edit-field" data-edit-value>
+                E-mail
+                <input type="email" name="email" value={company.email || company.claimEmail || ''} required />
+                {updateInputErrors.email && <small>{updateInputErrors.email.join(' ')}</small>}
+              </label>
+            </dd>
+          </div>
+
+          <div class="editable-field">
+            <dt>Telefon</dt>
+            <dd>
+              <span data-view-value>{company.phone || 'Ikke registreret'}</span>
+              <label class="edit-field" data-edit-value>
+                Telefon
+                <input type="tel" name="phone" value={company.phone || ''} required minlength="8" />
+                {updateInputErrors.phone && <small>{updateInputErrors.phone.join(' ')}</small>}
+              </label>
+            </dd>
+          </div>
+
+          <div class="editable-field">
+            <dt>Website</dt>
+            <dd>
+              <span data-view-value>{company.website ? <a href={company.website}>{company.website}</a> : 'Ikke registreret'}</span>
+              <label class="edit-field" data-edit-value>
+                Website
+                <input type="url" name="website" value={company.website || ''} required placeholder="https://example.dk" />
+                {updateInputErrors.website && <small>{updateInputErrors.website.join(' ')}</small>}
+              </label>
+            </dd>
+          </div>
+
           <div><dt>CVR</dt><dd>{company.cvr || 'Ikke registreret'}</dd></div>
           <div><dt>Claimet den</dt><dd>{formatDate(company.claimedAt)}</dd></div>
           <div><dt>Vilkår accepteret</dt><dd>{formatDate(company.termsAcceptedAt)}</dd></div>
-          <div><dt>Marketing</dt><dd>{company.marketingConsent ? 'Accepteret' : 'Ikke accepteret'}</dd></div>
+
+          <div class="editable-field">
+            <dt>Marketing</dt>
+            <dd>
+              <span data-view-value>{company.marketingConsent ? 'Accepteret' : 'Ikke accepteret'}</span>
+              <label class="checkbox-label" data-edit-value>
+                <input type="checkbox" name="marketingConsent" value="true" checked={company.marketingConsent} />
+                <span>Accepter marketing</span>
+              </label>
+            </dd>
+          </div>
         </dl>
-      </article>
+
+        <div class="edit-actions" data-edit-value>
+          <button class="button" type="submit">Gem ændringer</button>
+          <button class="button secondary" type="button" data-cancel-edit>Annuller</button>
+        </div>
+      </form>
     ))}
   </div>
 </AuthorizedLayout>
+
+<script>
+  document.querySelectorAll('[data-company-edit-form]').forEach((form) => {
+    const editButton = form.querySelector('[data-edit-company]');
+    const cancelButton = form.querySelector('[data-cancel-edit]');
+    const inputs = Array.from(form.querySelectorAll('input'));
+    const originalValues = new Map(inputs.map((input) => [input, input instanceof HTMLInputElement && input.type === 'checkbox' ? input.checked : input.value]));
+
+    editButton?.addEventListener('click', () => {
+      form.classList.add('is-editing');
+    });
+
+    cancelButton?.addEventListener('click', () => {
+      inputs.forEach((input) => {
+        const originalValue = originalValues.get(input);
+        if (!(input instanceof HTMLInputElement)) return;
+
+        if (input.type === 'checkbox') {
+          input.checked = Boolean(originalValue);
+        } else if (typeof originalValue === 'string') {
+          input.value = originalValue;
+        }
+      });
+      form.classList.remove('is-editing');
+    });
+  });
+</script>
 
 <style>
   .dashboard-head {
@@ -70,14 +204,38 @@ const formatAddress = (company: typeof companies[number]) => [company.location?.
   .company-panel { padding: clamp(1.2rem, 3vw, 1.8rem); }
   .company-panel__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
   .company-panel h2 { margin-top: 0; }
+  .company-actions { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; justify-content: flex-end; }
   .status-pill { border-radius: 999px; padding: 0.32rem 0.7rem; background: var(--color-leaf-soft); color: var(--color-leaf-dark); font-weight: 850; }
+  .edit-button { padding: 0.65rem 0.9rem; }
   dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem; margin: 0; }
   dl div { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.85rem; background: var(--color-surface-strong); }
   dt { color: var(--color-muted); font-size: 0.78rem; font-weight: 850; letter-spacing: 0.05em; text-transform: uppercase; }
   dd { margin: 0.2rem 0 0; overflow-wrap: anywhere; font-weight: 700; }
+  label { display: grid; gap: 0.35rem; color: var(--color-primary); font-weight: 800; }
+  input[type='text'], input[type='email'], input[type='tel'], input[type='url'] { width: 100%; border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); padding: 0.72rem 0.8rem; background: #fff; color: var(--color-text); font: inherit; font-weight: 650; }
+  small { color: #a33b2f; font-weight: 750; }
+  [data-edit-value] { display: none; }
+  .is-editing [data-view-value] { display: none; }
+  .is-editing [data-edit-value] { display: grid; }
+  .is-editing .checkbox-label[data-edit-value] { display: flex; }
+  .is-editing .edit-button { display: none; }
+  .edit-fields { gap: 0.75rem; }
+  .edit-field { gap: 0.45rem; }
+  .field-row { display: grid; grid-template-columns: 150px 1fr; gap: 0.7rem; border: 0; padding: 0; background: transparent; }
+  dl div.field-row { border: 0; padding: 0; background: transparent; }
+  .checkbox-label { align-items: center; gap: 0.55rem; color: var(--color-text); }
+  .checkbox-label input { accent-color: var(--color-leaf); }
+  .edit-actions { margin-top: 1rem; display: none; grid-template-columns: max-content max-content; gap: 0.7rem; }
+  .notice { border-radius: var(--radius-md); padding: 1rem; margin: 0 0 1rem; }
+  .notice.success { border: 1px solid var(--color-border); background: var(--color-leaf-soft); }
+  .notice.error { border: 1px solid #e2aca4; background: #fff1ee; color: #823126; }
 
   @media (max-width: 760px) {
     .dashboard-head { flex-direction: column; }
     dl { grid-template-columns: 1fr; }
+    .company-panel__header { flex-direction: column; }
+    .company-actions { justify-content: flex-start; }
+    .field-row { grid-template-columns: 1fr; }
+    .edit-actions { grid-template-columns: 1fr; }
   }
 </style>
