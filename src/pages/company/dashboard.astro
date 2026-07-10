@@ -143,12 +143,12 @@ const formatAddress = (company: typeof companies[number]) => [streetAddress(comp
           <div><dt>Vilkår accepteret</dt><dd>{formatDate(company.termsAcceptedAt)}</dd></div>
 
           <div class="editable-field">
-            <dt>Marketing</dt>
+            <dt>Emails</dt>
             <dd>
               <span data-view-value>{company.marketingConsent ? 'Accepteret' : 'Ikke accepteret'}</span>
               <label class="checkbox-label" data-edit-value>
                 <input type="checkbox" name="marketingConsent" value="true" checked={company.marketingConsent} />
-                <span>Accepter marketing</span>
+                <span>Accepter emails</span>
               </label>
             </dd>
           </div>

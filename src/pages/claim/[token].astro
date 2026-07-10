@@ -67,13 +67,13 @@ const address = company?.location?.address ?? '';
 
           <label class="checkbox-label">
             <input type="checkbox" name="termsAccepted" value="true" required />
-            <span>Jeg accepterer vilkår for brug og bekræfter, at jeg må administrere denne virksomhedsside.</span>
+            <span>Jeg accepterer <a href="/vilkaar-for-virksomheder/" target="_blank" rel="noopener noreferrer">vilkår for brug</a> og bekræfter, at jeg må administrere denne virksomhedsside.</span>
           </label>
           {inputErrors.termsAccepted && <small>{inputErrors.termsAccepted.join(' ')}</small>}
 
           <label class="checkbox-label">
             <input type="checkbox" name="marketingConsent" value="true" />
-            <span>Ja tak, jeg vil modtage nyheder, tilbud og information om kundehenvendelser, profilfremhævelse og partnerløsninger fra Indeklimaguiden via e-mail. Jeg kan altid afmelde mig igen.</span>
+            <span>Ja tak, jeg vil gerne modtage information om kundehenvendelser, profilfremhævelse, partnerløsninger, nyheder og tilbud fra Indeklimaguiden via e-mail. Jeg kan altid afmelde mig igen.</span>
           </label>
 
           <button class="button" type="submit">Claim virksomhedsside</button>

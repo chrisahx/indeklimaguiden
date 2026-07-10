@@ -6,8 +6,17 @@ export const COMPANY_SESSION_COOKIE = 'company_session';
 export const COMPANY_TERMS_VERSION = '2026-07-10';
 export const CLAIM_TOKEN_DAYS = 30;
 export const LOGIN_CODE_MINUTES = 10;
+export const LOGIN_CODE_REQUEST_LIMIT = 3;
+export const LOGIN_CODE_REQUEST_WINDOW_MINUTES = 10;
 export const SESSION_DAYS = 30;
 const MAX_LOGIN_ATTEMPTS = 5;
+
+export class LoginCodeRequestLimitError extends Error {
+  constructor() {
+    super('Login code request limit exceeded.');
+    this.name = 'LoginCodeRequestLimitError';
+  }
+}
 
 export function normalizeCompanyEmail(email: string) {
   return email.trim().toLowerCase();
@@ -169,7 +178,7 @@ export async function completeCompanyClaim(input: {
   });
 }
 
-export async function createMagicLoginCode(email: string) {
+export async function createMagicLoginCode(email: string, now = new Date()) {
   const prisma = getPrisma();
   const normalizedEmail = normalizeCompanyEmail(email);
   const user = await prisma.user.findUnique({
@@ -184,12 +193,24 @@ export async function createMagicLoginCode(email: string) {
 
   if (!user || user.claimedCompanies.length === 0) return null;
 
+  const requestWindowStart = addMinutes(now, -LOGIN_CODE_REQUEST_WINDOW_MINUTES);
+  const recentRequestCount = await prisma.magicLoginCode.count({
+    where: {
+      email: normalizedEmail,
+      createdAt: { gte: requestWindowStart },
+    },
+  });
+
+  if (recentRequestCount >= LOGIN_CODE_REQUEST_LIMIT) {
+    throw new LoginCodeRequestLimitError();
+  }
+
   const code = generateLoginCode();
   await prisma.magicLoginCode.create({
     data: {
       email: normalizedEmail,
       codeHash: loginCodeHash(normalizedEmail, code),
-      expiresAt: addMinutes(new Date(), LOGIN_CODE_MINUTES),
+      expiresAt: addMinutes(now, LOGIN_CODE_MINUTES),
     },
   });
 

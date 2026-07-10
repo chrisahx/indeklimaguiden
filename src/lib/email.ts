@@ -317,6 +317,15 @@ function formatDanishDateTime(date: Date) {
   }).format(date);
 }
 
+function formatDanishTimeWithSeconds(date: Date) {
+  return new Intl.DateTimeFormat('da-DK', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZone: 'Europe/Copenhagen',
+  }).format(date);
+}
+
 function companyEmailShell(title: string, intro: string, body: string) {
   return `<!doctype html>
 <html lang="da">
@@ -501,11 +510,12 @@ export async function sendCompanyClaimInviteEmail(input: CompanyClaimInviteInput
 export async function sendCompanyLoginCodeEmail(input: CompanyLoginCodeInput) {
   const transporter = getTransporter();
   const from = env('SMTP_FROM') || 'Indeklima Guiden <leads@indeklimaguiden.dk>';
+  const timestamp = formatDanishTimeWithSeconds(new Date());
 
   await transporter.sendMail({
     from,
     to: input.email,
-    subject: `Din login-kode til Indeklima Guiden: ${input.code}`,
+    subject: `Din login-kode til Indeklima Guiden - ${timestamp}`,
     text: loginCodeText(input),
     html: loginCodeHtml(input),
   });

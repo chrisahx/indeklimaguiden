@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../lib/constants';
+---
+
+<BaseLayout title="Vilkår for virksomheder" description="Vilkår for virksomheder, der claimer og administrerer en virksomhedsside på Indeklima Guiden." path="/vilkaar-for-virksomheder/">
+  <section class="section reading article-body">
+    <h1>Vilkår for virksomheder</h1>
+
+    <p>
+      Disse vilkår gælder for virksomheder, der claimer, administrerer eller opdaterer en virksomhedsside på Indeklima Guiden.
+      Ved at acceptere vilkårene bekræfter du, at du har ret til at handle på vegne af virksomheden.
+    </p>
+
+    <h2>1. Adgang til virksomhedssiden</h2>
+    <p>
+      Adgang til virksomhedsområdet sker via den e-mailadresse, der er knyttet til virksomhedens claim. Vi kan sende engangskoder
+      eller andre sikkerhedslinks til denne e-mailadresse. Du er ansvarlig for, at e-mailadressen holdes opdateret, og at adgangen
+      ikke deles med uvedkommende.
+    </p>
+
+    <h2>2. Oplysninger på virksomhedssiden</h2>
+    <p>
+      Virksomheden er ansvarlig for, at de oplysninger, der indsendes eller opdateres, er korrekte, lovlige og ikke vildledende.
+      Det gælder blandt andet virksomhedsnavn, adresse, kontaktoplysninger, hjemmeside, beskrivelser, åbningstider og øvrige oplysninger.
+    </p>
+    <p>
+      Indeklima Guiden kan afvise, ændre eller fjerne oplysninger, hvis de vurderes at være urigtige, irrelevante, spam, i strid med lovgivningen
+      eller i strid med sidens formål.
+    </p>
+
+    <h2>3. Brug af platformen</h2>
+    <p>Virksomheden må ikke bruge Indeklima Guiden til at:</p>
+    <ul>
+      <li>indsende urigtige eller vildledende oplysninger,</li>
+      <li>udgive sig for at repræsentere en virksomhed uden tilladelse,</li>
+      <li>forsøge at få adgang til andre virksomheders oplysninger,</li>
+      <li>misbruge login-koder, formularer eller tekniske funktioner,</li>
+      <li>indsende indhold, der er ulovligt, krænkende eller skadeligt.</li>
+    </ul>
+
+    <h2>4. Kundehenvendelser og leads</h2>
+    <p>
+      Hvis virksomheden modtager kundehenvendelser eller leads via Indeklima Guiden, skal virksomheden selv vurdere, om opgaven er relevant,
+      og selv stå for al efterfølgende dialog, rådgivning, tilbud, aftaleindgåelse, levering og kundeservice.
+    </p>
+    <p>
+      Indeklima Guiden er ikke part i aftaler mellem virksomheden og kunder og garanterer ikke et bestemt antal henvendelser, salg eller opgaver.
+    </p>
+
+    <h2>5. Profilfremhævelse, partnere og kommercielle løsninger</h2>
+    <p>
+      Indeklima Guiden kan tilbyde profilfremhævelse, partnerløsninger, annoncering eller andre kommercielle muligheder. Eventuelle betalte løsninger
+      kræver særskilt aftale, medmindre andet fremgår tydeligt.
+    </p>
+
+    <h2>6. E-mail og markedsføring</h2>
+    <p>
+      Hvis du giver samtykke til e-mails, kan Indeklima Guiden sende information om kundehenvendelser, profilfremhævelse, partnerløsninger,
+      nyheder og tilbud. Du kan til enhver tid afmelde dig igen. Servicebeskeder om login, sikkerhed, claim eller vigtige ændringer kan stadig sendes,
+      når det er nødvendigt for at drive virksomhedsområdet.
+    </p>
+
+    <h2>7. Behandling af personoplysninger</h2>
+    <p>
+      Vi behandler personoplysninger i forbindelse med claim, login, virksomhedsadministration, kundehenvendelser og drift af hjemmesiden.
+      Læs mere i vores <a href="/privatlivspolitik/">privatlivspolitik</a>.
+    </p>
+
+    <h2>8. Ændringer og lukning af adgang</h2>
+    <p>
+      Vi kan ændre funktioner, opdatere disse vilkår eller lukke adgang til virksomhedsområdet, hvis vilkårene misbruges, hvis oplysninger er urigtige,
+      eller hvis det er nødvendigt af sikkerheds-, drifts- eller juridiske årsager.
+    </p>
+
+    <h2>9. Ansvar</h2>
+    <p>
+      Indeklima Guiden stilles til rådighed som en informations- og formidlingsplatform. Vi tilstræber korrekte oplysninger og stabil drift, men kan ikke
+      garantere, at alle oplysninger altid er fuldstændige, opdaterede eller fejlfrie. Virksomheden er selv ansvarlig for egne oplysninger, egne ydelser
+      og aftaler med kunder.
+    </p>
+
+    <h2>10. Kontakt</h2>
+    <p>
+      Spørgsmål om disse vilkår kan sendes til <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>.
+    </p>
+  </section>
+</BaseLayout>

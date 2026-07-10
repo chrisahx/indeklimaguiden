@@ -11,7 +11,10 @@ import {
   createSession,
   destroyCompanySession,
   getCompanySession,
+  LoginCodeRequestLimitError,
   LOGIN_CODE_MINUTES,
+  LOGIN_CODE_REQUEST_LIMIT,
+  LOGIN_CODE_REQUEST_WINDOW_MINUTES,
   normalizeCompanyEmail,
   setCompanySessionCookie,
   verifyMagicLoginCode,
@@ -141,7 +144,20 @@ export const server = {
       email: z.string().trim().email('Skriv venligst en gyldig e-mailadresse.'),
     }),
     handler: async (input) => {
-      const loginCode = await createMagicLoginCode(input.email);
+      let loginCode: Awaited<ReturnType<typeof createMagicLoginCode>> = null;
+
+      try {
+        loginCode = await createMagicLoginCode(input.email);
+      } catch (error) {
+        if (error instanceof LoginCodeRequestLimitError) {
+          throw new ActionError({
+            code: 'BAD_REQUEST',
+            message: `Du kan kun bestille ${LOGIN_CODE_REQUEST_LIMIT} login-koder hvert ${LOGIN_CODE_REQUEST_WINDOW_MINUTES}. minut. Vent lidt, og prov igen.`,
+          });
+        }
+
+        throw error;
+      }
 
       if (loginCode) {
         const company = loginCode.user.claimedCompanies[0];
