@@ -33,9 +33,13 @@ const navGroups = [
       { label: 'Varmepumpe vs elradiator', href: '/beregnere/varmepumpe-vs-elradiator/' },
     ],
   },
+  {
+    label: 'Installatører',
+    href: '/varmepumpe-installatoer/',
+    showOverview: false,
+    links: [{ label: 'Varmepumpe', href: '/varmepumpe-installatoer/' }],
+  },
 ];
-
-const installerLink = { label: 'Varmepumpe installatører', href: '/varmepumpe-installatoer/' };
 ---
 
 <header class="site-header">
@@ -59,7 +63,6 @@ const installerLink = { label: 'Varmepumpe installatører', href: '/varmepumpe-i
           </div>
         </div>
       ))}
-      <a class="nav-link" href={installerLink.href}>{installerLink.label}</a>
     </nav>
 
     <button class="mobile-menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-button>
@@ -69,7 +72,6 @@ const installerLink = { label: 'Varmepumpe installatører', href: '/varmepumpe-i
   </div>
 
   <nav id="mobile-menu" class="mobile-menu container" aria-label="Mobil navigation" hidden data-mobile-menu>
-    <a class="mobile-direct-link" href={installerLink.href}>{installerLink.label}</a>
     {navGroups.map((group, index) => (
       <section class="mobile-group">
         <button class="mobile-group-trigger" type="button" aria-expanded={index === 0 ? 'true' : 'false'} aria-controls={`mobile-group-${index}`} data-mobile-group-trigger>
@@ -77,7 +79,7 @@ const installerLink = { label: 'Varmepumpe installatører', href: '/varmepumpe-i
           <span aria-hidden="true">+</span>
         </button>
         <div id={`mobile-group-${index}`} class="mobile-group-links" hidden={index !== 0} data-mobile-group-links>
-          <a class="mobile-overview" href={group.href}>Alle {group.label.toLowerCase()}</a>
+          {group.showOverview !== false && <a class="mobile-overview" href={group.href}>Alle {group.label.toLowerCase()}</a>}
           {group.links.map((link) => <a href={link.href}>{link.label}</a>)}
         </div>
       </section>
@@ -188,7 +190,6 @@ const installerLink = { label: 'Varmepumpe installatører', href: '/varmepumpe-i
   }
 
   .nav-trigger,
-  .nav-link,
   .mobile-menu-button,
   .mobile-group-trigger,
   .mobile-menu a {
@@ -205,16 +206,8 @@ const installerLink = { label: 'Varmepumpe installatører', href: '/varmepumpe-i
     transition: background 160ms ease, color 160ms ease;
   }
 
-  .nav-link {
-    border-radius: 999px;
-    padding: 0.58rem 0.86rem;
-    transition: background 160ms ease, color 160ms ease;
-  }
-
   .nav-trigger:hover,
   .nav-trigger:focus-visible,
-  .nav-link:hover,
-  .nav-link:focus-visible,
   .nav-group:focus-within .nav-trigger,
   .nav-group:hover .nav-trigger {
     background: linear-gradient(135deg, var(--color-accent-soft), var(--color-leaf-soft));
@@ -304,17 +297,6 @@ const installerLink = { label: 'Varmepumpe installatører', href: '/varmepumpe-i
     border-radius: var(--radius-lg);
     background: rgba(255, 255, 255, 0.82);
     box-shadow: var(--shadow-soft);
-  }
-
-  .mobile-direct-link {
-    display: block;
-    margin-bottom: 0.7rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: 1rem;
-    background: linear-gradient(135deg, var(--color-accent-soft), var(--color-leaf-soft));
-    box-shadow: var(--shadow-soft);
-    font-weight: 900;
   }
 
   .mobile-group + .mobile-group {
