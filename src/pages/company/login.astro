@@ -1,0 +1,53 @@
+---
+export const prerender = false;
+
+import { actions, isInputError } from 'astro:actions';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const result = Astro.getActionResult(actions.requestCompanyLoginCode);
+const inputErrors = isInputError(result?.error) ? result.error.fields : {};
+const generalError = result?.error && !isInputError(result.error) ? result.error.message : '';
+const success = result && !result.error ? result.data : undefined;
+
+if (success) {
+  return Astro.redirect(`/company/verify/?email=${encodeURIComponent(success.email)}`);
+}
+---
+
+<BaseLayout title="Virksomhedslogin" description="Log ind på jeres virksomhedsside hos Indeklima Guiden." path="/company/login/" noindex>
+  <section class="section reading login-page">
+    <div class="surface login-card">
+      <span class="pill">Virksomhedslogin</span>
+      <h1>Log ind med e-mailkode</h1>
+      <p>Indtast den e-mailadresse, I brugte til at claime virksomhedssiden. Vi sender en 6-cifret kode.</p>
+
+      {generalError && (
+        <div class="notice error" role="alert">
+          <strong>Der opstod en fejl</strong>
+          <p>{generalError}</p>
+        </div>
+      )}
+
+      <form method="POST" action={actions.requestCompanyLoginCode} novalidate>
+        <label>
+          E-mailadresse
+          <input type="email" name="email" autocomplete="email" required />
+          {inputErrors.email && <small>{inputErrors.email.join(' ')}</small>}
+        </label>
+        <button class="button" type="submit">Send login-kode</button>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .login-card { display: grid; gap: 1rem; padding: clamp(1.4rem, 4vw, 2.2rem); }
+  .login-card h1 { font-size: clamp(2.2rem, 7vw, 4rem); }
+  form { display: grid; gap: 1rem; }
+  label { display: grid; gap: 0.35rem; font-weight: 800; color: var(--color-primary); }
+  input { width: 100%; border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); padding: 0.9rem 1rem; font: inherit; color: var(--color-text); background: #fff; }
+  small { color: #a33b2f; font-weight: 700; }
+  .notice { border-radius: var(--radius-md); padding: 1rem; }
+  .notice.success { border: 1px solid var(--color-border); background: var(--color-leaf-soft); }
+  .notice.error { border: 1px solid #e2aca4; background: #fff1ee; color: #823126; }
+</style>

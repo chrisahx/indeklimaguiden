@@ -1,0 +1,83 @@
+---
+export const prerender = false;
+
+import { actions } from 'astro:actions';
+import AuthorizedLayout from '../../layouts/AuthorizedLayout.astro';
+import { getCompanySession } from '../../lib/company-auth';
+
+const logoutResult = Astro.getActionResult(actions.logoutCompanyUser);
+
+if (logoutResult && !logoutResult.error) {
+  return Astro.redirect('/company/login/');
+}
+
+const session = await getCompanySession(Astro.cookies);
+
+if (!session) {
+  return Astro.redirect('/company/login/');
+}
+
+const companies = session.user.claimedCompanies;
+const formatDate = (date: Date | null) => date ? new Intl.DateTimeFormat('da-DK', { dateStyle: 'medium', timeZone: 'Europe/Copenhagen' }).format(date) : 'Ikke registreret';
+const formatAddress = (company: typeof companies[number]) => [company.location?.address, company.location?.postalCode, company.location?.city].filter(Boolean).join(', ') || 'Ikke registreret';
+---
+
+<AuthorizedLayout title="Virksomhedsdashboard" description="Se jeres virksomhedsoplysninger hos Indeklima Guiden." path="/company/dashboard/">
+  <div class="dashboard-head">
+    <div>
+      <span class="pill">Claimet virksomhed</span>
+      <h1>Virksomhedsoplysninger</h1>
+      <p>Her kan I se de oplysninger, der er knyttet til jeres claim.</p>
+    </div>
+    <form method="POST" action={actions.logoutCompanyUser}>
+      <button class="button secondary" type="submit">Log ud</button>
+    </form>
+  </div>
+
+  <div class="company-grid">
+    {companies.map((company) => (
+      <article class="surface company-panel">
+        <div class="company-panel__header">
+          <h2>{company.name}</h2>
+          <span class="status-pill">Claimet</span>
+        </div>
+        <dl>
+          <div><dt>Adresse</dt><dd>{formatAddress(company)}</dd></div>
+          <div><dt>E-mail</dt><dd>{company.email || company.claimEmail || 'Ikke registreret'}</dd></div>
+          <div><dt>Telefon</dt><dd>{company.phone || 'Ikke registreret'}</dd></div>
+          <div><dt>Website</dt><dd>{company.website ? <a href={company.website}>{company.website}</a> : 'Ikke registreret'}</dd></div>
+          <div><dt>CVR</dt><dd>{company.cvr || 'Ikke registreret'}</dd></div>
+          <div><dt>Claimet den</dt><dd>{formatDate(company.claimedAt)}</dd></div>
+          <div><dt>Vilkår accepteret</dt><dd>{formatDate(company.termsAcceptedAt)}</dd></div>
+          <div><dt>Marketing</dt><dd>{company.marketingConsent ? 'Accepteret' : 'Ikke accepteret'}</dd></div>
+        </dl>
+      </article>
+    ))}
+  </div>
+</AuthorizedLayout>
+
+<style>
+  .dashboard-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .dashboard-head h1 { font-size: clamp(2.3rem, 7vw, 4.8rem); }
+  .dashboard-head p { color: var(--color-muted); }
+  .company-grid { display: grid; gap: 1rem; }
+  .company-panel { padding: clamp(1.2rem, 3vw, 1.8rem); }
+  .company-panel__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .company-panel h2 { margin-top: 0; }
+  .status-pill { border-radius: 999px; padding: 0.32rem 0.7rem; background: var(--color-leaf-soft); color: var(--color-leaf-dark); font-weight: 850; }
+  dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem; margin: 0; }
+  dl div { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.85rem; background: var(--color-surface-strong); }
+  dt { color: var(--color-muted); font-size: 0.78rem; font-weight: 850; letter-spacing: 0.05em; text-transform: uppercase; }
+  dd { margin: 0.2rem 0 0; overflow-wrap: anywhere; font-weight: 700; }
+
+  @media (max-width: 760px) {
+    .dashboard-head { flex-direction: column; }
+    dl { grid-template-columns: 1fr; }
+  }
+</style>

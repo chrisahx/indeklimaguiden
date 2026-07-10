@@ -1,0 +1,33 @@
+---
+export const prerender = false;
+
+import BaseLayout from './BaseLayout.astro';
+import { getCompanySession } from '../lib/company-auth';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+}
+
+const session = await getCompanySession(Astro.cookies);
+
+if (!session) {
+  return Astro.redirect('/company/login/');
+}
+
+const { title, description, path = Astro.url.pathname } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} path={path} noindex>
+  <section class="section container company-auth-shell">
+    <slot />
+  </section>
+</BaseLayout>
+
+<style>
+  .company-auth-shell {
+    display: grid;
+    gap: 1.25rem;
+  }
+</style>

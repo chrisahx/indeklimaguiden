@@ -290,6 +290,151 @@ function customerConfirmationHtml(input: InstallerLeadInput, installerCount: num
 </html>`;
 }
 
+interface CompanyEmailInput {
+  companyName: string;
+  email: string;
+}
+
+interface CompanyClaimInviteInput extends CompanyEmailInput {
+  claimUrl: string;
+  expiresAt: Date;
+}
+
+interface CompanyLoginCodeInput extends CompanyEmailInput {
+  code: string;
+  expiresInMinutes: number;
+}
+
+interface CompanyClaimCompletedInput extends CompanyEmailInput {
+  dashboardUrl: string;
+}
+
+function formatDanishDateTime(date: Date) {
+  return new Intl.DateTimeFormat('da-DK', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'Europe/Copenhagen',
+  }).format(date);
+}
+
+function companyEmailShell(title: string, intro: string, body: string) {
+  return `<!doctype html>
+<html lang="da">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${escapeHtml(title)}</title>
+  </head>
+  <body style="margin:0; padding:0; background:#f7f3ea; color:#183044; font-family:Inter, Arial, sans-serif; line-height:1.6;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f7f3ea; padding:28px 14px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:660px; overflow:hidden; border:1px solid #dce6df; border-radius:22px; background:#ffffff; box-shadow:0 18px 60px rgba(7,48,79,0.09);">
+            <tr>
+              <td style="padding:30px 30px 26px; background:linear-gradient(135deg,#07304f,#006f9e); color:#ffffff;">
+                <div style="display:inline-block; margin-bottom:14px; border:1px solid rgba(255,255,255,0.32); border-radius:999px; padding:6px 11px; background:rgba(255,255,255,0.12); font-size:12px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase;">Indeklima Guiden</div>
+                <h1 style="margin:0 0 10px; color:#ffffff; font-size:28px; line-height:1.15; letter-spacing:-0.03em;">${escapeHtml(title)}</h1>
+                <p style="margin:0; max-width:560px; color:#e4f7fd; font-size:16px;">${escapeHtml(intro)}</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:28px 30px 30px;">
+                ${body}
+                <p style="margin:24px 0 0; color:#64717a; font-size:13px;">Venlig hilsen<br /><strong style="color:#07304f;">Indeklima Guiden</strong></p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+}
+
+function claimInviteText(input: CompanyClaimInviteInput) {
+  return `Claim jeres virksomhedsside hos Indeklima Guiden
+
+Hej ${input.companyName},
+
+Vi har oprettet en virksomhedsside for jer hos Indeklima Guiden. Brug linket herunder til at claim siden og bekræfte, at I må administrere oplysningerne.
+
+${input.claimUrl}
+
+Linket udløber ${formatDanishDateTime(input.expiresAt)}.
+
+Hvis I ikke forventede denne mail, kan I se bort fra den.
+
+Venlig hilsen
+Indeklima Guiden
+`;
+}
+
+function claimInviteHtml(input: CompanyClaimInviteInput) {
+  return companyEmailShell(
+    'Claim jeres virksomhedsside',
+    `Hej ${input.companyName}, brug linket til at bekræfte og administrere jeres side.`,
+    `<p style="margin:0 0 18px; color:#64717a; font-size:15px;">Vi har oprettet en virksomhedsside for <strong style="color:#07304f;">${escapeHtml(input.companyName)}</strong>. Klik på knappen herunder for at claim siden. I skal acceptere vilkår for brug, og I kan frivilligt give samtykke til marketing.</p>
+    <p style="margin:0 0 20px;"><a href="${escapeHtml(input.claimUrl)}" style="display:inline-block; border-radius:999px; padding:12px 18px; background:#70b62c; color:#ffffff; font-weight:850; text-decoration:none;">Claim virksomhedsside</a></p>
+    <div style="border:1px solid #dce6df; border-radius:16px; padding:16px; background:#fbfaf6; color:#64717a; font-size:14px;">Linket udløber <strong style="color:#183044;">${escapeHtml(formatDanishDateTime(input.expiresAt))}</strong>. Hvis knappen ikke virker, kan I kopiere dette link:<br /><a href="${escapeHtml(input.claimUrl)}" style="color:#006f9e; word-break:break-all;">${escapeHtml(input.claimUrl)}</a></div>`,
+  );
+}
+
+function loginCodeText(input: CompanyLoginCodeInput) {
+  return `Din login-kode til Indeklima Guiden
+
+Hej ${input.companyName},
+
+Brug denne kode til at logge ind på jeres virksomhedsside:
+
+${input.code}
+
+Koden udløber om ${input.expiresInMinutes} minutter.
+
+Hvis I ikke har bedt om en login-kode, kan I se bort fra denne mail.
+
+Venlig hilsen
+Indeklima Guiden
+`;
+}
+
+function loginCodeHtml(input: CompanyLoginCodeInput) {
+  return companyEmailShell(
+    'Din login-kode',
+    `Hej ${input.companyName}, brug koden herunder til at logge ind.`,
+    `<p style="margin:0 0 18px; color:#64717a; font-size:15px;">Indtast koden på login-siden for at få adgang til jeres virksomhedsområde.</p>
+    <div style="margin:0 0 18px; border:1px solid #dce6df; border-radius:18px; padding:22px; background:#fbfaf6; text-align:center;">
+      <div style="margin-bottom:8px; color:#64717a; font-size:12px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase;">Engangskode</div>
+      <div style="color:#07304f; font-size:38px; line-height:1; font-weight:900; letter-spacing:0.18em;">${escapeHtml(input.code)}</div>
+    </div>
+    <p style="margin:0; color:#64717a; font-size:14px;">Koden udløber om ${input.expiresInMinutes} minutter. Hvis I ikke har bedt om en login-kode, kan I se bort fra denne mail.</p>`,
+  );
+}
+
+function claimCompletedText(input: CompanyClaimCompletedInput) {
+  return `Jeres virksomhedsside er claimet
+
+Hej ${input.companyName},
+
+Jeres virksomhedsside hos Indeklima Guiden er nu claimet med e-mailadressen ${input.email}.
+
+I kan logge ind og se jeres virksomhedsoplysninger her:
+${input.dashboardUrl}
+
+Venlig hilsen
+Indeklima Guiden
+`;
+}
+
+function claimCompletedHtml(input: CompanyClaimCompletedInput) {
+  return companyEmailShell(
+    'Jeres virksomhedsside er claimet',
+    `Hej ${input.companyName}, jeres claim er gennemført.`,
+    `<p style="margin:0 0 18px; color:#64717a; font-size:15px;">Virksomhedssiden for <strong style="color:#07304f;">${escapeHtml(input.companyName)}</strong> er nu claimet med e-mailadressen <strong style="color:#07304f;">${escapeHtml(input.email)}</strong>.</p>
+    <p style="margin:0 0 20px;"><a href="${escapeHtml(input.dashboardUrl)}" style="display:inline-block; border-radius:999px; padding:12px 18px; background:#006f9e; color:#ffffff; font-weight:850; text-decoration:none;">Gå til virksomhedsområde</a></p>
+    <p style="margin:0; color:#64717a; font-size:14px;">Fremover kan I logge ind med jeres e-mailadresse og en engangskode.</p>`,
+  );
+}
+
 function errorMessage(error: unknown) {
   if (error instanceof Error) return error.message;
   return String(error);
@@ -338,4 +483,43 @@ export async function sendInstallerLeadEmails(input: InstallerLeadInput, install
   }
 
   return { installerEmailCount: results.length, customerEmailCount: 1, totalEmailCount: results.length + 1 };
+}
+
+export async function sendCompanyClaimInviteEmail(input: CompanyClaimInviteInput) {
+  const transporter = getTransporter();
+  const from = env('SMTP_FROM') || 'Indeklima Guiden <leads@indeklimaguiden.dk>';
+
+  await transporter.sendMail({
+    from,
+    to: input.email,
+    subject: `Claim virksomhedssiden for ${input.companyName}`,
+    text: claimInviteText(input),
+    html: claimInviteHtml(input),
+  });
+}
+
+export async function sendCompanyLoginCodeEmail(input: CompanyLoginCodeInput) {
+  const transporter = getTransporter();
+  const from = env('SMTP_FROM') || 'Indeklima Guiden <leads@indeklimaguiden.dk>';
+
+  await transporter.sendMail({
+    from,
+    to: input.email,
+    subject: `Din login-kode til Indeklima Guiden: ${input.code}`,
+    text: loginCodeText(input),
+    html: loginCodeHtml(input),
+  });
+}
+
+export async function sendCompanyClaimCompletedEmail(input: CompanyClaimCompletedInput) {
+  const transporter = getTransporter();
+  const from = env('SMTP_FROM') || 'Indeklima Guiden <leads@indeklimaguiden.dk>';
+
+  await transporter.sendMail({
+    from,
+    to: input.email,
+    subject: `Jeres virksomhedsside er claimet: ${input.companyName}`,
+    text: claimCompletedText(input),
+    html: claimCompletedHtml(input),
+  });
 }

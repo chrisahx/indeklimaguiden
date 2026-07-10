@@ -1,0 +1,103 @@
+---
+export const prerender = false;
+
+import { actions, isInputError } from 'astro:actions';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getValidCompanyClaimToken } from '../../lib/company-auth';
+
+const token = Astro.params.token ?? '';
+const claimToken = token ? await getValidCompanyClaimToken(token) : null;
+const result = Astro.getActionResult(actions.completeCompanyClaim);
+const inputErrors = isInputError(result?.error) ? result.error.fields : {};
+const generalError = result?.error && !isInputError(result.error) ? result.error.message : '';
+const success = result && !result.error ? result.data : undefined;
+const company = claimToken?.company;
+const address = company?.location ? [company.location.address, company.location.postalCode, company.location.city].filter(Boolean).join(', ') : '';
+---
+
+<BaseLayout title="Claim virksomhedsside" description="Claim jeres virksomhedsside hos Indeklima Guiden." path={`/claim/${token}/`} noindex>
+  <section class="section reading claim-page">
+    <span class="pill">Virksomhedsclaim</span>
+
+    {success ? (
+      <div class="surface claim-card">
+        <h1>Virksomhedssiden er claimet</h1>
+        <p>Tak. {success.companyName} er nu claimet, og vi har sendt en bekraeftelse til jeres e-mailadresse.</p>
+        <a class="button" href={success.dashboardUrl}>Gå til dashboard</a>
+      </div>
+    ) : !claimToken ? (
+      <div class="surface claim-card">
+        <h1>Claim-linket virker ikke længere</h1>
+        <p>Linket er ugyldigt, brugt eller udløbet. Kontakt Indeklima Guiden, hvis I skal have tilsendt et nyt claim-link.</p>
+        <a class="button secondary" href="/kontakt/">Kontakt os</a>
+      </div>
+    ) : company?.isClaimed ? (
+      <div class="surface claim-card">
+        <h1>Virksomheden er allerede claimet</h1>
+        <p>{company.name} er allerede claimet. Brug login-siden, hvis I vil logge ind.</p>
+        <a class="button" href="/company/login/">Log ind</a>
+      </div>
+    ) : (
+      <div class="surface claim-card">
+        <h1>Claim {company?.name}</h1>
+        <p class="lead">Bekræft, at I må administrere virksomhedssiden hos Indeklima Guiden.</p>
+
+        <dl class="company-summary">
+          <div><dt>Virksomhed</dt><dd>{company?.name}</dd></div>
+          {address && <div><dt>Adresse</dt><dd>{address}</dd></div>}
+          {company?.phone && <div><dt>Telefon</dt><dd>{company.phone}</dd></div>}
+          <div><dt>Claim e-mail</dt><dd>{claimToken.email}</dd></div>
+        </dl>
+
+        {generalError && (
+          <div class="notice error" role="alert">
+            <strong>Claim kunne ikke gennemføres</strong>
+            <p>{generalError}</p>
+          </div>
+        )}
+
+        <form method="POST" action={actions.completeCompanyClaim} novalidate>
+          <input type="hidden" name="token" value={token} />
+
+          <label>
+            Navn på kontaktperson
+            <input type="text" name="claimantName" autocomplete="name" placeholder="Fx Mette Hansen" />
+            {inputErrors.claimantName && <small>{inputErrors.claimantName.join(' ')}</small>}
+          </label>
+
+          <label class="checkbox-label">
+            <input type="checkbox" name="termsAccepted" value="true" required />
+            <span>Jeg accepterer vilkår for brug og bekræfter, at jeg må administrere denne virksomhedsside.</span>
+          </label>
+          {inputErrors.termsAccepted && <small>{inputErrors.termsAccepted.join(' ')}</small>}
+
+          <label class="checkbox-label">
+            <input type="checkbox" name="marketingConsent" value="true" />
+            <span>Ja tak, Indeklima Guiden må sende nyheder, tips og markedsføring til virksomheden.</span>
+          </label>
+
+          <button class="button" type="submit">Claim virksomhedsside</button>
+        </form>
+      </div>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .claim-page { display: grid; gap: 1rem; }
+  .claim-card { padding: clamp(1.4rem, 4vw, 2.2rem); }
+  .claim-card h1 { font-size: clamp(2.2rem, 7vw, 4rem); }
+  .lead { color: var(--color-muted); font-size: 1.08rem; }
+  .company-summary { display: grid; gap: 0.75rem; margin: 1.4rem 0; }
+  .company-summary div { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.85rem; background: var(--color-surface-strong); }
+  .company-summary dt { color: var(--color-muted); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+  .company-summary dd { margin: 0.2rem 0 0; font-weight: 750; }
+  form { display: grid; gap: 1rem; }
+  label { display: grid; gap: 0.35rem; font-weight: 800; color: var(--color-primary); }
+  input[type='text'] { width: 100%; border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); padding: 0.9rem 1rem; font: inherit; color: var(--color-text); background: #fff; }
+  small { color: #a33b2f; font-weight: 700; }
+  .checkbox-label { display: flex; align-items: flex-start; gap: 0.7rem; color: var(--color-text); font-weight: 650; }
+  .checkbox-label input { margin-top: 0.35rem; accent-color: var(--color-leaf); }
+  .notice { border-radius: var(--radius-md); padding: 1rem; margin: 1rem 0; }
+  .notice.error { border: 1px solid #e2aca4; background: #fff1ee; color: #823126; }
+</style>
