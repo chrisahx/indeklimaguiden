@@ -386,6 +386,8 @@ I kan nu bekræfte og administrere jeres virksomhedsside, så I selv kan gennemg
 Bekræft og administrér virksomhedssiden:
 ${input.claimUrl}
 
+Hvis knappen eller linket ikke virker, kan I kopiere adressen ind i jeres browser.
+
 Har I spørgsmål, er I altid velkomne til at skrive til info@indeklimaguiden.dk.
 
 Venlig hilsen
@@ -395,25 +397,48 @@ Indeklima Guiden
 }
 
 function claimInviteHtml(input: CompanyClaimInviteInput) {
-  return companyEmailShell(
-    'Jeres virksomhed er nu med på Indeklima Guiden',
-    `Hej ${input.companyName}`,
-    `<p style="margin:0 0 16px; color:#64717a; font-size:15px;">Jeg har oprettet <a href="https://indeklimaguiden.dk" style="color:#006f9e; font-weight:700;">Indeklima Guiden</a> - en ny platform, som skal gøre det lettere for boligejere at finde varmepumpeinstallatører i deres nærområde.</p>
-    <p style="margin:0 0 16px; color:#64717a; font-size:15px;">Som en del af platformen har jeg oprettet et landsdækkende register over varmepumpeinstallatører, og <strong style="color:#07304f;">${escapeHtml(input.companyName)}</strong> har allerede fået sin egen virksomhedsside.</p>
-    <p style="margin:0 0 10px; color:#64717a; font-size:15px;">Forbrugerne kan blandt andet:</p>
-    <ul style="margin:0 0 16px; padding-left:20px; color:#64717a; font-size:15px;">
-      <li>søge efter installatører i deres område</li>
-      <li>sammenligne virksomheder og finde relevante kontaktoplysninger</li>
-      <li>sende én forespørgsel til op til tre lokale installatører</li>
-    </ul>
-    <p style="margin:0 0 16px; color:#64717a; font-size:15px;">I kender måske tilbudsløsningen fra eksempelvis varmepumpe.dk eller 3byggetilbud. Forskellen er, at jeg har valgt at gøre løsningen gratis for installatørerne.</p>
-    <p style="margin:0 0 16px; color:#64717a; font-size:15px;">Det betyder, at når en boligejer sender en forespørgsel, finder systemet relevante installatører i nærheden og sender kundeoplysningerne direkte videre - uden betaling for leadet.</p>
-    <p style="margin:0 0 16px; color:#64717a; font-size:15px;">Jeg har bygget Indeklima Guiden, fordi jeg synes, der manglede en bedre måde for forbrugerne at finde lokale installatører på - samtidig med at installatørerne får en gratis kanal til synlighed og nye kundehenvendelser.</p>
-    <p style="margin:0 0 20px; color:#64717a; font-size:15px;">I kan nu bekræfte og administrere jeres virksomhedsside, så I selv kan gennemgå og opdatere virksomhedens oplysninger.</p>
-    <p style="margin:0 0 20px;"><a href="${escapeHtml(input.claimUrl)}" style="display:inline-block; border-radius:999px; padding:12px 18px; background:#70b62c; color:#ffffff; font-weight:850; text-decoration:none;">Bekræft og administrér virksomhedssiden</a></p>
-    <p style="margin:0; color:#64717a; font-size:15px;">Har I spørgsmål, er I altid velkomne til at skrive til <a href="mailto:info@indeklimaguiden.dk" style="color:#006f9e;">info@indeklimaguiden.dk</a>.</p>`,
-    'Christian<br /><strong style="color:#07304f;">Indeklima Guiden</strong>',
-  );
+  return `<!doctype html>
+<html lang="da">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jeres virksomhed er nu med på Indeklima Guiden</title>
+  </head>
+  <body style="margin:0; padding:0; background:#ffffff; color:#1f2933; font-family:Arial, sans-serif; line-height:1.6;">
+    <div style="max-width:640px; margin:0 auto; padding:28px 20px;">
+      <p style="margin:0 0 18px; font-size:16px; color:#1f2933;">Hej ${escapeHtml(input.companyName)}</p>
+
+      <p style="margin:0 0 16px; font-size:16px; color:#1f2933;">Jeg har oprettet <a href="https://indeklimaguiden.dk" style="color:#006f9e; text-decoration:underline;">Indeklima Guiden</a> - en ny platform, som skal gøre det lettere for boligejere at finde varmepumpeinstallatører i deres nærområde.</p>
+
+      <p style="margin:0 0 16px; font-size:16px; color:#1f2933;">Som en del af platformen har jeg oprettet et landsdækkende register over varmepumpeinstallatører, og ${escapeHtml(input.companyName)} har allerede fået sin egen virksomhedsside.</p>
+
+      <p style="margin:0 0 8px; font-size:16px; color:#1f2933;">Forbrugerne kan blandt andet:</p>
+      <ul style="margin:0 0 16px; padding-left:22px; font-size:16px; color:#1f2933;">
+        <li>søge efter installatører i deres område</li>
+        <li>sammenligne virksomheder og finde relevante kontaktoplysninger</li>
+        <li>sende én forespørgsel til op til tre lokale installatører</li>
+      </ul>
+
+      <p style="margin:0 0 16px; font-size:16px; color:#1f2933;">I kender måske tilbudsløsningen fra eksempelvis varmepumpe.dk eller 3byggetilbud. Forskellen er, at jeg har valgt at gøre løsningen gratis for installatørerne.</p>
+
+      <p style="margin:0 0 16px; font-size:16px; color:#1f2933;">Det betyder, at når en boligejer sender en forespørgsel, finder systemet relevante installatører i nærheden og sender kundeoplysningerne direkte videre - uden betaling for leadet.</p>
+
+      <p style="margin:0 0 16px; font-size:16px; color:#1f2933;">Jeg har bygget Indeklima Guiden, fordi jeg synes, der manglede en bedre måde for forbrugerne at finde lokale installatører på - samtidig med at installatørerne får en gratis kanal til synlighed og nye kundehenvendelser.</p>
+
+      <p style="margin:0 0 20px; font-size:16px; color:#1f2933;">I kan nu bekræfte og administrere jeres virksomhedsside, så I selv kan gennemgå og opdatere virksomhedens oplysninger.</p>
+
+      <p style="margin:0 0 16px;">
+        <a href="${escapeHtml(input.claimUrl)}" style="display:inline-block; border-radius:6px; padding:12px 18px; background:#006f9e; color:#ffffff; font-size:16px; font-weight:700; text-decoration:none;">Bekræft og administrér virksomhedssiden</a>
+      </p>
+
+      <p style="margin:0 0 20px; font-size:14px; color:#52606d;">Hvis knappen ikke virker, kan I kopiere dette link ind i jeres browser:<br /><a href="${escapeHtml(input.claimUrl)}" style="color:#006f9e; word-break:break-all;">${escapeHtml(input.claimUrl)}</a></p>
+
+      <p style="margin:0 0 22px; font-size:16px; color:#1f2933;">Har I spørgsmål, er I altid velkomne til at skrive til <a href="mailto:info@indeklimaguiden.dk" style="color:#006f9e; text-decoration:underline;">info@indeklimaguiden.dk</a>.</p>
+
+      <p style="margin:0; font-size:16px; color:#1f2933;">Venlig hilsen<br />Christian<br />Indeklima Guiden</p>
+    </div>
+  </body>
+</html>`;
 }
 
 function loginCodeText(input: CompanyLoginCodeInput) {
